@@ -111,6 +111,28 @@ exports.searchOneWay = async (req, res) => {
   }
 };
 
+//easeMyTrip------------------START
+
+exports.onewaySearch = async (req, res) => {
+  console.log(req,"req117")
+  try {
+    const data = {
+      ...req.body,
+    };
+
+    const response = await axios.post(`${api.emiflightSearch}`, data);
+
+    msg = "Flight Searched Successfully!";
+
+    actionCompleteResponse(res, response.data, msg);
+  } catch (err) {
+    console.log(err);
+    sendActionFailedResponse(res, {}, err.message);
+  }
+};
+
+
+
 exports.searchReturn = async (req, res) => {
   try {
     const data = {
@@ -233,6 +255,27 @@ exports.bookingFLight = async (req, res) => {
     sendActionFailedResponse(res, {}, err.message);
   }
 };
+
+//EMT flight booking -------------START---------------------
+
+exports.emtbookingFLight = async (req, res) => {
+  try {
+    const data = {
+      ...req.body,
+    };
+
+    const response = await axios.post(`${api.flightBookingURL}`, data);
+
+    msg = "Booking Flight Searched Successfully!";
+
+    actionCompleteResponse(res, response.data, msg);
+  } catch (err) {
+    console.log(err);
+    sendActionFailedResponse(res, {}, err.message);
+  }
+};
+
+//-------------------END--------------------------
 
 exports.getTicketLCC = async (req, res) => {
   try {

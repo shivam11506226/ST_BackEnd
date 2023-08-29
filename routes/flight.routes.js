@@ -22,6 +22,15 @@ module.exports = function (app) {
   //One Way Search
   app.post("/travvolt/flight/search/oneway", controller.searchOneWay);
 
+  //emt fligt search Routes------------------start
+
+  app.post("/emt/flight/search/oneway", controller.onewaySearch);
+
+  //--------------END--------------
+
+
+
+
   //Return Search
   app.post("/travvolt/flight/search/return", controller.searchReturn);
 
@@ -47,6 +56,14 @@ module.exports = function (app) {
 
   //Booking Non LCC FLights
   app.post("/travvolt/flight/booking", controller.bookingFLight);
+
+  //Booking EMT flights  Routes ---------------start--------
+
+  app.post("/emt/flight/booking", controller.emtbookingFLight);
+
+  // app.get("/single/flight/combined/response",controller.combinedSearch);
+
+
 
   //Get Ticket LCC
   app.post("/travvolt/flight/getticketlcc", controller.getTicketLCC);

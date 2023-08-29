@@ -18,12 +18,29 @@ exports.api = {
   //Flight API's
   flightSearchURL:
     "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Search",
+
+    //easemyTrip Api----------------START------------------//
+    emiflightSearch:
+
+    "https://stagingapi.easemytrip.com/Flight.svc/json/FlightSearch",
+
+        //easemyTrip Api----------------END------------------//
+
   flightFareRuleURL:
     "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/FareRule",
   flightFareQuoteURL:
     "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/FareQuote",
   flightBookingURL:
     "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Book",
+
+  //----------------EMT-----------------  
+
+emtflightBookingURL:
+"https://stagingapi.easemytrip.com/Flight.svc/json/AirBookRQ",
+
+//---------------------END----------
+
+
   flightTicketLCCURL:
     "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Ticket",
   flightTicketNonLCCURL:

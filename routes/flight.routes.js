@@ -26,6 +26,16 @@ module.exports = function (app) {
 
   app.post("/emt/flight/search/oneway", controller.onewaySearch);
 
+  //-------------Two way flight Search-----------------------
+
+  app.post("/emt/flight/search/twoway", controller.twowaySearch);
+
+
+  app.post("/emt/flight/search/discount", controller.twowaySearch);
+
+
+
+
   //--------------END--------------
 
 
@@ -59,7 +69,19 @@ module.exports = function (app) {
 
   //Booking EMT flights  Routes ---------------start--------
 
-  app.post("/emt/flight/booking", controller.emtbookingFLight);
+  app.post("/emt/flight/bookingRequest", controller.emtbookingFLightRequest);
+
+
+  app.post("/GetSeatMap", controller.getSeatMap);
+
+
+  app.post("/AirRePriceRQ", controller.emtFlightPrice);
+
+
+  app.post("/BookFlight", controller.emtFlightBook);
+
+
+
 
   // app.get("/single/flight/combined/response",controller.combinedSearch);
 

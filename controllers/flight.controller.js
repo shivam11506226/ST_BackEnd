@@ -114,7 +114,6 @@ exports.searchOneWay = async (req, res) => {
 //easeMyTrip------------------START
 
 exports.onewaySearch = async (req, res) => {
-  console.log(req,"req117")
   try {
     const data = {
       ...req.body,
@@ -130,6 +129,48 @@ exports.onewaySearch = async (req, res) => {
     sendActionFailedResponse(res, {}, err.message);
   }
 };
+
+
+//two way Search ---------------//
+
+
+exports.twowaySearch = async (req, res) => {
+  try {
+    const data = {
+      ...req.body,
+    };
+
+    const response = await axios.post(`${api.emiflightSearch}`, data);
+
+    msg = " Two way Flight Searched Successfully!";
+
+    actionCompleteResponse(res, response.data, msg);
+  } catch (err) {
+    console.log(err);
+    sendActionFailedResponse(res, {}, err.message);
+  }
+};
+
+// Emt flight Discount------------//
+
+exports.emtflightDiscount = async (req, res) => {
+  try {
+    const data = {
+      ...req.body,
+    };
+
+    const response = await axios.post(`${api.emiflightSearch}`, data);
+
+    msg = "  Flight Discount Searched Successfully!";
+
+    actionCompleteResponse(res, response.data, msg);
+  } catch (err) {
+    console.log(err);
+    sendActionFailedResponse(res, {}, err.message);
+  }
+};
+
+
 
 
 
@@ -258,13 +299,13 @@ exports.bookingFLight = async (req, res) => {
 
 //EMT flight booking -------------START---------------------
 
-exports.emtbookingFLight = async (req, res) => {
+exports.emtbookingFLightRequest = async (req, res) => {
   try {
     const data = {
       ...req.body,
     };
 
-    const response = await axios.post(`${api.flightBookingURL}`, data);
+    const response = await axios.post(`${api.emtflightBookingURL}`, data);
 
     msg = "Booking Flight Searched Successfully!";
 
@@ -274,6 +315,67 @@ exports.emtbookingFLight = async (req, res) => {
     sendActionFailedResponse(res, {}, err.message);
   }
 };
+
+
+
+
+
+
+exports.getSeatMap = async (req, res) => {
+  try {
+    const data = {
+      ...req.body,
+    };
+
+    const response = await axios.post(`${api.getSeatMapURL}`, data);
+
+    msg = " getSeatMap Successfully!";
+
+    actionCompleteResponse(res, response.data, msg);
+  } catch (err) {
+    console.log(err);
+    sendActionFailedResponse(res, {}, err.message);
+  }
+};
+
+
+
+
+exports.emtFlightPrice = async (req, res) => {
+  try {
+    const data = {
+      ...req.body,
+    };
+
+    const response = await axios.post(`${api.airRePriceRQURL}`, data);
+
+    msg = " flight price  Successfully!";
+
+    actionCompleteResponse(res, response.data, msg);
+  } catch (err) {
+    console.log(err);
+    sendActionFailedResponse(res, {}, err.message);
+  }
+};
+
+exports.emtFlightBook = async (req, res) => {
+  try {
+    const data = {
+      ...req.body,
+    };
+
+    const response = await axios.post(`${api.bookFlight}`, data);
+
+    msg = " flight price  Successfully!";
+
+    actionCompleteResponse(res, response.data, msg);
+  } catch (err) {
+    console.log(err);
+    sendActionFailedResponse(res, {}, err.message);
+  }
+};
+
+
 
 //-------------------END--------------------------
 

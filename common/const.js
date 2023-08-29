@@ -24,6 +24,8 @@ exports.api = {
 
     "https://stagingapi.easemytrip.com/Flight.svc/json/FlightSearch",
 
+    
+
         //easemyTrip Api----------------END------------------//
 
   flightFareRuleURL:
@@ -37,6 +39,17 @@ exports.api = {
 
 emtflightBookingURL:
 "https://stagingapi.easemytrip.com/Flight.svc/json/AirBookRQ",
+
+getSeatMapURL:
+"https://stagingapi.easemytrip.com/Flight.svc/json/GetSeatMap",
+
+
+airRePriceRQURL:
+"https://stagingapi.easemytrip.com/Flight.svc/json/AirRePriceRQ",
+
+
+bookFlight:
+"https://stagingapi.easemytrip.com/Flight.svc/json/BookFlight",
 
 //---------------------END----------
 

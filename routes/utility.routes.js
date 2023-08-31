@@ -9,6 +9,26 @@ module.exports = function (app) {
   
   app.post("/api/Login/UserLogin", controller.userLogin);
 
+  app.post("/api/Recharge/GetService",controller.getService);
+
+
+  app.post("/api/Recharge/GetRechargePlan",controller.getRechargePlan);
+
+
+
+  app.post("/api/Recharge/GetRechargePlanDetail",controller.getRechargePlanDetails);
+
+
+
+  app.post("/api/Recharge/Recharge/",controller.rechageRequest);
+
+
+
+
+
+
+
+
 
 
 

@@ -19,14 +19,11 @@ exports.api = {
   flightSearchURL:
     "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Search",
 
-    //easemyTrip Api----------------START------------------//
-    emiflightSearch:
-
+  //easemyTrip Api----------------START------------------//
+  emiflightSearch:
     "https://stagingapi.easemytrip.com/Flight.svc/json/FlightSearch",
 
-    
-
-        //easemyTrip Api----------------END------------------//
+  //easemyTrip Api----------------END------------------//
 
   flightFareRuleURL:
     "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/FareRule",
@@ -35,24 +32,19 @@ exports.api = {
   flightBookingURL:
     "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Book",
 
-  //----------------EMT-----------------  
+  //----------------EMT-----------------
 
-emtflightBookingURL:
-"https://stagingapi.easemytrip.com/Flight.svc/json/AirBookRQ",
+  emtflightBookingURL:
+    "https://stagingapi.easemytrip.com/Flight.svc/json/AirBookRQ",
 
-getSeatMapURL:
-"https://stagingapi.easemytrip.com/Flight.svc/json/GetSeatMap",
+  getSeatMapURL: "https://stagingapi.easemytrip.com/Flight.svc/json/GetSeatMap",
 
+  airRePriceRQURL:
+    "https://stagingapi.easemytrip.com/Flight.svc/json/AirRePriceRQ",
 
-airRePriceRQURL:
-"https://stagingapi.easemytrip.com/Flight.svc/json/AirRePriceRQ",
+  bookFlight: "https://stagingapi.easemytrip.com/Flight.svc/json/BookFlight",
 
-
-bookFlight:
-"https://stagingapi.easemytrip.com/Flight.svc/json/BookFlight",
-
-//---------------------END----------
-
+  //---------------------END----------
 
   flightTicketLCCURL:
     "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Ticket",
@@ -184,8 +176,23 @@ bookFlight:
   // get cancle request status
   getcancleRequeststatus:
     "http://api.tektravels.com/BookingEngineService_Transfer/TransferService.svc/rest/GetChangeRequestStatus/",
-};
 
+  //utility--------------------------//start---------
+  utilityloginwebapiURL:
+    "http://utilitywebapi.bisplindia.in/api/Login/UserLogin",
+
+  getUserBalanceRequest:
+    "https://utilitywebapi.bisplindia.in/api/Admin/GetUserBalance",
+
+  getPromoServicesRequest:
+    "https://utilitywebapi.bisplindia.in/api/PromoCode/GetPromoServices",
+
+  getPromoCodeRequest:
+    "https://utilitywebapi.bisplindia.in/api/PromoCode/GetPromoCode",
+  getOTPRequest: "https://utilitywebapi.bisplindia.in/api/Admin/OTP",
+  getVerifyOTPRequest:
+    "https://utilitywebapi.bisplindia.in/api/Admin/VerifyOTP",
+};
 exports.responseFlags = {
   ACTION_COMPLETE: 200,
   ACTION_FAILED: 500,

@@ -75,6 +75,7 @@ require("./routes/city.routes")(app);
 require("./routes/sightSeeting.routes")(app);
 require("./routes/universalTransfer.routes")(app);
 require("./routes/visa.routes")(app);
+require("./routes/utility.routes")(app);
 
 mongoose
   .connect(configs.mongoUrl.DEVELOPMENT, {
@@ -128,18 +129,18 @@ function initial() {
 }
 //================================> handle uncaughtException errors <=====================================//
 
-process.on('uncaughtException', (err) => {
+process.on("uncaughtException", (err) => {
   console.log(`server rejected ${err.message}`);
   console.log("server shutdown due to uncaught Exception ");
-        process.exit(1);
+  process.exit(1);
 });
 
 //================================> handle  Unhandled Promise Rejection errors <=====================================//
 
-process.on('unhandledRejection',(err)=>{
+process.on("unhandledRejection", (err) => {
   console.log(`server rejected ${err.message}`);
   console.log("server shutdown due to unhandled rejection");
-  server.close(()=>{
-        process.exit(1);
+  server.close(() => {
+    process.exit(1);
   });
 });

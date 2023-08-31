@@ -181,6 +181,18 @@ exports.api = {
   utilityloginwebapiURL:
     "http://utilitywebapi.bisplindia.in/api/Login/UserLogin",
 
+  getServiceRechegeURL:
+    "http://utilitywebapi.bisplindia.in/api/Recharge/GetService",
+
+  getRechargePlanULR:
+    "https://utilitywebapi.bisplindia.in/api/Recharge/GetRechargePlan",
+
+  getPlanDetailURL:
+    "https://utilitywebapi.bisplindia.in/api/Recharge/GetRechargePlanDetail",
+
+  rechageRequestURL:
+    " https://utilitywebapi.bisplindia.in/api/Recharge/Recharge",
+
   getUserBalanceRequest:
     "https://utilitywebapi.bisplindia.in/api/Admin/GetUserBalance",
 

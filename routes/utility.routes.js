@@ -11,4 +11,15 @@ module.exports = function (app) {
   app.post("/api/PromoCode/GetPromoCode", controller.getPromoCode);
   app.post("/api/Admin/OTP", controller.getOTP);
   app.post("/api/Admin/VerifyOTP", controller.getVerifyOTP);
+
+  app.post("/api/Recharge/GetService", controller.getService);
+
+  app.post("/api/Recharge/GetRechargePlan", controller.getRechargePlan);
+
+  app.post(
+    "/api/Recharge/GetRechargePlanDetail",
+    controller.getRechargePlanDetails
+  );
+
+  app.post("/api/Recharge/Recharge/", controller.rechageRequest);
 };

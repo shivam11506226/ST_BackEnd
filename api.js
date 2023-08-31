@@ -75,6 +75,7 @@ require("./routes/city.routes")(app);
 require("./routes/sightSeeting.routes")(app);
 require("./routes/universalTransfer.routes")(app);
 require("./routes/visa.routes")(app);
+require("./routes/utility.routes")(app);
 
 mongoose
   .connect(configs.mongoUrl.DEVELOPMENT, {

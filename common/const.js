@@ -184,6 +184,12 @@ bookFlight:
   // get cancle request status
   getcancleRequeststatus:
     "http://api.tektravels.com/BookingEngineService_Transfer/TransferService.svc/rest/GetChangeRequestStatus/",
+
+
+
+    //utility--------------------------//start---------
+    utilityloginwebapiURL:
+     "http://utilitywebapi.bisplindia.in/api/Login/UserLogin",
 };
 
 exports.responseFlags = {

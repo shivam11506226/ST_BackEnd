@@ -67,8 +67,11 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
+ 
+  // need change username to email for body parser then successfully login
   User.findOne({
     email: req.body.username,
+    // $or:[{email:req.body.email},{username:req.body.username}]
   })
     .populate("roles", "-__v")
     .exec((err, user) => {

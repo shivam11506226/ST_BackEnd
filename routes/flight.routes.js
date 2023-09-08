@@ -30,16 +30,9 @@ module.exports = function (app) {
 
   app.post("/emt/flight/search/twoway", controller.twowaySearch);
 
-
   app.post("/emt/flight/search/discount", controller.twowaySearch);
 
-
-
-
   //--------------END--------------
-
-
-
 
   //Return Search
   app.post("/travvolt/flight/search/return", controller.searchReturn);
@@ -71,21 +64,13 @@ module.exports = function (app) {
 
   app.post("/emt/flight/bookingRequest", controller.emtbookingFLightRequest);
 
-
   app.post("/GetSeatMap", controller.getSeatMap);
-
 
   app.post("/AirRePriceRQ", controller.emtFlightPrice);
 
-
   app.post("/BookFlight", controller.emtFlightBook);
 
-
-
-
   // app.get("/single/flight/combined/response",controller.combinedSearch);
-
-
 
   //Get Ticket LCC
   app.post("/travvolt/flight/getticketlcc", controller.getTicketLCC);
@@ -125,4 +110,9 @@ module.exports = function (app) {
     "/travvolt/flight/getcancellationcharges",
     controller.getGetCancellationCharges
   );
+
+  // payment
+
+  app.post("/travvolt/flight/paymentFlight", controller.paymentFlight);
+  app.post("/travvolt/flight/verify", controller.verifyPayment);
 };

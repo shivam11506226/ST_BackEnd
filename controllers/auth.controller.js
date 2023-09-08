@@ -67,7 +67,6 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
- 
   // need change username to email for body parser then successfully login
   User.findOne({
     email: req.body.username,

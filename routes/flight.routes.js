@@ -114,5 +114,5 @@ module.exports = function (app) {
   // payment
 
   app.post("/travvolt/flight/paymentFlight", controller.paymentFlight);
-  app.post("/travvolt/flight/verify", controller.verifyPayment);
+  // app.post("/travvolt/flight/verifyPayment", controller.verifyPayment);
 };

@@ -8,6 +8,9 @@ const {
   sendActionFailedResponse,
 } = require("../common/common");
 
+const Razorpay_KEY_ID = "rzp_test_rSxJ8wZCLzTJck";
+const Razorpay_KEY_SECRET = "4jCX6zX5M7QF1vTzijG1adyC";
+
 exports.getSearchAirportData = async (req, res) => {
   try {
     let data = await Airport.find({
@@ -507,34 +510,39 @@ exports.getGetCancellationCharges = async (req, res) => {
 exports.paymentFlight = (req, res) => {
   try {
     let instance = new Razorpay({
-      key_id: "YOUR_KEY_ID",
-      key_secret: "YOUR_SECRET",
+      key_id: Razorpay_KEY_ID,
+      key_secret: Razorpay_KEY_SECRET,
     });
 
     var options = {
-      amount: req.body.amount * 100, // amount in the smallest currency unit
+      amount: 5000 * 100, // amount in the smallest currency unit
       currency: "INR",
       receipt: "order_rcptid_11",
     };
+    console.log(req.body);
     instance.orders.create(options, function (err, order) {
       if (err) {
         return res.send({ code: 500, message: "Server Error" });
       }
       console.log(order);
-      return res.send({ code: 200, message: "order Created Successfully" });
+      return res.send({
+        code: 200,
+        message: "order Created Successfully",
+        data: order,
+      });
     });
-    res.send({ orders });
   } catch (err) {
     console.log(err);
     sendActionFailedResponse(res, {}, err.message);
   }
 };
 
-exports.verifyPayment = (req, res) => {
-  try {
-    res.send({ verify });
-  } catch (err) {
-    console.log(err);
-    sendActionFailedResponse(res, {}, err.message);
-  }
-};
+//verifyPayment
+// exports.verifyPayment = (req, res) => {
+//   try {
+//     res.send({ verify });
+//   } catch (err) {
+//     console.log(err);
+//     sendActionFailedResponse(res, {}, err.message);
+//   }
+// };

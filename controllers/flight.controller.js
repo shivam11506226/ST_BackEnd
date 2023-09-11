@@ -1,4 +1,5 @@
 const axios = require("axios");
+const Razorpay = require("razorpay");
 const { tokenGenerator, api } = require("../common/const");
 const db = require("../model");
 const Airport = db.airport;
@@ -130,9 +131,7 @@ exports.onewaySearch = async (req, res) => {
   }
 };
 
-
 //two way Search ---------------//
-
 
 exports.twowaySearch = async (req, res) => {
   try {
@@ -171,7 +170,6 @@ exports.emtflightDiscount = async (req, res) => {
 };
 
 //--------------EMT---------END-----------//
-
 
 exports.searchReturn = async (req, res) => {
   try {
@@ -315,11 +313,6 @@ exports.emtbookingFLightRequest = async (req, res) => {
   }
 };
 
-
-
-
-
-
 exports.getSeatMap = async (req, res) => {
   try {
     const data = {
@@ -336,9 +329,6 @@ exports.getSeatMap = async (req, res) => {
     sendActionFailedResponse(res, {}, err.message);
   }
 };
-
-
-
 
 exports.emtFlightPrice = async (req, res) => {
   try {
@@ -373,8 +363,6 @@ exports.emtFlightBook = async (req, res) => {
     sendActionFailedResponse(res, {}, err.message);
   }
 };
-
-
 
 //-------------------END--------------------------
 
@@ -513,3 +501,46 @@ exports.getGetCancellationCharges = async (req, res) => {
     sendActionFailedResponse(res, {}, err.message);
   }
 };
+
+/// payment
+
+exports.paymentFlight = (req, res) => {
+  const amountFlight = req.body.amount;
+  try {
+    let instance = new Razorpay({
+      key_id: process.env.Razorpay_KEY_ID,
+      key_secret: process.env.Razorpay_KEY_SECRET,
+    });
+
+    var options = {
+      amount: amountFlight * 100, // amount in the smallest currency unit
+      currency: "INR",
+      receipt: "order_rcptid_11",
+    };
+    console.log(amountFlight);
+    instance.orders.create(options, function (err, order) {
+      if (err) {
+        return res.send({ code: 500, message: "Server Error" });
+      }
+      console.log(order);
+      return res.send({
+        code: 200,
+        message: "order Created Successfully",
+        data: order,
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    sendActionFailedResponse(res, {}, err.message);
+  }
+};
+
+//verifyPayment
+// exports.verifyPayment = (req, res) => {
+//   try {
+//     res.send({ verify });
+//   } catch (err) {
+//     console.log(err);
+//     sendActionFailedResponse(res, {}, err.message);
+//   }
+// };

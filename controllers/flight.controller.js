@@ -8,9 +8,6 @@ const {
   sendActionFailedResponse,
 } = require("../common/common");
 
-const Razorpay_KEY_ID = "rzp_test_rSxJ8wZCLzTJck";
-const Razorpay_KEY_SECRET = "4jCX6zX5M7QF1vTzijG1adyC";
-
 exports.getSearchAirportData = async (req, res) => {
   try {
     let data = await Airport.find({
@@ -508,18 +505,19 @@ exports.getGetCancellationCharges = async (req, res) => {
 /// payment
 
 exports.paymentFlight = (req, res) => {
+  const amountFlight = req.body.amount;
   try {
     let instance = new Razorpay({
-      key_id: Razorpay_KEY_ID,
-      key_secret: Razorpay_KEY_SECRET,
+      key_id: process.env.Razorpay_KEY_ID,
+      key_secret: process.env.Razorpay_KEY_SECRET,
     });
 
     var options = {
-      amount: 5000 * 100, // amount in the smallest currency unit
+      amount: amountFlight * 100, // amount in the smallest currency unit
       currency: "INR",
       receipt: "order_rcptid_11",
     };
-    console.log(req.body);
+    console.log(amountFlight);
     instance.orders.create(options, function (err, order) {
       if (err) {
         return res.send({ code: 500, message: "Server Error" });

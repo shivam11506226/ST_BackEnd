@@ -21,4 +21,5 @@ module.exports = function (app) {
   );
   app.get("/travvolt/wallet/showTransactions/:id", controller.showTransactions);
   app.post("/travvolt/wallet/rechargeWallet", controller.rechargeWallet);
+  // app.post("/travvolt/wallet/updateRozarPay", controller.updateRozarPay);
 };

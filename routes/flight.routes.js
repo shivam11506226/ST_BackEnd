@@ -110,9 +110,4 @@ module.exports = function (app) {
     "/travvolt/flight/getcancellationcharges",
     controller.getGetCancellationCharges
   );
-
-  // payment
-
-  app.post("/travvolt/flight/paymentFlight", controller.paymentFlight);
-  // app.post("/travvolt/flight/verifyPayment", controller.verifyPayment);
 };

@@ -46,7 +46,7 @@ exports.update_amount = async (req, res) => {
     //  console.log(r.name);
     if (role.name === "admin") {
       const response = await wallet.findById(id);
-      const balance = Number(response.balance) + req.body.balance;
+      const balance = Number(response.balance) + Number(req.body.balance);
       const { currency } = req.body;
       const data = await wallet.findByIdAndUpdate(id, { balance, currency });
       var size = Object.keys(data).length;
@@ -132,7 +132,7 @@ exports.showTransactions = async (req, res) => {
 /// payment
 
 exports.rechargeWallet = (req, res) => {
-  const amountFlight = req.body.amount;
+  const amount = req.body.amount;
   try {
     let instance = new Razorpay({
       key_id: process.env.Razorpay_KEY_ID,
@@ -140,11 +140,11 @@ exports.rechargeWallet = (req, res) => {
     });
 
     var options = {
-      amount: amountFlight * 100, // amount in the smallest currency unit
+      amount: amount * 100, // amount in the smallest currency unit
       currency: "INR",
       receipt: "order_rcptid_11",
     };
-    console.log(amountFlight);
+    console.log(amount);
     instance.orders.create(options, function (err, order) {
       if (err) {
         return res.send({ code: 500, message: "Server Error" });
@@ -166,6 +166,74 @@ exports.rechargeWallet = (req, res) => {
 // exports.verifyPayment = (req, res) => {
 //   try {
 //     res.send({ verify });
+//   } catch (err) {
+//     console.log(err);
+//     sendActionFailedResponse(res, {}, err.message);
+//   }
+// };
+
+// exports.updateRozarPay = async (req, res) => {
+//   const userId = req.params.id; // Assuming you have user authentication middleware
+//   const amountFlight = req.body.amount;
+
+//   try {
+//     // Create a Razorpay order
+//     let instance = new Razorpay({
+//       key_id: process.env.Razorpay_KEY_ID,
+//       key_secret: process.env.Razorpay_KEY_SECRET,
+//     });
+
+//     var options = {
+//       amount: amountFlight * 100, // amount in the smallest currency unit
+//       currency: "INR",
+//       receipt: "order_rcptid_11",
+//     };
+
+//     instance.orders.create(options, async function (err, order) {
+//       if (err) {
+//         return res.status(500).json({ code: 500, message: "Server Error" });
+//       }
+
+//       // Assuming the order creation was successful
+//       console.log(order);
+
+//       // Now, update the user's wallet balance
+//       try {
+//         const userWallet = await wallet.findOne({ user: userId });
+
+//         if (!userWallet) {
+//           return res
+//             .status(404)
+//             .json({ message: "Wallet not found for the user" });
+//         }
+
+//         const balance = Number(userWallet.balance) + Number(amountFlight);
+//         const { currency } = "INR";
+
+//         // Update the user's wallet balance
+//         userWallet.balance = balance;
+//         userWallet.currency = currency;
+//         await userWallet.save();
+
+//         // Update the b2bUser balance if necessary
+//         const resData = await b2bUser.findOne({ walletid: userWallet._id });
+//         if (resData) {
+//           await b2bUser.findOneAndUpdate(
+//             { walletid: userWallet._id },
+//             { $set: { balance: balance } },
+//             { new: true }
+//           );
+//         }
+
+//         const msg = "Wallet balance updated successfully";
+//         return res
+//           .status(200)
+//           .json({ message: msg, updatedWallet: userWallet, order });
+//       } catch (error) {
+//         console.error(error);
+//         return res.status(500).json({ message: "Server Error" });
+//       }
+//     });
 //   } catch (err) {
 //     console.log(err);
 //     sendActionFailedResponse(res, {}, err.message);

@@ -110,4 +110,7 @@ module.exports = function (app) {
     "/travvolt/flight/getcancellationcharges",
     controller.getGetCancellationCharges
   );
+
+  //twoapi merge
+  app.post("/combinedApi", controller.combinedApi);
 };

@@ -172,70 +172,52 @@ exports.rechargeWallet = (req, res) => {
 //   }
 // };
 
-// exports.updateRozarPay = async (req, res) => {
-//   const userId = req.params.id; // Assuming you have user authentication middleware
-//   const amountFlight = req.body.amount;
+exports.updateRozarPay = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const { amount } = req.body;
 
-//   try {
-//     // Create a Razorpay order
-//     let instance = new Razorpay({
-//       key_id: process.env.Razorpay_KEY_ID,
-//       key_secret: process.env.Razorpay_KEY_SECRET,
-//     });
+    // Retrieve the user by their ID
+    const user = await User.findById(userId);
 
-//     var options = {
-//       amount: amountFlight * 100, // amount in the smallest currency unit
-//       currency: "INR",
-//       receipt: "order_rcptid_11",
-//     };
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-//     instance.orders.create(options, async function (err, order) {
-//       if (err) {
-//         return res.status(500).json({ code: 500, message: "Server Error" });
-//       }
+    let instance = new Razorpay({
+      key_id: process.env.Razorpay_KEY_ID,
+      key_secret: process.env.Razorpay_KEY_SECRET,
+    });
 
-//       // Assuming the order creation was successful
-//       console.log(order);
+    // Create a Razorpay order
+    var options = {
+      amount: amount * 100, // amount in the smallest currency unit
+      currency: "INR",
+      receipt: "order_rcptid_11",
+    };
 
-//       // Now, update the user's wallet balance
-//       try {
-//         const userWallet = await wallet.findOne({ user: userId });
+    instance.orders.create(options, function (err, order) {
+      if (err) {
+        return res.status(500).json({ code: 500, message: "Server Error" });
+      }
 
-//         if (!userWallet) {
-//           return res
-//             .status(404)
-//             .json({ message: "Wallet not found for the user" });
-//         }
+      // Update the user's balance
+      user.balance += amount;
 
-//         const balance = Number(userWallet.balance) + Number(amountFlight);
-//         const { currency } = "INR";
+      // Save the updated user document
+      user.save();
 
-//         // Update the user's wallet balance
-//         userWallet.balance = balance;
-//         userWallet.currency = currency;
-//         await userWallet.save();
-
-//         // Update the b2bUser balance if necessary
-//         const resData = await b2bUser.findOne({ walletid: userWallet._id });
-//         if (resData) {
-//           await b2bUser.findOneAndUpdate(
-//             { walletid: userWallet._id },
-//             { $set: { balance: balance } },
-//             { new: true }
-//           );
-//         }
-
-//         const msg = "Wallet balance updated successfully";
-//         return res
-//           .status(200)
-//           .json({ message: msg, updatedWallet: userWallet, order });
-//       } catch (error) {
-//         console.error(error);
-//         return res.status(500).json({ message: "Server Error" });
-//       }
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     sendActionFailedResponse(res, {}, err.message);
-//   }
-// };
+      return res.status(200).json({
+        code: 200,
+        message: "Recharge and balance update successful",
+        data: {
+          order,
+          user,
+        },
+      });
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

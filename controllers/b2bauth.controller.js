@@ -4,6 +4,7 @@ var bcrypt = require("bcryptjs");
 const wallet = require('../model/wallet.model');
 const User = require('../model/user.model');
 const Role = require('../model/role.model');
+const Razorpay = require("razorpay");
 
 const aws = require("aws-sdk");
 const {
@@ -217,5 +218,101 @@ exports.GetMarkup = async (req, res) => {
   }
 };
 
+//update b2b balance using razorpay
+exports.updateUserBalance= async (req,res)=>{
+
+  try {
+    const { _id, amount } = req.body; // Destructure userId and additionalBalance from the request body
+
+    // Check if userId is valid in your user table
+     console.log(req.body);
+    
+
+    let instance = new Razorpay({
+      key_id: process.env.Razorpay_KEY_ID,
+      key_secret: process.env.Razorpay_KEY_SECRET,
+    });
+
+    var options = {
+      amount: Number(req.body.amount) * 100, // amount in the smallest currency unit
+      currency: "INR",
+      receipt: "order_rcptid_11",
+    };
+    console.log(req.body.amount);
+    instance.orders.create(options, function (err, order) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ code: 500, message: "Server Error" });
+        }
+           
+      console.log(order);
+      // return res.send({
+      //   code: 200,
+      //   message: "order Created Successfully",
+      //   data: order,
+      // });
+    });
+    const user = await b2bUser.findById(_id);
+
+    if (!user) {
+      return sendActionFailedResponse(res, {}, "Invalid userId");
+    }
+
+    // Update the user's balance by adding the additional balance
+    user.balance += Number(amount);
+
+    // Save the updated user
+    const updatedUser = await user.save();
+
+    // Respond with the updated user object
+    actionCompleteResponse(res, updatedUser, "User balance updated successfully");
+     
+  } catch (error) {
+    sendActionFailedResponse(res, {}, "Internal server error");
+    console.log(error);    
+  }
+
+};
+
+exports.payVerify= (req,res)=>{
+  try {
+    console.log(req.body);
+    body=req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
+    var crypto = require("crypto");
+    var expectedSignature = crypto.createHmac('sha256', process.env.Razorpay_KEY_SECRET)
+                                    .update(body.toString())
+                                    .digest('hex');
+                                    console.log("sig"+req.body.razorpay_signature);
+                                    console.log("sig"+expectedSignature);
+    
+    if(expectedSignature === req.body.razorpay_signature){
+      console.log("Payment Success");
+    }else{
+      console.log("Payment Fail");
+    }
+    
+  } catch (error) {
+    sendActionFailedResponse(res, {}, "Internal server error");
+    console.log(error.message);    
+  }
+}
 
 
+
+// get userById
+
+exports.UserById=async (req,res)=>{
+  try {
+    const userId = req.params.userId;
+    // Query MongoDB to find a user by userId
+    const user = await b2bUser.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    actionCompleteResponse(res, user, "User Found");
+    
+  } catch (error) {
+    sendActionFailedResponse(res, {}, "Internal server error");
+    console.log(error);      
+  }
+}

@@ -18,4 +18,16 @@ module.exports = function (app) {
   app.get("/travvolt/user/getallusers", controller.Getallusers);
   app.post("/travvolt/user/setmarkup", controller.SetMarkup);
   app.get("/travvolt/user/getmarkup/:userId", controller.GetMarkup);
+  
+
+  //get singleuserbyid
+  app.get("/travvolt/user/:userId",controller.UserById);
+
+//update balance route
+  app.post("/updateBalance", controller.updateUserBalance);
+  //veryfiyrazorPay
+
+  app.post('/payVerify',controller.payVerify);
+
+
 };

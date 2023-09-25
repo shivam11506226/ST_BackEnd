@@ -6,6 +6,7 @@ const {
   actionCompleteResponse,
   sendActionFailedResponse,
 } = require("../common/common");
+const { response } = require("express");
 
 exports.getSearchAirportData = async (req, res) => {
   try {
@@ -495,6 +496,370 @@ exports.getGetCancellationCharges = async (req, res) => {
     msg = "Get Cancellation Charges Successfully!";
 
     actionCompleteResponse(res, response.data, msg);
+  } catch (err) {
+    console.log(err);
+    sendActionFailedResponse(res, {}, err.message);
+  }
+};
+
+// exports.combinedApi = async (req, res) => {
+//   try {
+//     const data = {
+//       ...req.body,
+//     };
+//     const token = "QVBJQWNjZXNzQVBJQDEyMw==";
+
+//     const response1 = await axios.post(
+//       "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Search",
+//       {
+//         EndUserIp: "103.154.247.235",
+//         TokenId: "c8452e79-51ef-42f8-a140-57904bb0eba5",
+//         AdultCount: "1",
+//         ChildCount: "1",
+//         InfantCount: "1",
+//         DirectFlight: "false",
+//         OneStopFlight: "false",
+//         JourneyType: "1",
+//         PreferredAirlines: null,
+//         Segments: [
+//           {
+//             Origin: "DEL",
+//             Destination: "BOM",
+//             FlightCabinClass: "1",
+//             PreferredDepartureTime: "2023-09-14T00: 00: 00",
+//             PreferredArrivalTime: "2023-09-14T00: 00: 00",
+//           },
+//         ],
+//         Sources: null,
+//       }
+//     );
+
+//     // Make requests to the second API
+//     const response2 = await axios.post(
+//       "https://stagingapi.easemytrip.com/Flight.svc/json/FlightSearch",
+// {
+//   Adults: 1,
+//   Authentication: {
+//     Password: "EMT@uytrFYTREt",
+//     UserName: "EMTB2B",
+//     IpAddress: "10.10.10.10",
+//   },
+//   Cabin: 0,
+//   Childs: 1,
+//   FlightSearchDetails: [
+//     {
+//       BeginDate: "2023-10-02",
+//       Origin: "DEL",
+//       Destination: "BOM",
+//     },
+//   ],
+//   Infants: 1,
+//   TraceId: "EMTB2B73fd0ca9fcf4436cbe8b59fded57e616",
+//   TripType: 0,
+// }
+//     );
+
+//     const response3 = await axios.post(
+//       "https://utilitywebapi.bisplindia.in/api/Flight/SearchFlight",
+//       {
+//         DATA: {
+//           AdultCount: "1",
+//           ChildCount: "0",
+//           DirectFlight: "false",
+//           EndUserIp: "103.154.247.235",
+//           GroupID: "0",
+//           InfantCount: "0",
+//           JourneyType: "1",
+//           OneStopFlight: "false",
+//           PreferredAirlines: "",
+//           Segments: [
+//             {
+//               Destination: "DEL",
+//               DestinationFull: "DEL (Delhi)",
+//               FlightCabinClass: "1",
+//               Origin: "JAI",
+//               OriginFull: "JAI (Jaipur)",
+//               PreferredArrivalTime: "2023-09-27",
+//               PreferredDepartureTime: "2023-09-27",
+//             },
+//           ],
+//           Sources: [
+//             "GDS",
+//             "FZ",
+//             "G8",
+//             "SG",
+//             "G9",
+//             "AK",
+//             "IX",
+//             "LB",
+//             "TR",
+//             "6E",
+//             "B3",
+//             "OP",
+//             "2T",
+//             "W5",
+//             "LV",
+//             "TZ",
+//             "ZO",
+//             "PY",
+//           ],
+//         },
+
+//         HEADER: {
+//           Password: "123456",
+//           SponsorFormNo: "1003",
+//           UserName: "Demo2",
+//           Authorization: `Bearer ${token}`,
+//         },
+//       },
+//       {
+//         headers: {
+//           token: `${token}`,
+//         },
+//       }
+//     );
+
+//     // Combine the responses as needed
+//     const mergedData = {
+//       travvoltApi: response1.data,
+//       emtApi: response2.data,
+//       utilityData: response3.data,
+//     };
+
+//     msg = "Flight Searched Successfully!";
+//     // Send the merged data as a response
+//     actionCompleteResponse(res, mergedData, msg);
+//     // res.json(mergedData);
+//     // Extract "Results" array from the first API response
+//     //const resultsArray = mergedData.travvoltApi;
+
+//     // Extract "Journeys" array from the second API response
+//     //const journeysArray = mergedData.emtApi;
+
+//     //var newdata = [...resultsArray, ...journeysArray];
+
+//     console.log("============================================");
+//     const bothapiFareValue = [
+//       response1?.data?.Response?.Results[0][0]?.Fare?.BaseFare,
+//       response2?.data?.Journeys[0]?.Segments[0]?.Fare?.BasicFare,
+//     ];
+//     const utilityData = JSON.parse(response3?.data?.RESP_VALUE);
+//     // console.log(bothapiFareValue);
+//     const mergeApiArray = [
+//       response1?.data?.Response?.Results[0][0],
+//       response1?.data?.Response?.Results[0][1],
+//       response1?.data?.Response?.Results[0][2],
+//       response2?.data?.Journeys[0]?.Segments[0],
+//       response2?.data?.Journeys[0]?.Segments[1],
+//       response2?.data?.Journeys[0]?.Segments[2],
+//       utilityData[0],
+//       utilityData[1],
+//       utilityData[2],
+//     ];
+
+//     // Now you can work with the array of objects
+//     //console.log(utilityData[0]?.grossAmount);
+
+//     // console.log(mergeApiArray);
+//     const customSort = (a, b) => {
+//       const aBaseFare1 = a?.Fare?.BaseFare || 0;
+//       const bBaseFare1 = b?.Fare?.BaseFare || 0;
+
+//       const aBaseFare2 = a?.Fare?.BasicFare || 0;
+//       const bBaseFare2 = b?.Fare?.BasicFare || 0;
+//       const aGrossAmount = a?.grossAmount || 0;
+//       const bGrossAmount = b?.grossAmount || 0;
+
+//       return (
+//         aBaseFare1 - bBaseFare1 ||
+//         aBaseFare2 - bBaseFare2 ||
+//         aGrossAmount - bGrossAmount
+//       );
+//     };
+
+//     // Sort the mergeApiArray using the custom sorting function
+//     mergeApiArray.sort(customSort);
+
+//     console.log(mergeApiArray);
+
+//     // console.log(response2?.data?.Journeys[0]?.Segments[0]?.Fare.BasicFare);
+//   } catch (err) {
+//     console.log(err);
+//     sendActionFailedResponse(res, {}, err.message);
+//   }
+// };
+
+exports.combinedApi = async (req, res) => {
+  try {
+    // Destructure data from the request body
+    const { commonData, api1Data, api2Data, api3Data } = req.body;
+    const token = "QVBJQWNjZXNzQVBJQDEyMw==";
+
+    // Function to handle API requests and return data
+    const makeRequest = async (url, data) => {
+      const response = await axios.post(url, data);
+      return response.data;
+    };
+
+    // Define URLs for the three APIs
+    const api1Url =
+      "http://api.tektravels.com/BookingEngineService_Air/AirService.svc/rest/Search";
+    const api2Url =
+      "https://stagingapi.easemytrip.com/Flight.svc/json/FlightSearch";
+
+    // Create promises for each API request
+    const api1Promise = makeRequest(api1Url, { ...commonData, ...api1Data });
+    const api2Promise = makeRequest(api2Url, {
+      ...commonData,
+      ...api2Data,
+    });
+
+    // Wait for all API requests to complete
+    const [response1, response2] = await Promise.all([
+      api1Promise,
+      api2Promise,
+    ]);
+    
+    msg = "Flight Searched Successfully!";
+    // Combine the responses as needed
+    const mergedData = {
+      travvoltApi: response1,
+      emtApi: response2,
+    };
+
+    
+    
+
+    console.log("============================================");
+    // const bothapiFareValue = [
+    //   response1?.data?.Response?.Results[0][0]?.Fare?.BaseFare,
+    //   response2?.data?.Journeys[0]?.Segments[0]?.Fare?.BasicFare,
+    // ];
+    // console.log(mergedData);
+    // const mergeApiArray = [
+    //   response1?.Response?.Results[0][0],
+    //   response1?.Response?.Results[0][1],
+    //   response1?.Response?.Results[0][2],
+    //   response2?.Journeys[0]?.Segments[0],
+    //   response2?.Journeys[0]?.Segments[1],
+    //   response2?.Journeys[0]?.Segments[2],
+    // ];
+    
+    let mergeApiArray =[
+      ...(response1?.Response?.Results[0] || []), 
+      ...(response2?.Journeys[0]?.Segments || [])];
+
+      console.log("hello")
+   
+    // sort data according to BaseFare or Basic Fare
+    
+    
+
+    // Sort the mergeApiArray using the custom sorting function
+   
+   
+   
+    const uniqueData = [];
+
+const getSelectedData = (currObj) => {
+  let currFlightName;
+  let currFlightDepartureTime;
+  let price;
+
+  if (currObj.BondType) {
+    currFlightName = currObj.Bonds[0].Legs[0].FlightName;
+    currFlightDepartureTime = currObj.Bonds[0].Legs[0].DepartureTime;
+    price = currObj.Fare.BasicFare;
+  } else {
+    currFlightName = currObj.Segments[0][0].Airline.AirlineName;
+    const dateTimeString = currObj.Segments[0][0].Origin.DepTime;
+    const dateTime = new Date(dateTimeString);
+    const hours = dateTime.getHours();
+    const minutes = dateTime.getMinutes();
+    currFlightDepartureTime = `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
+    price = currObj.Fare.BaseFare;
+  }
+
+  return { currFlightName, currFlightDepartureTime, price };
+};
+
+
+for (let i = 0; i < mergeApiArray.length; i++) {
+  let currObj = mergeApiArray[i];
+  if (!currObj.BondType && !currObj.Fare) {
+    continue;
+  }
+  let { currFlightName, currFlightDepartureTime, price } =
+    getSelectedData(currObj);
+
+  for (let j = i + 1; j < mergeApiArray.length; j++) {
+    if (mergeApiArray[j] === -1) continue;
+    const {
+      currFlightName: currFlightName1,
+      currFlightDepartureTime: currFlightDepartureTime1,
+      price: price1,
+    } = getSelectedData(mergeApiArray[j]);
+
+    if (
+      currFlightName === currFlightName1 &&
+      currFlightDepartureTime === currFlightDepartureTime1
+    ) {
+      if (price > price1) {
+        currObj = mergeApiArray[j];
+        currFlightName = currFlightName1;
+        currFlightDepartureTime = currFlightDepartureTime1;
+        price = price1;
+      }
+      mergeApiArray[j] = -1;
+    }
+  }
+  uniqueData.push(currObj);
+ 
+}
+
+const customSort = (a, b) => {
+  const aFare = a.Fare.BasicFare || a.Fare.BaseFare;
+  const bFare = b.Fare.BasicFare || b.Fare.BaseFare;
+  return aFare - bFare;
+};
+uniqueData.sort(customSort);
+    actionCompleteResponse(res, uniqueData, msg);
+
+    // console.log(mergeApiArray);
+    //travvolt flightNumber
+    // console.log("tbo flightNumber",response1?.Response?.Results[0][0]?.Segments[0][0]?.Airline?.FlightNumber);
+    // const tboFlightNo =
+    //   response1?.Response?.Results[0][0]?.Segments[0][0]?.Airline?.FlightNumber;
+    // const emtFlightNo =
+    //   response2?.Journeys[0]?.Segments[0]?.Bonds[0]?.Legs[0]?.FlightNumber;
+    //tbo depr time
+    // console.log(
+    //   "tbo deprt time",
+    //   response1?.Response?.Results[0][0]?.Segments[0][0]?.Origin?.DepTime
+    // );
+    // const datetimeString =
+    //   response1?.Response?.Results[0][0]?.Segments[0][0]?.Origin?.DepTime;
+    // const dateObject = new Date(datetimeString);
+
+    // Get hours and minutes
+    // const hours = dateObject.getHours();
+    // const minutes = dateObject.getMinutes();
+
+    // Format as "hh:mm"
+    // const tboFlightDepTime = `${hours.toString().padStart(2, "0")}:${minutes
+    //   .toString()
+    //   .padStart(2, "0")}`;
+    //  console.log(tboFlightDepTime);
+    // console.log(
+    //   "emt deprt time",
+    //   response2?.Journeys[0]?.Segments[0]?.Bonds[0]?.Legs[0]?.DepartureTime
+    // );
+    // const emtFlightDepTime =
+    //   response2?.Journeys[0]?.Segments[0]?.Bonds[0]?.Legs[0]?.DepartureTime;
+    //   console.log(emtFlightDepTime);
+    //emt flightNumber
+    // console.log('emt flight number',response2?.Journeys[0]?.Segments[0]?.Bonds[0]?.Legs[0]?.FlightNumber);
+    
   } catch (err) {
     console.log(err);
     sendActionFailedResponse(res, {}, err.message);

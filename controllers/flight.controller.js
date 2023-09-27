@@ -692,7 +692,7 @@ exports.getGetCancellationCharges = async (req, res) => {
 exports.combinedApi = async (req, res) => {
   try {
     // Destructure data from the request body
-    const { commonData, api1Data, api2Data, api3Data } = req.body;
+    const { travoltPayload, emtPayload } = req.body;
     const token = "QVBJQWNjZXNzQVBJQDEyMw==";
 
     // Function to handle API requests and return data
@@ -708,11 +708,9 @@ exports.combinedApi = async (req, res) => {
       "https://stagingapi.easemytrip.com/Flight.svc/json/FlightSearch";
 
     // Create promises for each API request
-    const api1Promise = makeRequest(api1Url, { ...commonData, ...api1Data });
-    const api2Promise = makeRequest(api2Url, {
-      ...commonData,
-      ...api2Data,
-    });
+    const api1Promise = makeRequest(api1Url, travoltPayload);
+    const api2Promise = makeRequest(api2Url, emtPayload
+    );
 
     // Wait for all API requests to complete
     const [response1, response2] = await Promise.all([
@@ -748,6 +746,7 @@ exports.combinedApi = async (req, res) => {
     let mergeApiArray =[
       ...(response1?.Response?.Results[0] || []), 
       ...(response2?.Journeys[0]?.Segments || [])];
+     
 
       console.log("hello")
    

@@ -9,4 +9,7 @@ module.exports = function (app) {
   app.get("/travvolt/city/searchCityData", controller.searchCityData);
   app.get("/travvolt/city/searchCityBusData", controller.searchCityBusData);
   app.post("/travvolt/city/hotelCitySearch", controller.hotelCitySearch);
+
+  //flight all city data 
+  app.get("/travvolt/searchCity", controller.searchCityFlight);
 };

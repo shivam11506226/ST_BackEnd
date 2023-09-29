@@ -821,8 +821,13 @@ const customSort = (a, b) => {
   const bFare = b.Fare.BasicFare || b.Fare.BaseFare;
   return aFare - bFare;
 };
+
+
 uniqueData.sort(customSort);
-    actionCompleteResponse(res, uniqueData, msg);
+// let TraceId = {"TraceId":response1?.Response?.TraceId};
+// let modifiedData = [TraceId, ...uniqueData];
+actionCompleteResponse(res, uniqueData, msg);
+   
 
     // console.log(mergeApiArray);
     //travvolt flightNumber

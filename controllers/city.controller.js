@@ -43,3 +43,24 @@ exports.hotelCitySearch = async (req, res) => {
     sendActionFailedResponse(res, {}, error.message);
   }
 };
+
+
+exports.searchCityFlight= async (req, res) =>{
+  try {
+    const allCityBusData = await cityData.find({});
+
+    const responseData = allCityBusData.map((item) => ({
+      id: item.id,
+      code: item.code,
+      AirportCode: item.AirportCode,
+      name: item.name,
+      CityCode: item.CityCode,
+      CountryCode: item.CountryCode,
+    }));
+    const msg = "All data retrieved successfully";
+    actionCompleteResponse(res, responseData, msg);
+    
+  } catch (error) {
+    sendActionFailedResponse(res, {}, error.message);
+  }
+}

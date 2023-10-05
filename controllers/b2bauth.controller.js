@@ -81,46 +81,86 @@ exports.RegisterUser = async (req, res) => {
   });
 };
 
-exports.LoginUser = async (req, res) => {
-  b2bUser
-    .findOne({ "personal_details.email": req.body.email })
-    .exec((err, user) => {
-      if (err) {
-        console.log(err);
-        sendActionFailedResponse(res, {}, err.message);
+// exports.LoginUser = async (req, res) => {
+//   b2bUser
+//     .findOne({ "personal_details.email": req.body.email })
+//     .exec((err, user) => {
+//       if (err) {
+//         console.log(err);
+//         sendActionFailedResponse(res, {}, err.message);
+//       }
+
+//       if (!user) {
+//         const msg = "User Not found.";
+//         sendActionFailedResponse(res, {}, msg);
+//       }
+
+//       if (user?.is_active == 0) {
+//         const msg = "User Disabled Please Contact your Administrator";
+//         sendActionFailedResponse(res, {}, msg);
+//       } else if (user?.is_active == 1) {
+//         var passwordIsValid = bcrypt.compareSync(
+//           req.body.password,
+//           user?.personal_details?.password
+//         );
+
+//         if (!passwordIsValid) {
+//           // return res.status(401).send({ message: "Invalid Password!" });
+//           const msg = "Invalid Password!";
+//           sendActionFailedResponse(res, {}, msg);
+//         }
+//         const response = {
+//           id: user._id,
+//           username: user?.personal_details?.first_name,
+//           email: user?.personal_details?.email,
+//           balance: user?.balance,
+//           markup: user?.markup
+//         };
+//         msg = "User Login Successfully!";
+//         actionCompleteResponse(res, response, msg);
+//       }
+//     });
+// };
+
+exports.LoginUser= async (req, res) =>{
+  try {
+    const user = await b2bUser.findOne({ "personal_details.email": req.body.email });
+
+    if (!user) {
+      const msg = "User Not found.";
+      return sendActionFailedResponse(res, {}, msg);
+    }
+
+    if (user.is_active === 0) {
+      const msg = "User Disabled. Please Contact your Administrator";
+      return sendActionFailedResponse(res, {}, msg);
+    } else if (user.is_active === 1) {
+      const passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        user?.personal_details?.password
+      );
+
+      if (!passwordIsValid) {
+        const msg = "Invalid Password!";
+        return sendActionFailedResponse(res, {}, msg);
       }
 
-      if (!user) {
-        const msg = "User Not found.";
-        sendActionFailedResponse(res, {}, msg);
-      }
+      const response = {
+        id: user._id,
+        username: user?.personal_details?.first_name,
+        email: user?.personal_details?.email,
+        balance: user?.balance,
+        markup: user?.markup
+      };
+      const msg = "User Login Successfully!";
+      return actionCompleteResponse(res, response, msg);
+    }
+  } catch (error) {
+    sendActionFailedResponse(res, {}, "Internal server error");
+    console.error(error);
+  }
 
-      if (user?.is_active == 0) {
-        const msg = "User Disabled Please Contact your Administrator";
-        sendActionFailedResponse(res, {}, msg);
-      } else if (user?.is_active == 1) {
-        var passwordIsValid = bcrypt.compareSync(
-          req.body.password,
-          user?.personal_details?.password
-        );
-
-        if (!passwordIsValid) {
-          // return res.status(401).send({ message: "Invalid Password!" });
-          const msg = "Invalid Password!";
-          sendActionFailedResponse(res, {}, msg);
-        }
-        const response = {
-          id: user._id,
-          username: user?.personal_details?.first_name,
-          email: user?.personal_details?.email,
-          balance: user?.balance,
-          markup: user?.markup
-        };
-        msg = "User Login Successfully!";
-        actionCompleteResponse(res, response, msg);
-      }
-    });
-};
+}
 
 exports.UserUpdate = async (req, res) => {
   try {
@@ -316,3 +356,45 @@ exports.UserById=async (req,res)=>{
     console.log(error);      
   }
 }
+
+
+//change password
+
+
+exports.UserChangePassword = async (req, res) => {
+  try {
+    const { _id, oldpassword, changepassword, confirmpassword } = req.body;
+    const user = await b2bUser.findById(_id);
+
+    if (!user) {
+      return sendActionFailedResponse(res, {}, "User not found");
+    }
+
+    // Check if the old password matches the stored password
+    const isPasswordValid = await bcrypt.compare(oldpassword, user.personal_details.password);
+
+    if (!isPasswordValid) {
+      return sendActionFailedResponse(res, {}, "Old password is incorrect");
+    }
+
+    // Check if the new password and confirmation match
+    if (changepassword !== confirmpassword) {
+      return sendActionFailedResponse(res, {}, "New password and confirmation do not match");
+    }
+
+    // Hash the new password before updating it
+    const hashedPassword = await bcrypt.hash(changepassword, 10); // You can adjust the salt rounds as needed
+
+    // Update the user's password field (assuming it's under personal_details)
+    user.personal_details.password = hashedPassword;
+    const updaeUser= await user.save();
+
+    // Send a success response
+    return actionCompleteResponse(res,updaeUser, { message: "Password updated successfully" });
+
+  } catch (error) {
+    sendActionFailedResponse(res, {}, "Internal server error");
+    console.log(error);
+  }
+}
+

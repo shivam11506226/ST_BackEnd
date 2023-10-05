@@ -23,6 +23,10 @@ module.exports = function (app) {
   //get singleuserbyid
   app.get("/travvolt/user/:userId",controller.UserById);
 
+  //update password user by id
+
+  app.patch("/travvolt/user/changepassword", controller.UserChangePassword);
+
 //update balance route
   app.post("/updateBalance", controller.updateUserBalance);
   //veryfiyrazorPay

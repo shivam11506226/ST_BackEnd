@@ -47,9 +47,9 @@ const schemas = {
     destination:joi.string().required(),
     origin:joi.string().required(),
     dateOfJourney:joi.string().required(),
-    busType:joi.number().required(),
+    busType:joi.string().required(),
     pnr:joi.string().required(),
-    busId:joi.string().required(),
+    busId:joi.number().required(),
     noOfSeats:joi.number().required()
  })
 

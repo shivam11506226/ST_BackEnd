@@ -49,7 +49,7 @@ const busBookingData = mongoose.model(
             required:[true,'pnr is required']
           },
           busId:{
-            type:String,
+            type:Number,
             required:[true,'bus Id is required']
           },
           noOfSeats:{

@@ -34,7 +34,25 @@ const schemas = {
   }),
   payWalletAmount:joi.object().keys({
     amount:joi.number().required(),
-  })  
+  }),  
+
+  //bus booking schema validation
+  busBookingSchema: joi.object().keys({ 
+    
+    userId:joi.objectId,
+    name:joi.string().required(),
+    phone:joi.string().max(13).required(),
+    email:joi.string().email().required(),
+    address:joi.string().required(),
+    destination:joi.string().required(),
+    origin:joi.string().required(),
+    dateOfJourney:joi.string().required(),
+    busType:joi.string().required(),
+    pnr:joi.string().required(),
+    busId:joi.string().required(),
+    noOfSeats:joi.number().required()
+ })
+
 
 }; 
 

@@ -360,7 +360,6 @@ exports.UserById=async (req,res)=>{
 
 //change password
 
-
 exports.UserChangePassword = async (req, res) => {
   try {
     const { _id, oldpassword, changepassword, confirmpassword } = req.body;

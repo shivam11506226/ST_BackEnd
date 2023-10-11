@@ -9,4 +9,7 @@ module.exports = function (app) {
     app.post('/travvolt/visa/createVisa',controller.createVisa);
     app.get('/travvolt/visa/getAllVisa',controller.getAllVisa);
 
+    //delete  by id
+    app.delete("/travvolt/deleteVisa/:id",controller.deleteVisa);
+
 }

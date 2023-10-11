@@ -26,3 +26,21 @@ exports.getAllVisa = async (req,res)=>{
    sendActionFailedResponse(res,{},error.message);
   }
 };
+
+
+
+// delete particular visa detail with id
+exports.deleteVisa = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await visadata.findByIdAndDelete(id);
+    console.log("result found", result)
+
+    if (!result) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+    actionCompleteResponse(res,response,"deleted successfully");    
+  } catch (error) {
+    sendActionFailedResponse(res,{},error.message);
+  }
+}

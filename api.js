@@ -77,6 +77,9 @@ require("./routes/universalTransfer.routes")(app);
 require("./routes/visa.routes")(app);
 require("./routes/utility.routes")(app);
 
+//bus booking data
+require("./routes/busBookingData.routes")(app);
+
 mongoose
   .connect(configs.mongoUrl.DEVELOPMENT, {
     useNewUrlParser: true,

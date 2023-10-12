@@ -51,8 +51,28 @@ const schemas = {
     pnr:joi.string().required(),
     busId:joi.number().required(),
     noOfSeats:joi.number().required()
- })
+ }),
 
+ //hotelBooking schema validation via JOI
+
+ hotelBookingSchema:joi.object().keys({ 
+    
+  userId:joi.objectId,
+  name:joi.string().required(),
+  phone:joi.string().max(13).required(),
+  email:joi.string().email().required(),
+  address:joi.string().required(),
+  destination:joi.string().required(),
+  BookingId:joi.string().required(),
+  toDate:joi.string().required(),
+  fromDate:joi.string().required(),
+  hotelName:joi.string().required(),
+  hotelId:joi.string().required(),
+  noOfPeople:joi.number().required(), 
+  cityName:joi.string().required(),
+  room:joi.number().required(),
+  night:joi.number().required()
+})
 
 }; 
 

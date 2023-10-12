@@ -79,7 +79,8 @@ require("./routes/utility.routes")(app);
 
 //bus booking data
 require("./routes/busBookingData.routes")(app);
-
+//hotel booking data
+require("./routes/hotelBookingData.routes")(app);
 mongoose
   .connect(configs.mongoUrl.DEVELOPMENT, {
     useNewUrlParser: true,

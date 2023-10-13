@@ -64,15 +64,28 @@ const schemas = {
   address:joi.string().required(),
   destination:joi.string().required(),
   BookingId:joi.string().required(),
-  toDate:joi.string().required(),
-  fromDate:joi.string().required(),
+  CheckInDate:joi.string().required(),
+  CheckOutDate:joi.string().required(),
   hotelName:joi.string().required(),
   hotelId:joi.string().required(),
   noOfPeople:joi.number().required(), 
   cityName:joi.string().required(),
   room:joi.number().required(),
-  night:joi.number().required()
+  night:joi.number().required(),
+  country:joi.string().required()
+}),
+
+//weeklyVisa schema validation via joi
+
+weeklyVisaSchema:joi.object().keys({
+  countryName:joi.string().required(),
+  price:joi.number().required(),
+  validityPeriod:joi.string().required(),
+  lengthOfStay:joi.string().required(),
+  gallery: joi.array().items(joi.string()).optional(),
+  visaType:joi.string().required()
 })
+
 
 }; 
 

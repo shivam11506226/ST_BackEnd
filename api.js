@@ -76,6 +76,7 @@ require("./routes/sightSeeting.routes")(app);
 require("./routes/universalTransfer.routes")(app);
 require("./routes/visa.routes")(app);
 require("./routes/utility.routes")(app);
+require("./routes/visaRoutes/visaRoutes")(app);
 
 //bus booking data
 require("./routes/busBookingData.routes")(app);
@@ -148,3 +149,7 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   });
 });
+
+
+
+console.log(new Date())

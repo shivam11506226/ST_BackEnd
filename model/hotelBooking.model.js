@@ -37,14 +37,14 @@ const hotelBookingDetail = mongoose.model(
       },
       BookingId: {
         type: String,
-        required: [true, 'booking id is required'],
+        // required: [true, 'booking id is required'],
       },
 
-      toDate: {
+      CheckInDate: {
         type: Date,
         required: [true, 'Date of check in  required']
       },
-      fromDate: {
+      CheckOutDate: {
         type: Date,
         required: [true, 'Date of checkout  is required']
       },

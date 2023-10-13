@@ -1,5 +1,5 @@
 const { responseFlags, responseMessages } = require("./const");
-
+const cloudinary = require("cloudinary").v2;
 exports.mongoUrl = {
   DEVELOPMENT:
     "mongodb+srv://travvolt:asdf1234@travvoltcluster.ob9cb9w.mongodb.net/?retryWrites=true&w=majority",
@@ -26,3 +26,12 @@ exports.sendActionFailedResponse = function (res, data, msg) {
 
   return res.status(responseFlags.ACTION_FAILED).send(response);
 };
+
+
+exports.cloudinary={
+  "cloudinary": {
+    "cloud_name": "dultedeh8",
+    "api_key":  "461991833927796",
+    "api_secret": "ruuF-4CFhQVh205cif_tQqNBBcA"
+  }
+}

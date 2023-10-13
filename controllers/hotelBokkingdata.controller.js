@@ -17,8 +17,8 @@ exports.addHotelBookingData = async (req,res)=>{
             address:req.body.address,
             destination:req.body.destination,
             BookingId:req.body.origin,
-            toDate:req.body.dateOfJourney,
-            fromDate:req.body.busType,
+            CheckInDate:req.body.CheckInDate,
+            CheckOutDate:req.body.CheckOutDate,
             hotelName:req.body.hotelName,
             hotelId:req.body.hotelId,
             noOfPeople:req.body.noOfPeople,
@@ -29,6 +29,7 @@ exports.addHotelBookingData = async (req,res)=>{
             bookingStatus:bookingStatus.BOOKED
         };
         const response = await hotelBookingModel.create(data);
+        console.log("response==========",response);
         const msg = "Hotel booking  successfully";
         actionCompleteResponse(res,response,msg);
     } catch (error) {

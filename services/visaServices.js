@@ -28,7 +28,7 @@ const visaServices = {
         const { page, limit} = validatedBody;
         let options = {
             page: Number(page) || 1,
-            limit: Number(limit) || 5,
+            limit: Number(limit) || 10,
             sort: { createdAt: -1 ,},
         };
         return await visaModel.paginate(query, options);

@@ -49,8 +49,8 @@ exports.createWeeklyVisa = async (req, res, next) => {
 exports.getWeeklyVisa = async (req, res, next) => {
     try {
         const {page,limit} = req.query;
-       
-        const result = await weeklyVisaListPaginate({},req.query);
+       const options={page,limit}
+        const result = await weeklyVisaListPaginate({},options);
          const currentDate= new Date();
          currentDate.setDate(currentDate.getDate() + 2)
          result.docs.forEach(doc => {

@@ -52,11 +52,12 @@ exports.getWeeklyVisa = async (req, res, next) => {
         const currentDate = new Date();
         currentDate.setDate(currentDate.getDate() + 2);
         const formatTime = date => {
+            const getDate=date.getDate();
             const hours = date.getHours();
             const minutes = date.getMinutes();
             const amOrPm = hours >= 12 ? 'PM' : 'AM';
             const formattedHours = hours % 12 || 12;
-            return `${formattedHours}:${String(minutes).padStart(2, '0')} ${amOrPm}`;
+            return `${getDate},${formattedHours}:${String(minutes).padStart(2, '0')}${amOrPm}`;
         };
         result.docs.forEach(doc => {
             doc._doc.pricePerPerson = `${doc.price}/person`

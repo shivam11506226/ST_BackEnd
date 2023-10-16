@@ -6,7 +6,7 @@ cloudinary.config({
 });
 
 const { visaServices } = require('../../services/visaServices');
-const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa } = visaServices;
+const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa ,weeklyVisaListPaginate} = visaServices;
 const { userServices } = require('../../services/userServices');
 const { createUser, findUser, getUser, findUserData, updateUser } = userServices;
 const {
@@ -48,12 +48,15 @@ exports.createWeeklyVisa = async (req, res, next) => {
 
 exports.getWeeklyVisa = async (req, res, next) => {
     try {
-        const result = await weeklyVisaList({});
-        console.log("data=====>>", data);
+        const {page,limit} = req.query;
+       
+        const result = await weeklyVisaListPaginate({},req.query);
          const currentDate= new Date();
          currentDate.setDate(currentDate.getDate() + 2)
-         const getData=`Submit Today For Gauranted Visa By :  +${currentDate}`
-         
+         result.docs.forEach(doc => {
+            doc.getData = `Submit Today For Guaranteed Visa By: ${currentDate}`;
+          });
+         console.log("result===========",result);
         actionCompleteResponse(res, result, 'weeklyVisa get data successfully.')
     } catch (error) {
         console.log("error========>>>>>>", error);
@@ -61,16 +64,6 @@ exports.getWeeklyVisa = async (req, res, next) => {
         return next(error);
     }
 }
-
-// exports.updateWeeklyVisa=async(req,res,next)=>{
-//     try {
-
-//     } catch (error) {
-//         console.log("error========>>>>>>", error);
-//         // sendActionFailedResponse(res,{},error.message);
-//         return next(error);
-//     }
-// }
 
 exports.updateWeeklyVisa = async (req, res, next) => {
     const weeklyVisaDataId=req.body.weeklyVisaDataId;

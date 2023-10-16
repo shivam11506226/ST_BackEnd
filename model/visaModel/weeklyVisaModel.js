@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const status=require ('../../enums/status')
+const mongoosePaginate = require('mongoose-paginate-v2');
 mongoose.pluralize(null)
 const visaSchema = new mongoose.Schema({
     countryName:{
@@ -26,5 +27,5 @@ const visaSchema = new mongoose.Schema({
         // enum:[],
      }
 },{timestamps: true})
-
+visaSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model("weeklyVisa", visaSchema);

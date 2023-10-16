@@ -29,6 +29,7 @@ exports.addFlightBookingData = async (req,res)=>{
         };
         const response = await flightBookingData.create(data);
         const msg = "flight booking details added successfully";
+        
         actionCompleteResponse(res,response,msg);
     } catch (error) {
         sendActionFailedResponse(res,{},error.message);

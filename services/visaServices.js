@@ -1,4 +1,5 @@
-const visaModel=require("../model/visaModel/visaModel")
+const status = require("../enums/status");
+const visaModel=require("../model/visaModel/weeklyVisaModel")
 
 
 const visaServices = {
@@ -21,6 +22,16 @@ const visaServices = {
     },
     updateWeeklyVisa: async (query, updateObj) => {
         return await visaModel.findOneAndUpdate(query, updateObj, { new: true });
+    },
+    weeklyVisaListPaginate: async (validatedBody) => {
+        let query = { status:status.ACTIVE};
+        const { page, limit} = validatedBody;
+        let options = {
+            page: Number(page) || 1,
+            limit: Number(limit) || 5,
+            sort: { createdAt: -1 ,},
+        };
+        return await visaModel.paginate(query, options);
     },
 }
 

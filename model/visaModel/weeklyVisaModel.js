@@ -25,6 +25,12 @@ const visaSchema = new mongoose.Schema({
     visaType:{
         type: String,
         // enum:[],
+     },
+     govermentFees:{
+        type:Number
+     },
+     platFormFees:{
+        type:Number
      }
 },{timestamps: true})
 visaSchema.plugin(mongoosePaginate);

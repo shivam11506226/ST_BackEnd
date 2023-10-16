@@ -79,11 +79,12 @@ const schemas = {
 
 weeklyVisaSchema:joi.object().keys({
   countryName:joi.string().required(),
-  price:joi.number().required(),
+  govermentFees:joi.number().required(),
   validityPeriod:joi.string().required(),
   lengthOfStay:joi.string().required(),
   gallery: joi.array().items(joi.string()).optional(),
-  visaType:joi.string().required()
+  visaType:joi.string().required(),
+  platFormFees:joi.number().required(),
 })
 
 

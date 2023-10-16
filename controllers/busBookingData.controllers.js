@@ -25,6 +25,7 @@ exports.addBusBookingData = async (req,res)=>{
         };
         const response = await busBookingData.create(data);
         const msg = "Bus booking details added successfully";
+        const sendMail=await commonFunction.sendBusBookingConfirmation(data);
         actionCompleteResponse(res,response,msg);
     } catch (error) {
         sendActionFailedResponse(res,{},error.message);

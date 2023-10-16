@@ -16,9 +16,9 @@ const Role = db.role;
  * imports for routes
  */
 
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: true }));
-
+app.use(bodyparser.json({ limit: '10mb' }));
+// app.use(bodyparser.urlencoded({ extended: true }));
+app.use(bodyparser.urlencoded({ limit: '20mb', extended: true }));
 app.use(cookieParser());
 
 var corsOptions = {

@@ -8,6 +8,6 @@ module.exports = function (app) {
     res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
     next();
   });
-  app.post('/travvolt/hotelBooking/addHotelBookingData', SchemaValidator(schemas.hotelBookingSchema), [authJwt.verifyToken], controller.addHotelBookingData);
+  app.post('/skyTrails/hotelBooking/addHotelBookingData', SchemaValidator(schemas.hotelBookingSchema),  controller.addHotelBookingData);
 
 }

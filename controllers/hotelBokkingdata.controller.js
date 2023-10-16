@@ -5,7 +5,8 @@ const {
     sendActionFailedResponse,
   } = require("../common/common");
 const bookingStatus=require('../enums/bookingStatus')
-  
+const commonFunction=require('../utilities/commonFunctions');
+const { log } = require('console');
 
 exports.addHotelBookingData = async (req,res)=>{
     try {
@@ -31,6 +32,7 @@ exports.addHotelBookingData = async (req,res)=>{
         const response = await hotelBookingModel.create(data);
         console.log("response==========",response);
         const msg = "Hotel booking  successfully";
+        const sendMail=await commonFunction.sendHotelBookingConfirmation(data);
         actionCompleteResponse(res,response,msg);
     } catch (error) {
         sendActionFailedResponse(res,{},error.message);

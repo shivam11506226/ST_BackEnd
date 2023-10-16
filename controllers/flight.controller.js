@@ -869,3 +869,61 @@ actionCompleteResponse(res, uniqueData, msg);
     sendActionFailedResponse(res, {}, err.message);
   }
 };
+
+
+
+
+exports.sortedData= async (req,res)=>{
+  try {
+    const data = {
+      ...req.body,
+      JourneyType: "1",
+    };
+
+    const response = await axios.post(`${api.flightSearchURL}`, data);
+  
+
+
+    msg = "Flight Searched Successfully!";
+    const results=response?.data?.Response?.Results[0]
+
+    const keysToCopyInFare = ['Currency', 'BaseFare', 'Tax', 'Discount']
+    const keysToCopyInSegment = ['Airline', 'Duration']; 
+    const Results = results.map(result => {
+      const { IsHoldAllowedWithSSR, Segments, ResultIndex,IsLCC } = result;
+      const formattedSegments = Segments.flat().map(segment => {
+      const copiedSegment = {};
+        keysToCopyInSegment.forEach(key => {
+          if (segment[key]) {
+            copiedSegment[key] = segment[key];
+          }
+        });
+        return copiedSegment;
+      });
+  
+  const { Currency, BaseFare, Tax, Discount } = result.Fare;
+  const copiedFare = { Currency, BaseFare, Tax, Discount }; // Extract specific keys from Fare object
+
+  const copiedObject = {
+    IsHoldAllowedWithSSR,
+    IsLCC,
+    Fare: copiedFare,
+    Segments: formattedSegments,
+    ResultIndex
+  };
+  return copiedObject;
+});
+  const TraceId=response?.data?.Response?.TraceId;
+  console.log(TraceId)
+  const Origin=response?.data?.Response?.Origin;
+  const Destination=response?.data?.Response?.Destination;
+
+   const sortedflightData={TraceId,Origin,Destination,Results};
+
+    actionCompleteResponse(res, sortedflightData, msg);
+    
+  } catch (error) {
+    console.log(error);
+    sendActionFailedResponse(res, {}, error.message);    
+  }
+}

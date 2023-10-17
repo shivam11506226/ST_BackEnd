@@ -11,7 +11,7 @@ const { log } = require('console');
 exports.addHotelBookingData = async (req,res)=>{
     try {
         const data = {
-            userId:req.body.userId,
+            userId:req.body.userId,  
             name:req.body.name,
             phone:req.body.phone,            
             email:req.body.email,

@@ -51,16 +51,12 @@ exports.getWeeklyVisa = async (req, res, next) => {
         const result = await weeklyVisaListPaginate(options);
         const currentDate = new Date();
         currentDate.setDate(currentDate.getDate() + 2);
-        const formatTime = date => {
-            const hours = date.getHours();
-            const minutes = date.getMinutes();
-            const amOrPm = hours >= 12 ? 'PM' : 'AM';
-            const formattedHours = hours % 12 || 12;
-            return `${formattedHours}:${String(minutes).padStart(2, '0')} ${amOrPm}`;
-        };
+        const amOrPm = currentDate.getHours() >= 12 ? 'PM' : 'AM';
+        const hours = currentDate.getHours() % 12 || 12; 
+        const formattedDate = `${currentDate.getDate()} ${currentDate.toLocaleString('default', { month: 'short' })}, ${hours}:${(currentDate.getMinutes() < 10 ? '0' : '')}${currentDate.getMinutes()} ${amOrPm}`;
         result.docs.forEach(doc => {
             doc._doc.pricePerPerson = `${doc.price}/person`
-            doc._doc.getData = `Submit Today For Guaranteed Visa By: ${formatTime(currentDate)}`;
+            doc._doc.getData = `Submit Today For Guaranteed Visa By: ${formattedDate}`;
         });
         actionCompleteResponse(res, result, 'weeklyVisa get data successfully.');
     } catch (error) {

@@ -1,9 +1,9 @@
 exports.tokenGenerator = {
   ClientId: "ApiIntegrationNew",
-  UserName: "SKD.1",
-  Password: "Skdtour@4321",
-  TokenAgencyId: 8428,
-  TokenMemberId: 9611,
+  UserName: "Theskytrails12",
+  Password: "Skytrails@1234",
+  TokenAgencyId: 57537,
+  TokenMemberId: 57679,
 };
 
 exports.api = {

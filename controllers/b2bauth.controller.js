@@ -18,6 +18,7 @@ console.log(process.env.AWS_ACCESS_KEY_ID, process.env.AWS_SECRET_ACCESS_KEY);
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: 'us-east-1',
 });
 
 exports.RegisterUser = async (req, res) => {
@@ -345,7 +346,7 @@ exports.UserById=async (req,res)=>{
   try {
     const userId = req.params.userId;
     // Query MongoDB to find a user by userId
-    const user = await b2bUser.findById(userId);
+    const user = await b2bUser.findById(userId).select('-personal_details.password');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }

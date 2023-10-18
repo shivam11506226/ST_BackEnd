@@ -113,4 +113,11 @@ module.exports = function (app) {
 
   //twoapi merge
   app.post("/combinedApi", controller.combinedApi);
+
+
+  // sorted data
+
+  app.post("/sortedData", controller.sortedData);
 };
+
+

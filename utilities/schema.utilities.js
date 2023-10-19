@@ -85,9 +85,23 @@ weeklyVisaSchema:joi.object().keys({
   gallery: joi.array().items(joi.string()).optional(),
   visaType:joi.string().required(),
   platFormFees:joi.number().required(),
+}),
+
+//static content validation via joi
+staticContentSchema:joi.object().keys({
+  title:joi.string().required(),
+  description:joi.string().required(),
+  type:joi.string().valid('FLIGHTS','HOTELS','BUSES','TRAINS','HOLIDAYPACKAGE','CABS','TRAVELINSURENCE','FORXCARD','PRODUCTOFFERING','ABOUTTHESITE','QUICKLINKS','IMPORTANTLINKS','CORPORATETRAVEL','TNC','PRIVACYPOLICY','ABOUTUS','RETURNPOLICY','BOOKINGPOLICY','QUESTION').required(),
+  subType:joi.string().optional()
+}),
+
+
+faqSchema:joi.object().keys({
+  type:joi.string().valid('FLIGHTS','HOTELS','BUSES','TRAINS','HOLIDAYPACKAGE','CABS','TRAVELINSURENCE','FORXCARD','PRODUCTOFFERING','ABOUTTHESITE','QUICKLINKS','IMPORTANTLINKS','CORPORATETRAVEL','TNC','PRIVACYPOLICY','ABOUTUS','RETURNPOLICY','BOOKINGPOLICY','QUESTION').required(),
+  que:joi.string().required(),
+  ans:joi.string().required(),
+  staticContentTypeId:joi.string().required()
 })
-
-
 }; 
 
 module.exports = schemas;

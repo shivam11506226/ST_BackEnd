@@ -77,11 +77,13 @@ require("./routes/universalTransfer.routes")(app);
 require("./routes/visa.routes")(app);
 require("./routes/utility.routes")(app);
 require("./routes/visaRoutes/visaRoutes")(app);
-
+require("./routes/staticContentRoutes")(app);
 //bus booking data
 require("./routes/busBookingData.routes")(app);
 //hotel booking data
 require("./routes/hotelBookingData.routes")(app);
+//faqroutes
+// require("./routes/faqRoutes")(app);
 mongoose
   .connect(configs.mongoUrl.DEVELOPMENT, {
     useNewUrlParser: true,

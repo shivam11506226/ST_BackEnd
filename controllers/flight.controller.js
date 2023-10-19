@@ -709,24 +709,20 @@ exports.combinedApi = async (req, res) => {
 
     // Create promises for each API request
     const api1Promise = makeRequest(api1Url, travoltPayload);
-    const api2Promise = makeRequest(api2Url, emtPayload
-    );
+    const api2Promise = makeRequest(api2Url, emtPayload);
 
     // Wait for all API requests to complete
     const [response1, response2] = await Promise.all([
       api1Promise,
       api2Promise,
     ]);
-    
+
     msg = "Flight Searched Successfully!";
     // Combine the responses as needed
     const mergedData = {
       travvoltApi: response1,
       emtApi: response2,
     };
-
-    
-    
 
     console.log("============================================");
     // const bothapiFareValue = [
@@ -742,92 +738,86 @@ exports.combinedApi = async (req, res) => {
     //   response2?.Journeys[0]?.Segments[1],
     //   response2?.Journeys[0]?.Segments[2],
     // ];
-    
-    let mergeApiArray =[
-      ...(response1?.Response?.Results[0] || []), 
-      ...(response2?.Journeys[0]?.Segments || [])];
-     
 
-      console.log("hello")
-   
+    let mergeApiArray = [
+      ...(response1?.Response?.Results[0] || []),
+      ...(response2?.Journeys[0]?.Segments || []),
+    ];
+
+    console.log("hello");
+
     // sort data according to BaseFare or Basic Fare
-    
-    
 
     // Sort the mergeApiArray using the custom sorting function
-   
-   
-   
+
     const uniqueData = [];
 
-const getSelectedData = (currObj) => {
-  let currFlightName;
-  let currFlightDepartureTime;
-  let price;
+    const getSelectedData = (currObj) => {
+      let currFlightName;
+      let currFlightDepartureTime;
+      let price;
 
-  if (currObj.BondType) {
-    currFlightName = currObj.Bonds[0].Legs[0].FlightName;
-    currFlightDepartureTime = currObj.Bonds[0].Legs[0].DepartureTime;
-    price = currObj.Fare.BasicFare;
-  } else {
-    currFlightName = currObj.Segments[0][0].Airline.AirlineName;
-    const dateTimeString = currObj.Segments[0][0].Origin.DepTime;
-    const dateTime = new Date(dateTimeString);
-    const hours = dateTime.getHours();
-    const minutes = dateTime.getMinutes();
-    currFlightDepartureTime = `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
-    price = currObj.Fare.BaseFare;
-  }
-
-  return { currFlightName, currFlightDepartureTime, price };
-};
-
-
-for (let i = 0; i < mergeApiArray.length; i++) {
-  let currObj = mergeApiArray[i];
-  if (!currObj.BondType && !currObj.Fare) {
-    continue;
-  }
-  let { currFlightName, currFlightDepartureTime, price } =
-    getSelectedData(currObj);
-
-  for (let j = i + 1; j < mergeApiArray.length; j++) {
-    if (mergeApiArray[j] === -1) continue;
-    const {
-      currFlightName: currFlightName1,
-      currFlightDepartureTime: currFlightDepartureTime1,
-      price: price1,
-    } = getSelectedData(mergeApiArray[j]);
-
-    if (
-      currFlightName === currFlightName1 &&
-      currFlightDepartureTime === currFlightDepartureTime1
-    ) {
-      if (price > price1) {
-        currObj = mergeApiArray[j];
-        currFlightName = currFlightName1;
-        currFlightDepartureTime = currFlightDepartureTime1;
-        price = price1;
+      if (currObj.BondType) {
+        currFlightName = currObj.Bonds[0].Legs[0].FlightName;
+        currFlightDepartureTime = currObj.Bonds[0].Legs[0].DepartureTime;
+        price = currObj.Fare.BasicFare;
+      } else {
+        currFlightName = currObj.Segments[0][0].Airline.AirlineName;
+        const dateTimeString = currObj.Segments[0][0].Origin.DepTime;
+        const dateTime = new Date(dateTimeString);
+        const hours = dateTime.getHours();
+        const minutes = dateTime.getMinutes();
+        currFlightDepartureTime = `${hours}:${
+          minutes < 10 ? "0" : ""
+        }${minutes}`;
+        price = currObj.Fare.BaseFare;
       }
-      mergeApiArray[j] = -1;
+
+      return { currFlightName, currFlightDepartureTime, price };
+    };
+
+    for (let i = 0; i < mergeApiArray.length; i++) {
+      let currObj = mergeApiArray[i];
+      if (!currObj.BondType && !currObj.Fare) {
+        continue;
+      }
+      let { currFlightName, currFlightDepartureTime, price } =
+        getSelectedData(currObj);
+
+      for (let j = i + 1; j < mergeApiArray.length; j++) {
+        if (mergeApiArray[j] === -1) continue;
+        const {
+          currFlightName: currFlightName1,
+          currFlightDepartureTime: currFlightDepartureTime1,
+          price: price1,
+        } = getSelectedData(mergeApiArray[j]);
+
+        if (
+          currFlightName === currFlightName1 &&
+          currFlightDepartureTime === currFlightDepartureTime1
+        ) {
+          if (price > price1) {
+            currObj = mergeApiArray[j];
+            currFlightName = currFlightName1;
+            currFlightDepartureTime = currFlightDepartureTime1;
+            price = price1;
+          }
+          mergeApiArray[j] = -1;
+        }
+      }
+      uniqueData.push(currObj);
     }
-  }
-  uniqueData.push(currObj);
- 
-}
 
-const customSort = (a, b) => {
-  const aFare = a.Fare.BasicFare || a.Fare.BaseFare;
-  const bFare = b.Fare.BasicFare || b.Fare.BaseFare;
-  return aFare - bFare;
-};
+    const customSort = (a, b) => {
+      const aFare = a.Fare.BasicFare || a.Fare.BaseFare;
+      const bFare = b.Fare.BasicFare || b.Fare.BaseFare;
+      return aFare - bFare;
+    };
 
-
-uniqueData.sort(customSort);
-// let TraceId = {"TraceId":response1?.Response?.TraceId};
-// let modifiedData = [TraceId, ...uniqueData];
-actionCompleteResponse(res, uniqueData, msg);
-   
+    uniqueData.sort(customSort);
+    // let TraceId = {"TraceId":response1?.Response?.TraceId};
+    // let modifiedData = [TraceId, ...uniqueData];
+    actionCompleteResponse(res, uniqueData, msg);
 
     // console.log(mergeApiArray);
     //travvolt flightNumber
@@ -863,17 +853,13 @@ actionCompleteResponse(res, uniqueData, msg);
     //   console.log(emtFlightDepTime);
     //emt flightNumber
     // console.log('emt flight number',response2?.Journeys[0]?.Segments[0]?.Bonds[0]?.Legs[0]?.FlightNumber);
-    
   } catch (err) {
     console.log(err);
     sendActionFailedResponse(res, {}, err.message);
   }
 };
 
-
-
-
-exports.sortedData= async (req,res)=>{
+exports.sortedData = async (req, res) => {
   try {
     const data = {
       ...req.body,
@@ -881,52 +867,49 @@ exports.sortedData= async (req,res)=>{
     };
 
     const response = await axios.post(`${api.flightSearchURL}`, data);
-  
-
 
     msg = "Flight Searched Successfully!";
-    const results=response?.data?.Response?.Results[0]
+    const results = response?.data?.Response?.Results[0];
 
-    const keysToCopyInFare = ['Currency', 'BaseFare', 'Tax', 'Discount']
-    const keysToCopyInSegment = ['Airline', 'Duration']; 
-    const Results = results.map(result => {
-      const { IsHoldAllowedWithSSR, Segments, ResultIndex,IsLCC } = result;
-      const formattedSegments = Segments.flat().map(segment => {
-      const copiedSegment = {};
-        keysToCopyInSegment.forEach(key => {
+    const keysToCopyInFare = ["Currency", "BaseFare", "Tax", "Discount"];
+    const keysToCopyInSegment = ["Airline", "Duration"];
+    const Results = results.map((result) => {
+      const { IsHoldAllowedWithSSR, Segments, ResultIndex, IsLCC } = result;
+      const formattedSegments = Segments.flat().map((segment) => {
+        const copiedSegment = {};
+        keysToCopyInSegment.forEach((key) => {
           if (segment[key]) {
             copiedSegment[key] = segment[key];
           }
         });
         return copiedSegment;
       });
-  
-  const { Currency, BaseFare, Tax, Discount } = result.Fare;
-  const copiedFare = { Currency, BaseFare, Tax, Discount }; // Extract specific keys from Fare object
 
-  const copiedObject = {
-    IsHoldAllowedWithSSR,
-    IsLCC,
-    Fare: copiedFare,
-    Segments: formattedSegments,
-    ResultIndex
-  };
-  return copiedObject;
-});
-  const TraceId=response?.data?.Response?.TraceId;
-  console.log(TraceId)
-  const Origin=response?.data?.Response?.Origin;
-  const Destination=response?.data?.Response?.Destination;
+      const { Currency, BaseFare, Tax, Discount } = result.Fare;
+      const copiedFare = { Currency, BaseFare, Tax, Discount }; // Extract specific keys from Fare object
 
-   const sortedflightData={TraceId,Origin,Destination,Results};
+      const copiedObject = {
+        IsHoldAllowedWithSSR,
+        IsLCC,
+        Fare: copiedFare,
+        Segments: formattedSegments,
+        ResultIndex,
+      };
+      return copiedObject;
+    });
+    const TraceId = response?.data?.Response?.TraceId;
+    console.log(TraceId);
+    const Origin = response?.data?.Response?.Origin;
+    const Destination = response?.data?.Response?.Destination;
+
+    const sortedflightData = { TraceId, Origin, Destination, Results };
 
     actionCompleteResponse(res, sortedflightData, msg);
-    
   } catch (error) {
     console.log(error);
-    sendActionFailedResponse(res, {}, error.message);    
+    sendActionFailedResponse(res, {}, error.message);
   }
-}
+};
 
 //===========================================
 //========== Return flight Sort ===========
@@ -944,48 +927,31 @@ exports.returnFlightSort = async (req, res) => {
     msg = "Flight Searched Successfully!";
 
     const sortlist = response.data.Response.Results;
-    function sortByPublishedFare(data) {
+    const combinedResults = sortlist.reduce((acc, result) => {
+      if (result[0].Segments[0].length === 1) {
+        console.log(result[0].Segments[0].length,'one')
+        acc[0].push(result);
+      } else if (result[0].Segments[0].length === 2) {
+        console.log(result[0].Segments[0].length,"two")
+        acc[1].push(result);
+      }
+      return acc;
+    }, [[], []]);
+
+    const filteBysegment = combinedResults;
+    const flattenedArray = filteBysegment.flat(1);
+    function sortByPublishedFareAscending(data) {
       return data.map(innerArray => {
-        return innerArray.sort((a, b) => a.Fare.PublishedFare - b.Fare.PublishedFare);
+          return innerArray.sort((a, b) => a.Fare.PublishedFare - b.Fare.PublishedFare);
       });
     }
     
     // Call the sorting function
-    const sortedData = sortByPublishedFare(sortlist);
+    const sortedDataAscending = sortByPublishedFareAscending(flattenedArray);
 
-    function customSort(a, b) {
-      // First, compare segment length
-      const segmentLengthA = a.Segments[0].length;
-      const segmentLengthB = b.Segments[0].length;
-    
-      if (segmentLengthA < segmentLengthB) {
-        return -1;
-      } else if (segmentLengthA > segmentLengthB) {
-        return 1;
-      }
-    
-      // If the segment length is the same, compare Fare.PublishedFare
-      const fareA = a.Fare.PublishedFare;
-      const fareB = b.Fare.PublishedFare;
-    
-      if (fareA < fareB) {
-        return -1;
-      } else if (fareA > fareB) {
-        return 1;
-      }
-    
-      return 0; // Objects are considered equal
-    }
-    
-    // Sort the data array using the customSort function
-    sortedData.sort(customSort);
-    
-
-    actionCompleteResponse(res, sortedData, msg);
+    actionCompleteResponse(res, sortedDataAscending, msg);
   } catch (err) {
     console.log(err);
     sendActionFailedResponse(res, {}, err.message);
   }
 };
-
-

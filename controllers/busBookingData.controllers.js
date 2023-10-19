@@ -31,3 +31,16 @@ exports.addBusBookingData = async (req,res)=>{
         sendActionFailedResponse(res,{},error.message);
     }
 }
+
+//======================================================================
+//======== Get All Bus Booking list For admin  =========================
+//======================================================================
+
+exports.getAllBusBookingdataForAdmin = () => {
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+

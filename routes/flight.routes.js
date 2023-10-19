@@ -118,6 +118,10 @@ module.exports = function (app) {
   // sorted data
 
   app.post("/sortedData", controller.sortedData);
+
+  // return flight sort data
+
+  app.post("/travvolt/flight/retrun/sort", controller.returnFlightSort);
 };
 
 

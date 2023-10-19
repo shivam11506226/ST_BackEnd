@@ -75,3 +75,75 @@ exports.getoneFlightsBooking = async(req,res)=>{
       sendActionFailedResponse(res,{},error.message);
   }
 };
+
+
+//=====================================================
+//================ Get All Flight Booking List for Admin ========
+//=====================================================
+
+exports.getAllFlghtBookingForAdmin = async (req, res) => {
+    try {
+      const { Status } = req.body;
+      let response;
+      if (Status === "success") {
+        response = await flightBookingData.find({
+          paymentStatus: "success",
+        });
+      } else if (Status === "pending") {
+        response = await flightBookingData.find({
+          paymentStatus: "pending",
+        });
+      } else if (Status === "failure") {
+        response = await flightBookingData.find({
+          paymentStatus: "failure",
+        });
+      } else {
+        response = await flightBookingData.find({});
+        const msg = "successfully get all flights bookings";
+        actionCompleteResponse(res, response, msg);
+      }
+    } catch (error) {
+      sendActionFailedResponse(res, {}, error.message);
+    }
+  };
+  
+  //================================================================
+  //============= Get Monthly Flight Booking Passenger Calender ====
+  //================================================================
+  
+  exports.getMonthlyFlightBookingPassengerCalendar = async (req, res) => {
+      try {
+        var { year, month } = req.body;
+        month = parseInt(month);
+        let response;
+    
+        if (year && month) {
+          // If year and month are provided, retrieve data for the specified month and year.
+          response = await flightBookingData.find({
+            createdAt: {
+              $gte: new Date(year, month - 1, 1),
+              $lte: new Date(year, month, 1),
+            },
+          });
+        } else {
+          // If year and month are not provided, retrieve data for the current month and year.
+          const currentDate = new Date();
+          const currentYear = currentDate.getFullYear();
+          const currentMonth = currentDate.getMonth() + 1;
+    
+          response = await flightBookingData.find({
+            createdAt: {
+              $gte: new Date(currentYear, currentMonth - 1, 1),
+              $lte: new Date(currentYear, currentMonth, 1),
+            },
+          });
+        }
+    
+        // Respond with the data
+        const msg = "successfully get all Passegers";
+        actionCompleteResponse(res, response, msg);
+      } catch (error) {
+        sendActionFailedResponse(res, {}, error.message);
+      }
+    };
+    

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
-
+const status=require('../enums/status');
+const bookingStatus = require("../enums/bookingStatus");
 const busBookingData = mongoose.model(
   "busBookingData",
   new mongoose.Schema(
@@ -54,6 +55,14 @@ const busBookingData = mongoose.model(
       },
       noOfSeats: {
         type: Number, required: [true, '']
+      },
+      status:{
+        type:String,
+        default:status.ACTIVE
+      },
+      bookingStatus:{
+        type:String,
+        default:bookingStatus.PENDING
       }
     },
     { timestamps: true }

@@ -32,7 +32,9 @@ exports.addHotelBookingData = async (req,res)=>{
         const response = await hotelBookingModel.create(data);
         console.log("response==========",response);
         const msg = "Hotel booking  successfully";
-        const sendMail=await commonFunction.sendHotelBookingConfirmation(data);
+        await commonFunction.sendHotelBookingConfirmation(data);
+     
+
         actionCompleteResponse(res,response,msg);
     } catch (error) {
         sendActionFailedResponse(res,{},error.message);

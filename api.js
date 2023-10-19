@@ -12,6 +12,47 @@ const PORT = process.env.PORT || 8000;
 const db = require("./model");
 const Role = db.role;
 
+const WebSocket = require('websocket').server;
+const http = require('http'); 
+
+const server = http.createServer(app);
+
+// Create a WebSocket server and attach it to the HTTP server
+const wsServer = new WebSocket({
+  httpServer: server,
+  autoAcceptConnections: false,
+  maxReceivedFrameSize: 64 * 1024 * 1024,   // 64MiB
+  maxReceivedMessageSize: 64 * 1024 * 1024, // 64MiB
+  fragmentOutgoingMessages: false,
+  keepalive: false,
+  disableNagleAlgorithm: false,
+});
+
+// WebSocket server request event handling
+wsServer.on('request', (request) => {
+  const connection = request.accept(null, request.origin);
+  console.log('WebSocket connection accepted');
+
+  connection.on('message', (message) => {
+    if (message.type === 'utf8') {
+      const data = message.utf8Data;
+      // Handle WebSocket messages here                               
+      console.log('Received message:', data);
+      connection.sendUTF('Message received: ' + data); // Example: Send a response
+    }
+  });
+
+  connection.on('close', (reasonCode, description) => {
+    console.log(`Connection closed with code ${reasonCode} and reason: ${description}`);
+    // Handle disconnection
+  });
+});
+
+server.listen(7000, () => {
+  console.log('WebSocket server running on port 7000');
+});
+
+
 /**
  * imports for routes
  */
@@ -86,6 +127,10 @@ require("./routes/hotelBookingData.routes")(app);
 // const faqRoutes = require('./routes/faqRoutes');
 // app.use('/faqs', faqRoutes);
 require("./routes/faqRoutes")(app);
+
+//Set Up a WebSocket Client:  handling
+
+
 mongoose
   .connect(configs.mongoUrl.DEVELOPMENT, {
     useNewUrlParser: true,
@@ -156,4 +201,3 @@ process.on("unhandledRejection", (err) => {
 
 
 
-console.log(new Date())

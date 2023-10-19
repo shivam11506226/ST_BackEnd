@@ -1,7 +1,8 @@
 const nodemailerConfig = require('../config/nodeConfig');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-
+const { Client } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
 
 module.exports = {
 
@@ -119,10 +120,7 @@ module.exports = {
 
 
     sendHotelBookingConfirmation: async (to) => {
-        console.log("to=======", to);
-        console.log("to=======", to);
-        console.log("nodemailerConfig.options.auth.user =", nodemailerConfig.options.auth.user);
-        console.log("nodemailerConfig.options.auth.pass =", nodemailerConfig.options.auth.pass);
+       
         let html = `<!DOCTYPE html>
         <html lang="en">
         
@@ -142,7 +140,7 @@ module.exports = {
                         <div style="width: 90%;margin: auto; text-align: left;">
                             <br><br>
                             <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear ${to.name},
-                                you are booked hotel successfully from skyTrails.
+                                you are booked hotel successfully from skyTrails.<br>Yor details is:=== <br>hotelName:${to.hotelName}<br>CheckInDate:${to.CheckInDate}<br>CheckOutDate:${to.CheckOutDate}<br>noOfPeople: ${to.noOfPeople}<br>night: ${to.night}<br>room:${to.room}<br>
                         </div>
                     </div>
         
@@ -328,4 +326,7 @@ module.exports = {
         }
     },
 
+
+   
+    
 }

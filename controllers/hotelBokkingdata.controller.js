@@ -44,6 +44,7 @@ exports.addHotelBookingData = async (req, res) => {
 
 exports.getAllHotelBookingForAdmin = async (req, res) => {
     try {
+
         const { Status } = req.body;
         let response;
         if (Status === bookingStatus.BOOKED) {
@@ -67,3 +68,4 @@ exports.getAllHotelBookingForAdmin = async (req, res) => {
         sendActionFailedResponse(res, {}, error.message);
       }
 };
+

@@ -1,7 +1,7 @@
 {
-  "name": "travvolt-backend",
+  "name": "Skytrails-backend",
   "version": "1.0.0",
-  "description": "Travvolt Backend",
+  "description": "Skytrails Backend",
   "main": "index.js",
   "scripts": {
     "start": "nodemon api.js",

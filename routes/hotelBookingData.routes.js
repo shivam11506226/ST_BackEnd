@@ -10,4 +10,9 @@ module.exports = function (app) {
   });
   app.post('/skyTrails/hotelBooking/addHotelBookingData', SchemaValidator(schemas.hotelBookingSchema),  controller.addHotelBookingData);
 
+
+
+  // get all hotel booking for admin 
+
+  app.post('/skyTrails/getAllHotelbookingListForAdmin', controller.getAllHotelBookingForAdmin);
 }

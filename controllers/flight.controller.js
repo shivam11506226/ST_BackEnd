@@ -927,3 +927,65 @@ exports.sortedData= async (req,res)=>{
     sendActionFailedResponse(res, {}, error.message);    
   }
 }
+
+//===========================================
+//========== Return flight Sort ===========
+//===========================================
+
+exports.returnFlightSort = async (req, res) => {
+  try {
+    const data = {
+      ...req.body,
+      JourneyType: "2",
+    };
+
+    const response = await axios.post(`${api.flightSearchURL}`, data);
+
+    msg = "Flight Searched Successfully!";
+
+    const sortlist = response.data.Response.Results;
+    function sortByPublishedFare(data) {
+      return data.map(innerArray => {
+        return innerArray.sort((a, b) => a.Fare.PublishedFare - b.Fare.PublishedFare);
+      });
+    }
+    
+    // Call the sorting function
+    const sortedData = sortByPublishedFare(sortlist);
+
+    function customSort(a, b) {
+      // First, compare segment length
+      const segmentLengthA = a.Segments[0].length;
+      const segmentLengthB = b.Segments[0].length;
+    
+      if (segmentLengthA < segmentLengthB) {
+        return -1;
+      } else if (segmentLengthA > segmentLengthB) {
+        return 1;
+      }
+    
+      // If the segment length is the same, compare Fare.PublishedFare
+      const fareA = a.Fare.PublishedFare;
+      const fareB = b.Fare.PublishedFare;
+    
+      if (fareA < fareB) {
+        return -1;
+      } else if (fareA > fareB) {
+        return 1;
+      }
+    
+      return 0; // Objects are considered equal
+    }
+    
+    // Sort the data array using the customSort function
+    sortedData.sort(customSort);
+    
+
+    actionCompleteResponse(res, sortedData, msg);
+  } catch (err) {
+    console.log(err);
+    sendActionFailedResponse(res, {}, err.message);
+  }
+};
+
+

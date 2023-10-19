@@ -13,4 +13,8 @@ module.exports = function (app) {
     app.get('/travvolt/flightBooking/getoneFlightsBooking/:id',controller.getoneFlightsBooking);
     app.delete('/travvolt/flightBooking/deleteFlightBookings/:id',controller.deleteFlightBookings);
     app.delete('/travvolt/flightBooking/deleteAllFlightBookings',controller.deleteAllFlightBookings);
+
+    // ================ Get All Flight Booking List for Admin ========
+
+    app.post('/travvolt/flightBooking/getAllFlightsBookingForAdmin', controller.getAllFlghtBookingForAdmin);
 }

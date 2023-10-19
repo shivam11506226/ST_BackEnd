@@ -10,6 +10,7 @@ const {
  
    try {
     const response = await visadata.create({name,email,mobile,destination,visaType});
+    const sendMail = await commonFunction.VisaApplyConfirmationMail(response);
     const msg = "visa created successfully"
     actionCompleteResponse(res,response,msg)
    } catch (error) {

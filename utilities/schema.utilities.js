@@ -100,7 +100,7 @@ faqSchema:joi.object().keys({
   type:joi.string().valid('FLIGHTS','HOTELS','BUSES','TRAINS','HOLIDAYPACKAGE','CABS','TRAVELINSURENCE','FORXCARD','PRODUCTOFFERING','ABOUTTHESITE','QUICKLINKS','IMPORTANTLINKS','CORPORATETRAVEL','TNC','PRIVACYPOLICY','ABOUTUS','RETURNPOLICY','BOOKINGPOLICY','QUESTION').required(),
   que:joi.string().required(),
   ans:joi.string().required(),
-  staticContentTypeId:joi.string().required()
+  staticContentTypeId:joi.string().optional()
 })
 }; 
 

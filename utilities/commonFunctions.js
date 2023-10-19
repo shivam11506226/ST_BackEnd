@@ -1,6 +1,6 @@
 const nodemailerConfig = require('../config/nodeConfig');
 const jwt = require('jsonwebtoken');
-const nodemailer=require('nodemailer');
+const nodemailer = require('nodemailer');
 
 
 module.exports = {
@@ -95,12 +95,12 @@ module.exports = {
         var transporter = nodemailerConfig.createTransport({
             service: nodemailerConfig.service,
             auth: {
-              "user": nodemailerConfig.user,
-              "pass": nodemailerConfig.pass
-      
+                "user": nodemailerConfig.user,
+                "pass": nodemailerConfig.pass
+
             },
-      
-          });
+
+        });
         var mailOptions = {
             from: nodemailerConfig.user,
             to: to,
@@ -119,10 +119,10 @@ module.exports = {
 
 
     sendHotelBookingConfirmation: async (to) => {
-        console.log("to=======",to);
+        console.log("to=======", to);
         console.log("to=======", to);
         console.log("nodemailerConfig.options.auth.user =", nodemailerConfig.options.auth.user);
-    console.log("nodemailerConfig.options.auth.pass =", nodemailerConfig.options.auth.pass);
+        console.log("nodemailerConfig.options.auth.pass =", nodemailerConfig.options.auth.pass);
         let html = `<!DOCTYPE html>
         <html lang="en">
         
@@ -154,7 +154,7 @@ module.exports = {
         var transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 587,
-            secure: false,    
+            secure: false,
             auth: {
                 "user": nodemailerConfig.options.auth.user,
                 "pass": nodemailerConfig.options.auth.pass
@@ -185,15 +185,15 @@ module.exports = {
             console.error('Email sending failed:', error);
             throw error;
         }
-    
+
 
     },
 
     sendBusBookingConfirmation: async (to) => {
-        console.log("to=======",to);
+        console.log("to=======", to);
         console.log("to=======", to);
         console.log("nodemailerConfig.options.auth.user =", nodemailerConfig.options.auth.user);
-    console.log("nodemailerConfig.options.auth.pass =", nodemailerConfig.options.auth.pass);
+        console.log("nodemailerConfig.options.auth.pass =", nodemailerConfig.options.auth.pass);
         let html = `<!DOCTYPE html>
         <html lang="en">
         
@@ -225,7 +225,7 @@ module.exports = {
         var transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 587,
-            secure: false,    
+            secure: false,
             auth: {
                 "user": nodemailerConfig.options.auth.user,
                 "pass": nodemailerConfig.options.auth.pass
@@ -256,16 +256,16 @@ module.exports = {
             console.error('Email sending failed:', error);
             throw error;
         }
-    
+
 
     },
 
     //==========================================================
-//========== Send Email Visa Apply Confirmation Mail =======
-//==========================================================
+    //========== Send Email Visa Apply Confirmation Mail =======
+    //==========================================================
 
-  VisaApplyConfirmationMail: async (to) => {
-    let html = `<!DOCTYPE html>
+    VisaApplyConfirmationMail: async (to) => {
+        let html = `<!DOCTYPE html>
         <html lang="en">
         
         <head>
@@ -293,39 +293,39 @@ module.exports = {
         
         </body>
         </html>`;
-    var transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: nodemailerConfig.options.auth.user,
-        pass: nodemailerConfig.options.auth.pass,
-      },
-    });
-    var mailOptions = {
-      from: nodemailerConfig.options.auth.user,
-      to: to.email,
-      subject: "Visa Apply Confirmation Mail",
-      html: html,
-    };
-    try {
-      // Verify the connection
-      transporter.verify(function (error, success) {
-        if (error) {
-          console.log("SMTP Connection Error: " + error);
-        } else {
-          console.log("SMTP Connection Success: " + success);
-        }
-      });
+        var transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+            auth: {
+                user: nodemailerConfig.options.auth.user,
+                pass: nodemailerConfig.options.auth.pass,
+            },
+        });
+        var mailOptions = {
+            from: nodemailerConfig.options.auth.user,
+            to: to.email,
+            subject: "Visa Apply Confirmation Mail",
+            html: html,
+        };
+        try {
+            // Verify the connection
+            transporter.verify(function (error, success) {
+                if (error) {
+                    console.log("SMTP Connection Error: " + error);
+                } else {
+                    console.log("SMTP Connection Success: " + success);
+                }
+            });
 
-      // Send the email
-      const info = await transporter.sendMail(mailOptions);
-      console.log("Email sent: " + info.response);
-      return info;
-    } catch (error) {
-      console.error("Email sending failed:", error);
-      throw error;
-    }
-  },
-  
+            // Send the email
+            const info = await transporter.sendMail(mailOptions);
+            console.log("Email sent: " + info.response);
+            return info;
+        } catch (error) {
+            console.error("Email sending failed:", error);
+            throw error;
+        }
+    },
+
 }

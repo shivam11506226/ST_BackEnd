@@ -82,8 +82,10 @@ require("./routes/staticContentRoutes")(app);
 require("./routes/busBookingData.routes")(app);
 //hotel booking data
 require("./routes/hotelBookingData.routes")(app);
-//faqroutes
-// require("./routes/faqRoutes")(app);
+// Require and use the faqRoutes module
+// const faqRoutes = require('./routes/faqRoutes');
+// app.use('/faqs', faqRoutes);
+require("./routes/faqRoutes")(app);
 mongoose
   .connect(configs.mongoUrl.DEVELOPMENT, {
     useNewUrlParser: true,

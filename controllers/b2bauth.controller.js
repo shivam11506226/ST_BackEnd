@@ -69,7 +69,6 @@ exports.RegisterUser = async (req, res) => {
         if(size > 0) {
           const walletdata = await wallet.create({userId:user._id.toString(),currency:reqData.currency,status:"successful"});
           user.walletid = walletdata._id.toString();
-          // console.log(walletdata._id.toString());
         }
         const response = await user.save();
         msg = "Data Saved Successfully";

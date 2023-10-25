@@ -127,8 +127,12 @@ require("./routes/hotelBookingData.routes")(app);
 // const faqRoutes = require('./routes/faqRoutes');
 // app.use('/faqs', faqRoutes);
 require("./routes/faqRoutes")(app);
+
+
+
 require("./routes/offerRoutes/offer.routes")(app);
 require("./routes/visaEnquiry.routes")(app);
+
 
 //Set Up a WebSocket Client:  handling
 
@@ -200,6 +204,5 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   });
 });
-
 
 

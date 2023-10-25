@@ -26,7 +26,6 @@ exports.createfaqs = async (req, res, next) => {
         //     sendActionFailedResponse(res,{},'Unauthorised user');
         // }
         const existingData = await findfaq({ category: type });
-        console.log("existingData==========", existingData);
         if (existingData) {
             const obj={
                 Q:que,
@@ -41,7 +40,6 @@ exports.createfaqs = async (req, res, next) => {
                 A:ans,
                 category:type
             }
-            console.log("obj=====",obj);
             const result = await createfaq(obj);
             actionCompleteResponse(res, result, 'Frequently ask quetions created successfully.');
         }
@@ -56,7 +54,6 @@ exports.listfaqs = async (req, res, next) => {
     try {
         const { staticContentTypeId } = req.query;
         const isExist = await findstaticContent({ _id: staticContentTypeId, status: status.ACTIVE });
-        console.log("isExist===========", isExist);
         if (!isExist) {
             sendActionFailedResponse(res, {}, 'No Data Found');
         }

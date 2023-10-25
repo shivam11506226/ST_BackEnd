@@ -14,7 +14,7 @@ const staticContentSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enums:[staticContentsType.ABOUTTHESITE,staticContentsType.ABOUTUS,staticContentsType.BOOKINGPOLICY,staticContentsType.BUSES,staticContentsType.CABS,staticContentsType.CORPORATETRAVEL,staticContentsType.FLIGHTS,staticContentsType.FORXCARD,staticContentsType.HOLIDAYPACKAGE,staticContentsType.HOTELS,staticContentsType.IMPORTANTLINKS,staticContentsType.PRIVACYPOLICY,staticContentsType.PRODUCTOFFERING,staticContentsType.QUICKLINKS,staticContentsType.RETURNPOLICY,staticContentsType.staticContentsType,staticContentsType.TRAINS,staticContentsType.TRAVELINSURENCE],
+        enums:[staticContentsType.ABOUTTHESITE,staticContentsType.ABOUTUS,staticContentsType.BOOKINGPOLICY,staticContentsType.BUSES,staticContentsType.CABS,staticContentsType.CORPORATETRAVEL,staticContentsType.FLIGHTS,staticContentsType.FORXCARD,staticContentsType.HOLIDAYPACKAGE,staticContentsType.HOTELS,staticContentsType.IMPORTANTLINKS,staticContentsType.PRIVACYPOLICY,staticContentsType.PRODUCTOFFERING,staticContentsType.QUICKLINKS,staticContentsType.RETURNPOLICY,staticContentsType.staticContentsType,staticContentsType.TRAINS,staticContentsType.TRAVELINSURENCE,staticContentsType.QUESTION],
         },
 
 }, { timestamps: true })
@@ -64,7 +64,12 @@ mongoose.model("staticContent", staticContentSchema).find({}, async (err, result
             title: "PRODUCT OFFERING", 
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget.",
         };
-        mongoose.model("staticContent", staticContentSchema).create(obj1, obj2, obj3, obj4, obj5, obj6,obj7, (staticErr, staticResult) => {
+        var obj8 = {
+            type: staticContentsType.QUESTION,
+            title: "How to find booking ID?", 
+            description: "You can find your booking ID in your registered email, SMS sent to mobile no. used for booking or in ‘My Trips’ section.",
+        };
+        mongoose.model("staticContent", staticContentSchema).create(obj1, obj2, obj3, obj4, obj5, obj6,obj7,obj8, (staticErr, staticResult) => {
             if (staticErr) {
                 console.log("Static content error.", staticErr);
             }

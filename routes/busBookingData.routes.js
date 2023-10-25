@@ -8,7 +8,7 @@ module.exports = function (app) {
     next();
   });
   app.post(
-    "/travvolt/busBooking/addBusBookingData",
+    "/skyTrails/busBooking/addBusBookingData",
     SchemaValidator(schemas.busBookingSchema),
     controller.addBusBookingData
   );
@@ -16,7 +16,7 @@ module.exports = function (app) {
   // Get All Bus Boooking list for Admin
 
   app.post(
-    "/travvolt/getAllBusBookingForAdmin",
+    "/skyTrails/getAllBusBookingForAdmin",
     controller.getAllBusBookingdataForAdmin
   );
 };

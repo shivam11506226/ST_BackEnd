@@ -621,7 +621,7 @@ exports.getGetCancellationCharges = async (req, res) => {
 
 //     // Combine the responses as needed
 //     const mergedData = {
-//       travvoltApi: response1.data,
+//       skyTrailsApi: response1.data,
 //       emtApi: response2.data,
 //       utilityData: response3.data,
 //     };
@@ -631,7 +631,7 @@ exports.getGetCancellationCharges = async (req, res) => {
 //     actionCompleteResponse(res, mergedData, msg);
 //     // res.json(mergedData);
 //     // Extract "Results" array from the first API response
-//     //const resultsArray = mergedData.travvoltApi;
+//     //const resultsArray = mergedData.skyTrailsApi;
 
 //     // Extract "Journeys" array from the second API response
 //     //const journeysArray = mergedData.emtApi;
@@ -720,7 +720,7 @@ exports.combinedApi = async (req, res) => {
     msg = "Flight Searched Successfully!";
     // Combine the responses as needed
     const mergedData = {
-      travvoltApi: response1,
+      skyTrailsApi: response1,
       emtApi: response2,
     };
 
@@ -819,7 +819,7 @@ exports.combinedApi = async (req, res) => {
     actionCompleteResponse(res, uniqueData, msg);
 
     // console.log(mergeApiArray);
-    //travvolt flightNumber
+    //skyTrails flightNumber
     // console.log("tbo flightNumber",response1?.Response?.Results[0][0]?.Segments[0][0]?.Airline?.FlightNumber);
     // const tboFlightNo =
     //   response1?.Response?.Results[0][0]?.Segments[0][0]?.Airline?.FlightNumber;

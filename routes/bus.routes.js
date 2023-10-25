@@ -7,26 +7,26 @@ module.exports = function (app) {
   });
 
   //Bus City List
-  app.post("/travvolt/bus/citylist", controller.getBusCityList);
+  app.post("/skyTrails/bus/citylist", controller.getBusCityList);
 
   //Bus Search
-  app.post("/travvolt/bus/search", controller.searchBus);
+  app.post("/skyTrails/bus/search", controller.searchBus);
 
   //Bus Seat Layout
-  app.post("/travvolt/bus/seatlayout", controller.searchBusSeatLayout);
+  app.post("/skyTrails/bus/seatlayout", controller.searchBusSeatLayout);
 
   //Bus Boarding Point
-  app.post("/travvolt/bus/boardingpoint", controller.busBoardingPoint);
+  app.post("/skyTrails/bus/boardingpoint", controller.busBoardingPoint);
 
   //Bus Block
-  app.post("/travvolt/bus/block", controller.busBlock);
+  app.post("/skyTrails/bus/block", controller.busBlock);
 
   //Bus Book
-  app.post("/travvolt/bus/book", controller.busBook);
+  app.post("/skyTrails/bus/book", controller.busBook);
 
   //Bus Booking Details
-  app.post("/travvolt/bus/bookingdetails", controller.busBookingDetails);
+  app.post("/skyTrails/bus/bookingdetails", controller.busBookingDetails);
 
   //Bus Cancel
-  app.post("/travvolt/bus/cancel", controller.busCancellation);
+  app.post("/skyTrails/bus/cancel", controller.busCancellation);
 };

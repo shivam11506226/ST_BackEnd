@@ -11,21 +11,21 @@ module.exports = function (app) {
     next();
   });
 
-  app.post( "/travvolt/b2b/register",upload.single("file"), controller.RegisterUser);
-  app.post("/travvolt/b2b/login", controller.LoginUser);
-  app.post("/travvolt/user/update", controller.UserUpdate);
-  app.delete("/travvolt/user/delete", controller.deleteUser);
-  app.get("/travvolt/user/getallusers", controller.Getallusers);
-  app.post("/travvolt/user/setmarkup", controller.SetMarkup);
-  app.get("/travvolt/user/getmarkup/:userId", controller.GetMarkup);
+  app.post( "/skyTrails/b2b/register",upload.single("file"), controller.RegisterUser);
+  app.post("/skyTrails/b2b/login", controller.LoginUser);
+  app.post("/skyTrails/user/update", controller.UserUpdate);
+  app.delete("/skyTrails/user/delete", controller.deleteUser);
+  app.get("/skyTrails/user/getallusers", controller.Getallusers);
+  app.post("/skyTrails/user/setmarkup", controller.SetMarkup);
+  app.get("/skyTrails/user/getmarkup/:userId", controller.GetMarkup);
   
 
   //get singleuserbyid
-  app.get("/travvolt/user/:userId",controller.UserById);
+  app.get("/skyTrails/user/:userId",controller.UserById);
 
   //update password user by id
 
-  app.patch("/travvolt/user/changepassword", controller.UserChangePassword);
+  app.patch("/skyTrails/user/changepassword", controller.UserChangePassword);
 
 //update balance route
   app.post("/updateBalance", controller.updateUserBalance);

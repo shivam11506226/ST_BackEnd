@@ -724,7 +724,6 @@ exports.combinedApi = async (req, res) => {
       emtApi: response2,
     };
 
-    console.log("============================================");
     // const bothapiFareValue = [
     //   response1?.data?.Response?.Results[0][0]?.Fare?.BaseFare,
     //   response2?.data?.Journeys[0]?.Segments[0]?.Fare?.BasicFare,

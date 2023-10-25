@@ -8,19 +8,19 @@ module.exports = function (app) {
 
   //Airport Data
   app.get(
-    "/travvolt/getSearchAirportData/:key",
+    "/skyTrails/getSearchAirportData/:key",
     controller.getSearchAirportData
   );
-  app.post("/travvolt/airportData", controller.airportData);
+  app.post("/skyTrails/airportData", controller.airportData);
 
   //Token Generator
-  app.post("/travvolt/token", controller.tokenGenerator);
+  app.post("/skyTrails/token", controller.tokenGenerator);
 
   //Logout
-  app.post("/travvolt/logout", controller.logout);
+  app.post("/skyTrails/logout", controller.logout);
 
   //One Way Search
-  app.post("/travvolt/flight/search/oneway", controller.searchOneWay);
+  app.post("/skyTrails/flight/search/oneway", controller.searchOneWay);
 
   //emt fligt search Routes------------------start
 
@@ -35,30 +35,30 @@ module.exports = function (app) {
   //--------------END--------------
 
   //Return Search
-  app.post("/travvolt/flight/search/return", controller.searchReturn);
+  app.post("/skyTrails/flight/search/return", controller.searchReturn);
 
   //Multi City Search
-  app.post("/travvolt/flight/search/multicity", controller.searchMultiCity);
+  app.post("/skyTrails/flight/search/multicity", controller.searchMultiCity);
 
   //AdvanceSearch
-  app.post("/travvolt/flight/search/advance", controller.searchAdvance);
+  app.post("/skyTrails/flight/search/advance", controller.searchAdvance);
 
   //SpecialReturn Search
   app.post(
-    "/travvolt/flight/search/specialreturn",
+    "/skyTrails/flight/search/specialreturn",
     controller.searchSpecialReturn
   );
 
   //FareRule Search
-  app.post("/travvolt/flight/farerule", controller.fareRule);
+  app.post("/skyTrails/flight/farerule", controller.fareRule);
 
   //FareQuote Search
-  app.post("/travvolt/flight/farequote", controller.fareQuote);
+  app.post("/skyTrails/flight/farequote", controller.fareQuote);
 
   //SSR Pending
 
   //Booking Non LCC FLights
-  app.post("/travvolt/flight/booking", controller.bookingFLight);
+  app.post("/skyTrails/flight/booking", controller.bookingFLight);
 
   //Booking EMT flights  Routes ---------------start--------
 
@@ -73,41 +73,41 @@ module.exports = function (app) {
   // app.get("/single/flight/combined/response",controller.combinedSearch);
 
   //Get Ticket LCC
-  app.post("/travvolt/flight/getticketlcc", controller.getTicketLCC);
+  app.post("/skyTrails/flight/getticketlcc", controller.getTicketLCC);
 
   //Get Ticket Non LCC with passport
   app.post(
-    "/travvolt/flight/getticketnonlccpass",
+    "/skyTrails/flight/getticketnonlccpass",
     controller.getTicketNonLCCpass
   );
 
   //Get Ticket Non LCC without passport
-  app.post("/travvolt/flight/getticketnonlcc", controller.getTicketNonLCC);
+  app.post("/skyTrails/flight/getticketnonlcc", controller.getTicketNonLCC);
 
   //GetBookingDetails Request-1 BookingId, PNR
-  app.post("/travvolt/flight/getbookingdetails", controller.getBookingDetails);
+  app.post("/skyTrails/flight/getbookingdetails", controller.getBookingDetails);
 
   //ReleasePNRRequest
   app.post(
-    "/travvolt/flight/releasepnrrequest",
+    "/skyTrails/flight/releasepnrrequest",
     controller.getReleasePNRRequest
   );
 
   //SendChangeRequest
   app.post(
-    "/travvolt/flight/sendchangerequest",
+    "/skyTrails/flight/sendchangerequest",
     controller.getSendChangeRequest
   );
 
   //GetChangeRequestStatus
   app.post(
-    "/travvolt/flight/getchangerequeststatus",
+    "/skyTrails/flight/getchangerequeststatus",
     controller.getChangeRequestStatus
   );
 
   //GetCancellationCharges
   app.post(
-    "/travvolt/flight/getcancellationcharges",
+    "/skyTrails/flight/getcancellationcharges",
     controller.getGetCancellationCharges
   );
 
@@ -121,7 +121,7 @@ module.exports = function (app) {
 
   // return flight sort data
 
-  app.post("/travvolt/flight/retrun/sort", controller.returnFlightSort);
+  app.post("/skyTrails/flight/retrun/sort", controller.returnFlightSort);
 };
 
 

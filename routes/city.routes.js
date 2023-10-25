@@ -5,11 +5,11 @@ module.exports = function (app) {
     res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
     next();
   });
-  // app.post('/travvolt/city/addData',controller.addData);searchCityBusData
-  app.get("/travvolt/city/searchCityData", controller.searchCityData);
-  app.get("/travvolt/city/searchCityBusData", controller.searchCityBusData);
-  app.post("/travvolt/city/hotelCitySearch", controller.hotelCitySearch);
+  // app.post('/skyTrails/city/addData',controller.addData);searchCityBusData
+  app.get("/skyTrails/city/searchCityData", controller.searchCityData);
+  app.get("/skyTrails/city/searchCityBusData", controller.searchCityBusData);
+  app.post("/skyTrails/city/hotelCitySearch", controller.hotelCitySearch);
 
   //flight all city data 
-  app.get("/travvolt/searchCity", controller.searchCityFlight);
+  app.get("/skyTrails/searchCity", controller.searchCityFlight);
 };

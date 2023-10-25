@@ -6,10 +6,10 @@ module.exports = function (app) {
       res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
       next();
     });
-    app.post('/travvolt/forex/createForex',controller.createForex);
-    app.get('/travvolt/forex/getAllForex',controller.getAllForex);
-    app.delete('/travvolt/forex/deleteForex',controller.deleteForex);
-    app.post('/travvolt/forex/createCustomerforex',controller.createCustomerforex);
-    app.get('/travvolt/forex/getAllCustomerforex',controller.getAllCustomerforex);
-    app.delete('/travvolt/forex/deleteCustomerforex',controller.deleteCustomerforex);
+    app.post('/skyTrails/forex/createForex',controller.createForex);
+    app.get('/skyTrails/forex/getAllForex',controller.getAllForex);
+    app.delete('/skyTrails/forex/deleteForex',controller.deleteForex);
+    app.post('/skyTrails/forex/createCustomerforex',controller.createCustomerforex);
+    app.get('/skyTrails/forex/getAllCustomerforex',controller.getAllCustomerforex);
+    app.delete('/skyTrails/forex/deleteCustomerforex',controller.deleteCustomerforex);
 }

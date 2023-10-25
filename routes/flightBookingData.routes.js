@@ -8,13 +8,13 @@ module.exports = function (app) {
       res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
       next();
     });
-    app.post('/travvolt/flightBooking/addFlightBookingData',SchemaValidator(schemas.flightBookingSchema),controller.addFlightBookingData);
-    app.get('/travvolt/flightBooking/getAllFlightsBooking',controller.getAllFlightsBooking);
-    app.get('/travvolt/flightBooking/getoneFlightsBooking/:id',controller.getoneFlightsBooking);
-    app.delete('/travvolt/flightBooking/deleteFlightBookings/:id',controller.deleteFlightBookings);
-    app.delete('/travvolt/flightBooking/deleteAllFlightBookings',controller.deleteAllFlightBookings);
+    app.post('/skyTrails/flightBooking/addFlightBookingData',SchemaValidator(schemas.flightBookingSchema),controller.addFlightBookingData);
+    app.get('/skyTrails/flightBooking/getAllFlightsBooking',controller.getAllFlightsBooking);
+    app.get('/skyTrails/flightBooking/getoneFlightsBooking/:id',controller.getoneFlightsBooking);
+    app.delete('/skyTrails/flightBooking/deleteFlightBookings/:id',controller.deleteFlightBookings);
+    app.delete('/skyTrails/flightBooking/deleteAllFlightBookings',controller.deleteAllFlightBookings);
 
     // ================ Get All Flight Booking List for Admin ========
 
-    app.post('/travvolt/flightBooking/getAllFlightsBookingForAdmin', controller.getAllFlghtBookingForAdmin);
+    app.post('/skyTrails/flightBooking/getAllFlightsBookingForAdmin', controller.getAllFlghtBookingForAdmin);
 }

@@ -9,32 +9,32 @@ module.exports = function (app) {
     next();
   });
   app.post(
-    "/travvolt/international/create",
+    "/skyTrails/international/create",
     upload.single("file"),
     controller.internationalCreate
   );
-  app.get("/travvolt/international/getone/:id", controller.internationalFind);
+  app.get("/skyTrails/international/getone/:id", controller.internationalFind);
   app.put(
-    "/travvolt/international/update/:id",
+    "/skyTrails/international/update/:id",
     upload.single("file"),
     controller.internationalupdate
   );
   app.delete(
-    "/travvolt/international/deleteone/:id",
+    "/skyTrails/international/deleteone/:id",
     controller.internationalDelete
   );
-  app.get("/travvolt/international/getAll", controller.internationalgetAll);
+  app.get("/skyTrails/international/getAll", controller.internationalgetAll);
   app.post(
-    "/travvolt/international/setactive",
+    "/skyTrails/international/setactive",
     controller.internationalSetActive
   );
   app.post(
-    "/travvolt/international/pakageBookingrequest",
+    "/skyTrails/international/pakageBookingrequest",
     controller.pakageBookingrequest
   );
   app.get(
-    "/travvolt/international/getALLpakageBookingrequest",
+    "/skyTrails/international/getALLpakageBookingrequest",
     controller.getALLpakageBookingrequest
   );
-  app.post("/travvolt/international/pakageBooking", controller.pakageBooking);
+  app.post("/skyTrails/international/pakageBooking", controller.pakageBooking);
 };

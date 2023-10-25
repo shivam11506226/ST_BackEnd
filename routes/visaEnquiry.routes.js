@@ -5,9 +5,9 @@ module.exports = function (app) {
     res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
     next();
   });
-  app.post("/travvolt/visa/createVisaEnquiry", controller.createVisaEnquiry);
-  app.get("/travvolt/visa/getAllVisaEnquiry", controller.getAllVisaEnquiry);
+  app.post("/skyTrails/visa/createVisaEnquiry", controller.createVisaEnquiry);
+  app.get("/skyTrails/visa/getAllVisaEnquiry", controller.getAllVisaEnquiry);
 
   //delete  by id
-  app.delete("/travvolt/deleteVisaEnquiry/:id", controller.deleteVisaEnquiry);
+  app.delete("/skyTrails/deleteVisaEnquiry/:id", controller.deleteVisaEnquiry);
 };

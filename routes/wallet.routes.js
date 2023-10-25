@@ -7,19 +7,19 @@ module.exports = function (app) {
     res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
     next();
   });
-  // app.post('/travvolt/wallet/add_amount',SchemaValidator(schemas.walletSchema),controller.add_amount);
+  // app.post('/skyTrails/wallet/add_amount',SchemaValidator(schemas.walletSchema),controller.add_amount);
   app.put(
-    "/travvolt/wallet/update_amount/:id",
+    "/skyTrails/wallet/update_amount/:id",
     SchemaValidator(schemas.addwalletAmountSchema),
     controller.update_amount
   );
-  app.get("/travvolt/wallet/showWallet/:id", controller.showWallet);
+  app.get("/skyTrails/wallet/showWallet/:id", controller.showWallet);
   app.post(
-    "/travvolt/wallet/pay_amount/:id",
+    "/skyTrails/wallet/pay_amount/:id",
     SchemaValidator(schemas.payWalletAmount),
     controller.pay_amount
   );
-  app.get("/travvolt/wallet/showTransactions/:id", controller.showTransactions);
-  app.post("/travvolt/wallet/rechargeWallet", controller.rechargeWallet);
-  // app.post("/travvolt/wallet/updateRozarPay", controller.updateRozarPay);
+  app.get("/skyTrails/wallet/showTransactions/:id", controller.showTransactions);
+  app.post("/skyTrails/wallet/rechargeWallet", controller.rechargeWallet);
+  // app.post("/skyTrails/wallet/updateRozarPay", controller.updateRozarPay);
 };

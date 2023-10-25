@@ -128,6 +128,7 @@ require("./routes/hotelBookingData.routes")(app);
 // app.use('/faqs', faqRoutes);
 require("./routes/faqRoutes")(app);
 require("./routes/offerRoutes/offer.routes")(app);
+require("./routes/visaEnquiry.routes")(app);
 
 //Set Up a WebSocket Client:  handling
 

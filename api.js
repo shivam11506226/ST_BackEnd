@@ -127,11 +127,12 @@ require("./routes/hotelBookingData.routes")(app);
 // const faqRoutes = require('./routes/faqRoutes');
 // app.use('/faqs', faqRoutes);
 require("./routes/faqRoutes")(app);
-//Require forum Routes*************
-const forumQueRoutes = require("./routes/forumRoutes/forumQueRoutes");
-forumQueRoutes(app);
-const forumQueAnsCommRoutes = require("./routes/forumRoutes/forumQueAnsComm");
-forumQueAnsCommRoutes(app);
+
+
+
+require("./routes/offerRoutes/offer.routes")(app);
+require("./routes/visaEnquiry.routes")(app);
+
 
 //Set Up a WebSocket Client:  handling
 

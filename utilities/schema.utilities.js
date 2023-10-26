@@ -134,6 +134,17 @@ const schemas = {
     answerId: joi.string().optional(),
     userId: joi.string().optional(),
   }),
+
+  socialLoginSchema:joi.object().keys({
+    socialId: joi.string().required(),
+    socialType: joi.string().required(),
+    deviceType: joi.string().required(),
+    username: joi.string().optional(),
+    email: joi.string().optional(),
+    mobileNumber: joi.string().optional(),
+    password:joi.string().optional(),
+    userId:joi.string().optional()
+  })
 };
 
 module.exports = schemas;

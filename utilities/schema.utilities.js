@@ -2,23 +2,27 @@ const joi = require('joi');
 joi.objectId = require('joi-objectid')(joi);
 const schemas = {
   flightBookingSchema: joi.object().keys({
-
-    userId: joi.objectId,
-    firstName: joi.string().required(),
-    lastName: joi.string().required(),
-    gender: joi.string().max(5).required(),
-    phone: {
-      country_code: joi.string().max(4).required(),
-      mobile_number: joi.string().max(10).required(),
-    },
-    dob: joi.string().required(),
-    email: joi.string().email().required(),
-    address: joi.string().required(),
-    city: joi.string().required(),
-    country: joi.string().required(),
+    userId: joi.string().required(),
+    passengerDetails: joi.array().items(
+      joi.object({
+        firstName: joi.string().required(),
+        lastName: joi.string().required(),
+        gender: joi.string().required(),
+        phone: joi.object({
+          country_code: joi.string().default('+91').required(),
+          mobile_number: joi.number().required(),
+        }).required(),
+        dob: joi.string().required(),
+        email: joi.string().email().required(),
+        address: joi.string().required(),
+        city: joi.string().required(),
+        country: joi.string().required(),
+      })
+    ),
     flightName: joi.string().required(),
     pnr: joi.number().required(),
     paymentStatus: joi.string().required(),
+    transactionId: joi.string().required(),
   }),
 
   walletSchema: joi.object().keys({

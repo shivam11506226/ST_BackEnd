@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const { Client } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+const config = require("../config/auth.config.js");
 
 module.exports = {
 
@@ -12,7 +13,7 @@ module.exports = {
     },
 
     getToken: async (payload) => {
-        var token = await jwt.sign(payload, config.get('jwtsecret'), { expiresIn: "24h" })
+        var token = await jwt.sign(payload,config.secret, { expiresIn: "24h" })
         return token;
     },
 
@@ -188,10 +189,6 @@ module.exports = {
     },
 
     sendBusBookingConfirmation: async (to) => {
-        console.log("to=======", to);
-        console.log("to=======", to);
-        console.log("nodemailerConfig.options.auth.user =", nodemailerConfig.options.auth.user);
-        console.log("nodemailerConfig.options.auth.pass =", nodemailerConfig.options.auth.pass);
         let html = `<!DOCTYPE html>
         <html lang="en">
         

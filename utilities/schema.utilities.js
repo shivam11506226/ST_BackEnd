@@ -144,7 +144,30 @@ const schemas = {
     mobileNumber: joi.string().optional(),
     password:joi.string().optional(),
     userId:joi.string().optional()
-  })
+  }),
+
+  subAdminSchema:joi.object().keys({
+    username: joi.string().required(),
+    email: joi.string().required(),
+    mobile_number: joi.string().required(),
+    password:joi.string().required(),
+  }),
+  updateSubAdmin:joi.object().keys({
+    subAdminId:joi.string().required(),
+    username: joi.string().optional(),
+    email: joi.string().optional(),
+    mobile_number: joi.string().optional(),
+  }),
+  adminLoginSchema:joi.object().keys({
+    email: joi.string().optional(),
+    mobileNumber: joi.string().optional(),
+    password: joi.string().required(),
+  }),
+  subAdminLogin:joi.object().keys({
+    email: joi.string().optional(),
+    mobileNumber: joi.string().optional(),
+    password: joi.string().required(),
+  }),
 };
 
 module.exports = schemas;

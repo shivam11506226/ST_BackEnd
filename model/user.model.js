@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
-const userType = require('../enums/userType')
+const userType = require('../enums/userType');
+const { user } = require(".");
+const status=require('../enums/status');
+const approveStatus = require("../enums/approveStatus");
+var bcrypt = require("bcryptjs");
 const User = mongoose.model(
   "User",
   new mongoose.Schema(
@@ -40,6 +44,25 @@ const User = mongoose.model(
       Address: {
         type: String
       },
+      approveStatus:{
+        type:String,
+        enum:[approveStatus.APPROVED,approveStatus.PENDING,approveStatus.REJECT],
+        default:approveStatus.PENDING
+      },
+      userType:{
+        type:String,
+        enum:[userType.ADMIN,userType.AGENT,userType.USER,userType.SUBADMIN],
+        default:userType.USER
+      },
+      status:{
+        type:String,
+        enum:[status.ACTIVE,status.BLOCK,status.DELETE],
+        default:status.ACTIVE
+      },
+      isApproved:{
+        type: Boolean,
+        default: false
+      }
     },
     {
       timestamps: true,
@@ -48,3 +71,39 @@ const User = mongoose.model(
 );
 
 module.exports = User;
+
+
+// Find admin user(s)
+User.find({ userType: userType.ADMIN }, async (err, result) => {
+  if (err) {
+    console.log("DEFAULT ADMIN ERROR", err);
+  } else if (result.length !== 0) {
+    console.log("Default Admin(s) already exist.");
+  } else {
+    // Create a default admin user
+    const obj = {
+      userType: userType.ADMIN,
+      username: "charu@123", // Use "username" instead of "userName" if that's your schema field
+      email: "charuyadav594@theskytrails.com",
+      phone: {
+        country_code: "+91",
+        mobile_number: "8115199076",
+      },
+      password: bcrypt.hashSync("theskytrails@1",10),
+      Address: "New Delhi, India", // Use "Address" instead of "address" if that's your schema field
+      isOnline: false,
+      approveStatus: approveStatus.APPROVED, // Set approveStatus as needed
+      status: status.ACTIVE, // Set status as needed
+      isApproved: true,
+    };
+
+    // Create the default admin user
+    User.create(obj, async (err1, result1) => {
+      if (err1) {
+        console.log("Default admin creation error", err1);
+      } else {
+        console.log("Default admin created", result1);
+      }
+    });
+  }
+});

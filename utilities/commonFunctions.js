@@ -4,6 +4,12 @@ const nodemailer = require('nodemailer');
 const { Client } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const config = require("../config/auth.config.js");
+let cloudinary = require("cloudinary");
+cloudinary.config({
+    cloud_name: "dultedeh8",
+    api_key: "461991833927796",
+    api_secret: "ruuF-4CFhQVh205cif_tQqNBBcA",
+});
 
 module.exports = {
 
@@ -324,6 +330,11 @@ module.exports = {
     },
 
 
-   
+   //upload image on cloudinary***************************************
+   getSecureUrl: async (base64) => {
+    var result = await cloudinary.v2.uploader.upload(base64);
+    return result.secure_url;
+
+  },
     
 }

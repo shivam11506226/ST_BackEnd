@@ -6,7 +6,7 @@ const userServices={
     },
 
     findUser: async (query) => {
-        return await userModel.findOne(query).select('-otp');
+        return await userModel.findOne(query).select('-otp -isApproved -roles ');
     },
 
     getUser: async (query) => {
@@ -14,7 +14,7 @@ const userServices={
     },
 
     findUserData: async (query) => {
-        return await userModel.findOne(query);
+        return await userModel.findOne(query).select('-createdAt -updatedAt -roles -password -isOnline -firstTime -isApproved');
     },
 
     deleteUser: async (query) => {

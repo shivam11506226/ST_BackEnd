@@ -1,5 +1,6 @@
 module.exports = Object.freeze({
     ADMIN: 'ADMIN',
-    MODERATE: 'MODERATE',
-    USER: 'USER'
+    AGENT: 'AGENT',
+    USER: 'USER',
+    SUBADMIN:'SUBADMIN'
 })

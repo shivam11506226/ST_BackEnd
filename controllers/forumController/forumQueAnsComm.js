@@ -20,7 +20,7 @@ const {
     findforumQueAnsComm,
     findforumQueAnsCommData,
     updateforumQueAnsComm,
-    deleteforumQueAnsComm,forumListLookUp,
+    deleteforumQueAnsComm, forumListLookUp,
 } = forumQueAnsCommServices;
 const {
     actionCompleteResponse,
@@ -76,6 +76,7 @@ exports.createComment = async (req, res, next) => {
             userId: data.userId,
             questionId: data.content
         }
+        await updateforumQue({_id:isQuestionExist._id},{isAnyComment:true,$inc:{responseCount:1}})
         return actionCompleteResponse(
             res,
             result,
@@ -112,7 +113,7 @@ exports.updatePostComment = async (req, res, next) => {
         }
         const result = await updateforumQueAnsComm(
             { userId: isUser._id },
-            { content:content }
+            { content: content }
         );
         actionCompleteResponse(res, result, "Post edited successfully.");
     } catch (error) {

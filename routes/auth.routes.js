@@ -29,6 +29,11 @@ module.exports = function (app) {
   app.put("/skytrails/api/admin/updateSubAdmin", SchemaValidator(schemas.updateSubAdmin),[authJwt.verifcationToken],subAdminController.updateSubAdmin);
   app.delete("/skytrails/api/admin/deleteSubAdmin", SchemaValidator(schemas.updateSubAdmin),[authJwt.verifcationToken],subAdminController.deleteSubAdmin);
   app.get("/skytrails/api/admin/getSubAdmin",[authJwt.verifcationToken], subAdminController.getSubAdmin);
-  app.post("/skytrails/api/admin/adminLogin",SchemaValidator(schemas.adminLoginSchema),controller.adminLogin)
-  app.post("/skytrails/api/admin/subAdminLogin",SchemaValidator(schemas.subAdminLogin),subAdminController.subAdminLogin)
+  app.post("/skytrails/api/admin/adminLogin",SchemaValidator(schemas.adminLoginSchema),controller.adminLogin);
+  app.post("/skytrails/api/admin/subAdminLogin",SchemaValidator(schemas.subAdminLogin),subAdminController.subAdminLogin);
+  app.put("/skytrails/api/admin/editprofile",[authJwt.verifcationToken],controller.editProfile)
+  app.get("/skytrails/api/admin/getAllUsers",[authJwt.verifcationToken],controller.getAllUsers);
+  app.get("/skytrails/api/admin/getAllHotelBookingList",[authJwt.verifcationToken],controller.getAllHotelBookingList);
+  app.get("/skytrails/api/admin/getAllFlightBookingList",[authJwt.verifcationToken],controller.getAllFlightBookingList);
+  app.get("/skytrails/api/admin/adminDashBoard",[authJwt.verifcationToken],controller.adminDashBoard)
 };

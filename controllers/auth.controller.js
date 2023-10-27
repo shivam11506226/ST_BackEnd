@@ -15,9 +15,15 @@ const responseMessage = require('../utilities/responses')
 const { userServices } = require('../services/userServices');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
-const { createUser, findUser, getUser, findUserData, updateUser } = userServices;
+const { hotelBookingServicess } = require("../services/hotelBookingServices");
+const { aggregatePaginateHotelBookingList, hotelBookingList,countTotalBooking } = hotelBookingServicess;
+const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch,countTotalUser } = userServices;
 
-
+//***************************Necessary models**********************************/
+const flightModel = require('../model/flightBookingData.model')
+const hotelBookingModel = require('../model/hotelBooking.model')
+const busBookingModel = require("../model/busBookingData.model");
+const bookingStatus = require("../enums/bookingStatus");
 exports.signup = (req, res) => {
   const user = new User({
     username: req.body.username,
@@ -248,26 +254,169 @@ exports.activeBlockUser = async (req, res, next) => {
 exports.adminLogin = async (req, res, next) => {
   try {
     const { email, mobileNumber, password } = req.body;
-    const isAdminExist = await findUser({ $or: [{ email: email }, { mobileNumber: mobileNumber }],userType:userType.ADMIN,status:status.ACTIVE });
+    const isAdminExist = await findUser({ $or: [{ email: email }, { mobileNumber: mobileNumber }], userType: userType.ADMIN, status: status.ACTIVE });
     if (!isAdminExist) {
-      return res.status(statusCode.NotFound).send({message:responseMessage.ADMIN_NOT_FOUND})
+      return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND })
     }
-    const isMatched =  bcrypt.compareSync(password,isAdminExist.password);
+    const isMatched = bcrypt.compareSync(password, isAdminExist.password);
     if (!isMatched) {
-      return res.status(statusCode.badRequest).send({message:responseMessage.INCORRECT_LOGIN})
+      return res.status(statusCode.badRequest).send({ message: responseMessage.INCORRECT_LOGIN })
     }
     const token = await commonFunction.getToken({
       id: isAdminExist._id,
       email: isAdminExist.email,
       userType: isAdminExist.userType,
     });
-    const result={
-      token,isAdminExist
+    const result = {
+      token, isAdminExist
     }
-    return res.status(statusCode.OK).send({message:responseMessage.LOGIN,result:result});
+    return res.status(statusCode.OK).send({ message: responseMessage.LOGIN, result: result });
   } catch (error) {
     console.log("error=======>>>>>>", error);
     return next(error)
+  }
+}
+
+//**************************Edit profile******************************************/
+exports.editProfile = async (req, res, next) => {
+  try {
+    const { username, email, mobile_number, profilePic, } = req.body;
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
+    }
+    if (email || mobile_number) {
+      const isSubAdminAlreadyExist = await findUser({ $or: [{ email: email }, { mobile_number: mobile_number }], _id: { $nin: isAdmin._id } });
+      if (isSubAdminAlreadyExist) {
+        return res.status(statusCode.Conflict).send({ message: responseMessage.USER_ALREADY_EXIST });
+      }
+    }
+    if (profilePic) {
+      profilePic = await commonFunction.getSecureUrl(profilePic);
+    }
+    const result = await updateUser({ _id: subAdminId }, req.body);
+    return res.status(statusCode.OK).send({ message: responseMessage.UPDATE_SUCCESS, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}
+//**************************Get all userList Admin*****************************************/
+
+exports.getAllUsers = async (req, res, next) => {
+  try {
+    const { page, limit, usersType, search } = req.query;
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    }
+    const result = await paginateUserSearch(req.query);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}
+
+//***********************************GET ALL HOTEL BOOKING LIST ****************************************/
+
+exports.getAllHotelBookingList = async (req, res, next) => {
+  try {
+    const { page, limit, search, fromDate, toDate } = req.query;
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    }
+    const result = await aggregatePaginateHotelBookingList(req.query);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}
+
+//***************************************GET ALL FLIGHT BOOKING LIST**************************************/
+
+exports.getAllFlightBookingList = async (req, res, next) => {
+  try {
+    const { page, limit, search } = req.query;
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    }
+    if (search) {
+      var filter = search;
+    }
+    let data = filter || ""
+    const aggregateQuery = [
+      {
+        $lookup: {
+          from: "users",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "userDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { "flightName": { $regex: data, $options: "i" } },
+            { "userDetails.username": { $regex: data, $options: "i" } },
+            { "userDetails.email": { $regex: data, $options: "i" } },
+            { "paymentStatus": { $regex: data, $options: "i" } },
+            { "pnr": parseInt(data) },
+          ],
+        }
+      },
+    ]
+    let aggregate = flightModel.aggregate(aggregateQuery);
+    const options = {
+      page: parseInt(page, 10) || 1,
+      limit: parseInt(limit, 10) || 10,
+    };
+    const result = await flightModel.aggregatePaginate(aggregate, options);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}
+
+//*******************************************DashBoard****************************************/
+
+exports.adminDashBoard = async (req, res, next) => {
+  try {
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    }
+    var result={}
+    result.noOfHotelBookings=await countTotalBooking();
+    result.noOfUser=await countTotalUser({userType:userType.USER});
+    result.noOfFlightBookings=await flightModel.countDocuments({paymentStatus:"success"});
+    result.noOfBusBookings=await busBookingModel.countDocuments({});
+    result.noOfSubAdmin=await countTotalUser({userType:userType.SUBADMIN});
+    result.noOfAgent=await countTotalUser({userType:userType.AGENT});
+    console.log("result========",result);
+    
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
   }
 }
 

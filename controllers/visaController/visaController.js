@@ -116,3 +116,30 @@ exports.deleteWeeklyVisa = async (req, res, next) => {
 }
 
 
+// exports.getWeeklyVisa = async (req, res, next) => {
+//     try {
+//         const { page, limit } = req.query;
+//         const options = { page, limit };
+//         const result = await weeklyVisaListPaginate(options);
+//         const currentDate = new Date();
+        
+//         // Calculate the guaranteed visa date based on daysToProcess
+//         const guaranteedVisaDate = new Date(currentDate);
+//         guaranteedVisaDate.setDate(guaranteedVisaDate.getDate() + result.docs[0].daysToProcess);
+        
+//         const amOrPm = guaranteedVisaDate.getHours() >= 12 ? 'PM' : 'AM';
+//         const hours = guaranteedVisaDate.getHours() % 12 || 12;
+        
+//         const formattedDate = `${guaranteedVisaDate.getDate()} ${guaranteedVisaDate.toLocaleString('default', { month: 'short' })}, ${hours}:${(guaranteedVisaDate.getMinutes() < 10 ? '0' : '')}${guaranteedVisaDate.getMinutes()} ${amOrPm}`;
+        
+//         result.docs.forEach(doc => {
+//             doc._doc.pricePerPerson = `${doc.price}/person`;
+//             doc._doc.getData = `Submit Today For Guaranteed Visa By: ${formattedDate}`;
+//         });
+        
+//         actionCompleteResponse(res, result, 'weeklyVisa get data successfully.');
+//     } catch (error) {
+//         console.log("error========>>>>>>", error);
+//         return next(error);
+//     }
+// }

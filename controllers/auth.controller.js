@@ -406,14 +406,15 @@ exports.adminDashBoard = async (req, res, next) => {
       return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
     }
     var result={}
-    result.noOfHotelBookings=await countTotalBooking();
+    result.noOfHotelBookings=await countTotalBooking({bookingStatus:bookingStatus.BOOKED});
     result.noOfUser=await countTotalUser({userType:userType.USER});
     result.noOfFlightBookings=await flightModel.countDocuments({paymentStatus:"success"});
-    result.noOfBusBookings=await busBookingModel.countDocuments({});
+    result.noOfBusBookings=await busBookingModel.countDocuments({bookingStatus:bookingStatus.BOOKED});
     result.noOfSubAdmin=await countTotalUser({userType:userType.SUBADMIN});
     result.noOfAgent=await countTotalUser({userType:userType.AGENT});
+    result.totalBooking= result.noOfHotelBookings+result.noOfBusBookings+result.noOfFlightBookings;
     console.log("result========",result);
-    
+    console.log();
   } catch (error) {
     console.log("error=======>>>>>>", error);
     return next(error);

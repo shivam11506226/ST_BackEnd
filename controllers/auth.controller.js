@@ -5,7 +5,19 @@ const Role = db.role;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const { userInfo } = require("os");
-const commonFunction = require('../utilities/commonFunctions')
+const commonFunction = require('../utilities/commonFunctions');
+const approvestatus = require('../enums/approveStatus')
+//require responsemessage and statusCode
+const statusCode = require('../utilities/responceCode');
+const responseMessage = require('../utilities/responses')
+//***********************************SERVICES********************************************** */
+
+const { userServices } = require('../services/userServices');
+const userType = require("../enums/userType");
+const status = require("../enums/status");
+const { createUser, findUser, getUser, findUserData, updateUser } = userServices;
+
+
 exports.signup = (req, res) => {
   const user = new User({
     username: req.body.username,
@@ -181,3 +193,81 @@ exports.socialLogin = async (req, res, next) => {
     return next(error);
   }
 }
+
+//approve regect user request to become an agent**************************************************************************
+
+exports.approveAgent = async (req, res, next) => {
+  try {
+    const { userId, approveStatus } = req.body;
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
+    }
+    const iUserExist = await findUser({ _id: userId, status: status.ACTIVE });
+    if (!iUserExist) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.USER_NOT_FOUND });
+    }
+    let updateResult = await updateUser({ _id: iUserExist._id }, { approveStatus: approveStatus, isApproved: true });
+    if (approveStatus === approvestatus.APPROVED) {
+      return res.status(statusCode.OK).send({ message: responseMessage.APPROVED, result: updateResult });
+    } else {
+      return res.status(statusCode.OK).send({ message: responseMessage.REJECTED, result: updateResult });
+    }
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error)
+  }
+}
+
+//active blockuser ****************************************************************
+
+exports.activeBlockUser = async (req, res, next) => {
+  try {
+    const { userId, actionStatus } = req.body;
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.Unauthorized).send({ message: "User not authorized ." });
+    }
+    const iUserExist = await findUser({ _id: userId, status: status.ACTIVE });
+    if (!iUserExist) {
+      return res.status(statusCode.NotFound).send({ message: "User not Found ." });
+    }
+    let updateResult = await updateUser({ _id: iUserExist._id }, { status: actionStatus });
+    if (actionStatus === status.ACTIVE) {
+      return res.status(statusCode.OK).send({ message: "User active successfully .", result: updateResult });
+    } else {
+      return res.status(statusCode.OK).send({ message: "User blocked successfully .", result: updateResult });
+    }
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error)
+  }
+}
+
+//adminLogin**********************************************************************************
+exports.adminLogin = async (req, res, next) => {
+  try {
+    const { email, mobileNumber, password } = req.body;
+    const isAdminExist = await findUser({ $or: [{ email: email }, { mobileNumber: mobileNumber }],userType:userType.ADMIN,status:status.ACTIVE });
+    if (!isAdminExist) {
+      return res.status(statusCode.NotFound).send({message:responseMessage.ADMIN_NOT_FOUND})
+    }
+    const isMatched =  bcrypt.compareSync(password,isAdminExist.password);
+    if (!isMatched) {
+      return res.status(statusCode.badRequest).send({message:responseMessage.INCORRECT_LOGIN})
+    }
+    const token = await commonFunction.getToken({
+      id: isAdminExist._id,
+      email: isAdminExist.email,
+      userType: isAdminExist.userType,
+    });
+    const result={
+      token,isAdminExist
+    }
+    return res.status(statusCode.OK).send({message:responseMessage.LOGIN,result:result});
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error)
+  }
+}
+

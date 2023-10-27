@@ -29,40 +29,6 @@ const forumQueSchema = new mongoose.Schema({
             },
         },
     ],
-    answers: [
-        {
-            content: String, // Content of the answer
-            userId: {
-                type: mongoose.Types.ObjectId,
-                ref: 'users',
-            },
-            upvotes: [
-                {
-                    user: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        ref: 'users',
-                    },
-                },
-            ],
-            comments: [
-                {
-                    content: String, // Content of the comment on the answer
-                    userId: {
-                        type: mongoose.Types.ObjectId,
-                        ref: 'users',
-                    },
-                    upvotes: [
-                        {
-                            user: {
-                                type: mongoose.Schema.Types.ObjectId,
-                                ref: 'users',
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
-    ],
     views: {
         type: Number,
         default: 0,

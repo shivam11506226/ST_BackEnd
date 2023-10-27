@@ -31,7 +31,10 @@ const visaSchema = new mongoose.Schema({
      },
      platFormFees:{
         type:Number
-     }
+     },
+    daysToProcess: {
+        type: Number, 
+    },
 },{timestamps: true})
 visaSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("weeklyVisa", visaSchema);
+module.exports = mongoose.model("visa", visaSchema);

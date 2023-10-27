@@ -1,5 +1,5 @@
 const status = require("../enums/status");
-const visaModel=require("../model/visaModel/weeklyVisaModel")
+const visaModel=require("../model/visaModel/visaModel")
 
 
 const visaServices = {

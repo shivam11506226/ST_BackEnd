@@ -9,7 +9,7 @@ const busBookingData = mongoose.model(
       userId: {
         type: Schema.Types.ObjectId,
         required: [true, 'user ID is required'],
-        ref: "User",
+        ref: "users",
       },
       name: {
         type: String,

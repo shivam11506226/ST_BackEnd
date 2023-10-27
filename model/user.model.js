@@ -4,9 +4,8 @@ const { user } = require(".");
 const status=require('../enums/status');
 const approveStatus = require("../enums/approveStatus");
 var bcrypt = require("bcryptjs");
-const User = mongoose.model(
-  "User",
-  new mongoose.Schema(
+const mongoosePaginate = require('mongoose-paginate-v2');
+const userSchema = new mongoose.Schema(
     {
       username: { type: String },
       email: { type: String },
@@ -68,9 +67,10 @@ const User = mongoose.model(
       timestamps: true,
     }
   )
-);
+  userSchema.plugin(mongoosePaginate);
 
-module.exports = User;
+  const User = mongoose.model("users", userSchema);
+  module.exports = User;
 
 
 // Find admin user(s)

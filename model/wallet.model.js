@@ -11,7 +11,7 @@ const wallet = mongoose.model(
         },
         userId: {
           type: Schema.Types.ObjectId,
-          ref: "User",
+          ref: "users",
         },
         currency: {
             type: String,

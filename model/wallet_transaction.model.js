@@ -6,7 +6,7 @@ const walletTransaction = mongoose.model(
     {
         userId: {
           type: Schema.Types.ObjectId,
-          ref: "user",
+          ref: "users",
         },
         transactionId: {
           type: String,

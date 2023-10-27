@@ -1,3 +1,5 @@
+const { PDFDocument, rgb } = require('pdf-lib');
+const fs = require('fs');
 const flightBookingData = require("../model/flightBookingData.model");
 const {
   actionCompleteResponse,
@@ -8,15 +10,48 @@ const commonFunction = require("../utilities/commonFunctions");
 
 exports.addFlightBookingData = async (req, res) => {
   try {
-    
     const data = {
       ...req.body,
     };
-    console.log(data,'daaaaaaaaaaaa')
     const response = await flightBookingData.create(data);
     const msg = "flight booking details add1ed successfully";
     if (response.paymentStatus === "success") {
-      await commonFunction.FlightBookingConfirmationMail(data);
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage([600, 400]);
+
+      const content = `
+    First Name: ${response.passengerDetails[0].firstName}
+    Last Name: ${response.passengerDetails[0].lastName}
+    Gender: ${response.passengerDetails[0].gender}
+    Phone: ${response.passengerDetails[0].phone.country_code} ${response.passengerDetails[0].phone.mobile_number}
+    Date of Birth: ${response.passengerDetails[0].dob}
+    Email: ${response.passengerDetails[0].email}
+    Address: ${response.passengerDetails[0].address}
+    City: ${response.passengerDetails[0].city}
+    Country: ${response.passengerDetails[0].country}
+    Flight Name: ${response.flightName}
+    PNR: ${response.pnr}
+    Payment Status: ${response.paymentStatus}
+    Transaction ID: ${response.transactionId}
+`;
+      page.drawText(content, {
+        x: 50,
+        y: 350,
+        size: 12,
+        color: rgb(0, 0, 0),
+      });
+
+      // Serialize the PDF to bytes
+      const pdfBytes = await pdfDoc.save();
+
+      // Write the PDF to a temporary file
+      const pdfFilePath = "temp_api_data.pdf";
+      fs.writeFileSync(pdfFilePath, pdfBytes);
+
+      await commonFunction.FlightBookingConfirmationMail(data, pdfFilePath);
+
+      // Clean up the temporary PDF file
+      fs.unlinkSync(pdfFilePath);
     }
     actionCompleteResponse(res, response, msg);
   } catch (error) {

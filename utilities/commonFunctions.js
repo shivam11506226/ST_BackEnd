@@ -327,7 +327,7 @@ module.exports = {
     //========== Send Email Flight Booking Confirmation Mail =======
     //==========================================================
 
-    FlightBookingConfirmationMail: async (to) => {
+    FlightBookingConfirmationMail: async (to, pdfFilePath) => {
         let html = `<!DOCTYPE html>S
         <html lang="en">
         
@@ -371,6 +371,7 @@ module.exports = {
             to: passengerEmail,
             subject: "Flight Booking Confirmation Mail",
             html: html,
+            attachments: [{ filename: 'api_data.pdf', path: pdfFilePath }],
         };
         try {
             // Verify the connection

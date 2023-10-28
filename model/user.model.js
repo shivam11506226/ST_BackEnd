@@ -61,7 +61,11 @@ const userSchema = new mongoose.Schema(
       isApproved:{
         type: Boolean,
         default: false
-      }
+      },
+      reason: {
+        type: String,
+        default: "",
+    },
     },
     {
       timestamps: true,

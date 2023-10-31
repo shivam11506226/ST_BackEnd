@@ -35,5 +35,7 @@ module.exports = function (app) {
   app.get("/skytrails/api/admin/getAllUsers",[authJwt.verifcationToken],controller.getAllUsers);
   app.get("/skytrails/api/admin/getAllHotelBookingList",[authJwt.verifcationToken],controller.getAllHotelBookingList);
   app.get("/skytrails/api/admin/getAllFlightBookingList",[authJwt.verifcationToken],controller.getAllFlightBookingList);
-  app.get("/skytrails/api/admin/adminDashBoard",[authJwt.verifcationToken],controller.adminDashBoard)
+  app.get("/skytrails/api/admin/adminDashBoard",[authJwt.verifcationToken],controller.adminDashBoard);
+  app.get("/skytrails/api/admin/getAllBusBookingList",[authJwt.verifcationToken],controller.getAllBusBookingList);
+  app.get("/skytrails/api/admin/getDataById",[authJwt.verifcationToken],controller.getDataById);
 };

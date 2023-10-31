@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
-const status=require('../enums/status');
+const status = require('../enums/status');
 const bookingStatus = require("../enums/bookingStatus");
-const busBookingData = mongoose.model(
-  "busBookingData",
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
+const mongoosePaginate = require('mongoose-paginate-v2');
+const busBookingDataSchema =
   new mongoose.Schema(
     {
       userId: {
@@ -56,17 +57,20 @@ const busBookingData = mongoose.model(
       noOfSeats: {
         type: Number, required: [true, '']
       },
-      status:{
-        type:String,
-        default:status.ACTIVE
+      status: {
+        type: String,
+        default: status.ACTIVE
       },
-      bookingStatus:{
-        type:String,
-        default:bookingStatus.PENDING
+      bookingStatus: {
+        type: String,
+        default: bookingStatus.PENDING
       }
     },
     { timestamps: true }
   )
-);
+busBookingDataSchema.plugin(mongoosePaginate);
 
+busBookingDataSchema.plugin(aggregatePaginate);
+
+const busBookingData = mongoose.model("busBookingData", busBookingDataSchema);
 module.exports = busBookingData;

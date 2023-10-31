@@ -51,5 +51,9 @@ module.exports = {
     REJECTED:"Agent rejected successfully .",
     SUBADMIN_ALREADY_EXIST:"SubAdmin Already Exits",
     ADMIN_NOT_FOUND:'Admin not found',
-    SUBADMIN_CREATED:"SubAdmin created successfull."
+    SUBADMIN_CREATED:"SubAdmin created successfull.",
+	INVALID_MODEL:"Invalid model type.",
+	REGISTER_SUCCESS:"Registration successful",
+	PASSWORD_NOT_MATCH:"Password and confirm password are not match",
+	ALREADY_VERIFIED:"Your account is already verified"
 };

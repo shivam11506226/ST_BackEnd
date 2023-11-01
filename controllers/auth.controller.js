@@ -16,13 +16,15 @@ const { userServices } = require('../services/userServices');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
 const { hotelBookingServicess } = require("../services/hotelBookingServices");
-const { aggregatePaginateHotelBookingList, hotelBookingList,countTotalBooking } = hotelBookingServicess;
-const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch,countTotalUser } = userServices;
-
+const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData,deletehotelBooking,updatehotelBooking,hotelBookingList, countTotalBooking } = hotelBookingServicess;
+const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
+const { visaServices } = require('../services/visaServices');
+const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
 //***************************Necessary models**********************************/
 const flightModel = require('../model/flightBookingData.model')
 const hotelBookingModel = require('../model/hotelBooking.model')
 const busBookingModel = require("../model/busBookingData.model");
+
 const bookingStatus = require("../enums/bookingStatus");
 exports.signup = (req, res) => {
   const user = new User({
@@ -294,7 +296,7 @@ exports.editProfile = async (req, res, next) => {
     if (profilePic) {
       profilePic = await commonFunction.getSecureUrl(profilePic);
     }
-    const result = await updateUser({ _id: subAdminId }, req.body);
+    const result = await updateUser({ _id: isAdmin._id }, req.body);
     return res.status(statusCode.OK).send({ message: responseMessage.UPDATE_SUCCESS, result: result });
   } catch (error) {
     console.log("error=======>>>>>>", error);
@@ -405,19 +407,215 @@ exports.adminDashBoard = async (req, res, next) => {
     if (!isAdmin) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
     }
-    var result={}
-    result.noOfHotelBookings=await countTotalBooking({bookingStatus:bookingStatus.BOOKED});
-    result.noOfUser=await countTotalUser({userType:userType.USER});
-    result.noOfFlightBookings=await flightModel.countDocuments({paymentStatus:"success"});
-    result.noOfBusBookings=await busBookingModel.countDocuments({bookingStatus:bookingStatus.BOOKED});
-    result.noOfSubAdmin=await countTotalUser({userType:userType.SUBADMIN});
-    result.noOfAgent=await countTotalUser({userType:userType.AGENT});
-    result.totalBooking= result.noOfHotelBookings+result.noOfBusBookings+result.noOfFlightBookings;
-    console.log("result========",result);
+    var result = {}
+    result.noOfHotelBookings = await countTotalBooking({ bookingStatus: bookingStatus.BOOKED });
+    result.noOfUser = await countTotalUser({ userType: userType.USER });
+    result.noOfFlightBookings = await flightModel.countDocuments({ paymentStatus: "success" });
+    result.noOfBusBookings = await busBookingModel.countDocuments({ bookingStatus: bookingStatus.BOOKED });
+    result.noOfSubAdmin = await countTotalUser({ userType: userType.SUBADMIN });
+    result.noOfAgent = await countTotalUser({ userType: userType.AGENT });
+    result.totalBooking = result.noOfHotelBookings + result.noOfBusBookings + result.noOfFlightBookings;
+    console.log("result========", result);
     console.log();
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND,result:result });
   } catch (error) {
     console.log("error=======>>>>>>", error);
     return next(error);
   }
 }
+
+//*********************************GETALL BUSBOKING DETAILS*********************************************/
+
+exports.getAllBusBookingList = async (req, res, next) => {
+  try {
+    const { page, limit, search } = req.query;
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    }
+    if (search) {
+      var filter = search;
+    }
+    let data = filter || "";
+    const pipeline = [
+      {
+        $lookup: {
+          from: "users",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "userDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { "destination": { $regex: data, $options: "i" } },
+            { "userDetails.username": { $regex: data, $options: "i" } },
+            { "userDetails.email": { $regex: data, $options: "i" } },
+            { "paymentStatus": { $regex: data, $options: "i" } },
+            { "pnr": { $regex: data, $options: "i" } },
+            { "origin": { $regex: data, $options: "i" } },
+            { "dateOfJourney": { $regex: data, $options: "i" } },
+            { "busType": { $regex: data, $options: "i" } },
+            { "busId": parseInt(data) },
+            { "name": { $regex: data, $options: "i" } },
+            { "bookingStatus": { $regex: data, $options: "i" } }
+          ],
+        }
+      },
+    ]
+    let aggregate = busBookingModel.aggregate(pipeline);
+    const options = {
+      page: parseInt(page, 10) || 1,
+      limit: parseInt(limit, 10) || 10,
+    };
+    const result = await busBookingModel.aggregatePaginate(aggregate, options);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}
+
+
+//****************************GET SPECIFIC BOOKING DETAILS**********************************************/
+
+exports.getDataById = async (req, res, next) => {
+  const { model, id } = req.query;
+  let result;
+  try {
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    }
+    switch (model) {
+      case 'hotel':
+        result = await findhotelBooking({ _id: id });
+        break;
+      case 'flight':
+        result = await flightModel.findOne({ _id: id });
+        break;
+      case 'bus':
+        result = await busBookingModel.findOne({ _id: id });
+        break;
+      case 'user':
+        result = await findUser({ _id: id });
+        break;
+      case 'visa':
+        result = await findWeeklyVisa({ _id: id });
+        break;
+      case 'Agent':
+        result = await findUser({ _id: id });
+        break;
+      default:
+        return res.status(400).json({ message: responseMessage.INVALID_MODEL });
+    }
+    console.log();
+    if (!result) {
+      return res.status(404).json({ message: responseMessage.DATA_NOT_FOUND });
+    }
+
+    return res.status(200).json({ message: responseMessage.DATA_FOUND, data: result });
+  } catch (error) {
+    console.log("error =-=-=-=-=-=-=-=-=-=-=-=-=->>", error);
+    return next(error)
+  }
+}
+
+//***************************************************CANCEL TICKET****************************************************/
+
+exports.cancelTickets=async(req,res,next)=>{
+  try {
+    const {model,ticketId}=req.body;
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    }
+
+    switch (model) {
+      case 'hotel':
+        const isBookingExist=await findhotelBooking({_id:ticketId, bookingStatus:bookingStatus.BOOKED});
+        if(!isBookingExist){
+          return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+        }
+        if(isBookingExist.bookingStatus==bookingStatus.CANCEL){
+
+        }
+        result = await updatehotelBooking({ _id: id },{bookingStatus:bookingStatus.CANCEL});
+        break;
+      case 'flight':
+        result = await flightModel.findOne({ _id: id });
+        break;
+      case 'bus':
+        result = await busBookingModel.findOne({ _id: id });
+        break;
+      case 'user':
+        result = await findUser({ _id: id });
+        break;
+      case 'visa':
+        result = await findWeeklyVisa({ _id: id });
+        break;
+      case 'Agent':
+        result = await findUser({ _id: id });
+        break;
+      default:
+        return res.status(statusCode.badRequest).json({ message: responseMessage.INVALID_MODEL });
+    }
+  } catch (error) {
+    console.log("error============>>>>>>",error);
+    return next(error)
+  }
+}
+
+//**************************************upload profile picture*********************************************************/
+
+exports.uploadProfilePicture=async(req,res,next)=>{
+  try {
+    const {picture}=req.body;
+    const userList=await findUser({_id:req.userId});
+    if(!userList){
+      return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
+    }
+    const imageUrl=await commonFunction.getSecureUrl(picture);
+    if(imageUrl){
+      const result=await updateUser({_id:userList._id},{profilePic:imageUrl})
+      return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+    }
+  } catch (error) {
+    console.log("error====>>>",error);
+    return next(error);
+  }
+}
+
+//****************************CANCEL HOTEL BOOKING AS PER USER REQUEST*************************************************/
+
+exports.cancelHotel=async(req,res,next)=>{
+  try {
+    const {bookingID}=req.body;
+    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    }
+    const currentDate=new Date().toISOString();
+const isBookingExist=await findhotelBooking({_id:bookingID,status:status.ACTIVE,CheckInDate:{$gt:currentDate}});
+if(!isBookingExist){
+  return res.status(statusCode.NotFound).send({message:responseMessage.NOT_FOUND})
+}
+const result=await updatehotelBooking({_id:isBookingExist._id},{bookingStatus:bookingStatus.CANCEL});
+await commonFunction.sendHotelBookingCancelation(isBookingExist);
+return res.status(statusCode.OK).send({message:responseMessage.CANCELED,result:result})
+  } catch (error) {
+    console.log("error===========>>>.",error);
+  }
+}
+
 

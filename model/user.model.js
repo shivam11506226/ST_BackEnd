@@ -1,80 +1,104 @@
 const mongoose = require("mongoose");
 const userType = require('../enums/userType');
 const { user } = require(".");
-const status=require('../enums/status');
+const status = require('../enums/status');
 const approveStatus = require("../enums/approveStatus");
 var bcrypt = require("bcryptjs");
 const mongoosePaginate = require('mongoose-paginate-v2');
 const userSchema = new mongoose.Schema(
-    {
-      username: { type: String },
-      email: { type: String },
-      password: { type: String },
-      phone: {
-        country_code: {
-          type: String,
-          default: "+91",
-        },
-        mobile_number: { type: String },
-      },
-      roles: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Role",
-        },
-      ],
-      socialId: {
-        type: String
-      },
-      socialType: {
-        type: String
-      },
-      deviceType: {
-        type: String
-      },
-      isOnline: {
-        type: Boolean,
-        default: false
-      },
-      firstTime: {
-        type: Boolean,
-        default: false
-      },
-      Address: {
-        type: String
-      },
-      approveStatus:{
-        type:String,
-        enum:[approveStatus.APPROVED,approveStatus.PENDING,approveStatus.REJECT],
-        default:approveStatus.PENDING
-      },
-      userType:{
-        type:String,
-        enum:[userType.ADMIN,userType.AGENT,userType.USER,userType.SUBADMIN],
-        default:userType.USER
-      },
-      status:{
-        type:String,
-        enum:[status.ACTIVE,status.BLOCK,status.DELETE],
-        default:status.ACTIVE
-      },
-      isApproved:{
-        type: Boolean,
-        default: false
-      },
-      reason: {
+  {
+    username: { type: String },
+    email: { type: String },
+    password: { type: String },
+    phone: {
+      country_code: {
         type: String,
-        default: "",
+        default: "+91",
+      },
+      mobile_number: { type: String },
     },
+    roles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Role",
+      },
+    ],
+    socialId: {
+      type: String
     },
-    {
-      timestamps: true,
-    }
-  )
-  userSchema.plugin(mongoosePaginate);
+    socialType: {
+      type: String
+    },
+    deviceType: {
+      type: String
+    },
+    isOnline: {
+      type: Boolean,
+      default: false
+    },
+    firstTime: {
+      type: Boolean,
+      default: false
+    },
+    Address: {
+      type: String
+    },
+    approveStatus: {
+      type: String,
+      enum: [approveStatus.APPROVED, approveStatus.PENDING, approveStatus.REJECT],
+      default: approveStatus.PENDING
+    },
+    userType: {
+      type: String,
+      enum: [userType.ADMIN, userType.AGENT, userType.USER, userType.SUBADMIN],
+      default: userType.USER
+    },
+    status: {
+      type: String,
+      enum: [status.ACTIVE, status.BLOCK, status.DELETE],
+      default: status.ACTIVE
+    },
+    isApproved: {
+      type: Boolean,
+      default: false
+    },
+    reason: {
+      type: String,
+      default: "",
+    },
+    profilePic: {
+      type: String,
+      default: "",
+    },
+    otp: {
+      type: String,
+    },
+    otpExpireTime: {
+      type: Date,
+    },
+    otpVerified: {
+      type: Boolean,
+      default: false
+    },
+    location: {
+      type: {
+        type: String,
+        default: "Point"
+      },
+      coordinates: {
+        type: [Number],
+        default: [0, 0]
+      }
+    },
+  },
+  {
+    timestamps: true,
+  }
+)
+userSchema.plugin(mongoosePaginate);
 
-  const User = mongoose.model("users", userSchema);
-  module.exports = User;
+const User = mongoose.model("users", userSchema);
+module.exports = User;
 
 
 // Find admin user(s)
@@ -93,7 +117,7 @@ User.find({ userType: userType.ADMIN }, async (err, result) => {
         country_code: "+91",
         mobile_number: "8115199076",
       },
-      password: bcrypt.hashSync("theskytrails@1",10),
+      password: bcrypt.hashSync("theskytrails@1", 10),
       Address: "New Delhi, India", // Use "Address" instead of "address" if that's your schema field
       isOnline: false,
       approveStatus: approveStatus.APPROVED, // Set approveStatus as needed

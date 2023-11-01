@@ -4,6 +4,7 @@ const {
   actionCompleteResponse,
   sendActionFailedResponse,
 } = require("../common/common");
+const sendSMS = require("../utilities/sendSms");
 
 exports.addBusBookingData = async (req, res) => {
   try {
@@ -24,7 +25,11 @@ exports.addBusBookingData = async (req, res) => {
     };
     const response = await busBookingData.create(data);
     const msg = "Bus booking details added successfully";
-    const sendMail = await commonFunction.sendBusBookingConfirmation(data);
+    if(response.bookingStatus === "BOOKED"){
+      await commonFunction.sendBusBookingConfirmation(data);
+      sendSMS.sendSMSForBusBookingConfirmation(response);
+    }
+    
     actionCompleteResponse(res, response, msg);
   } catch (error) {
     sendActionFailedResponse(res, {}, error.message);

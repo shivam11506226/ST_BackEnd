@@ -1,30 +1,29 @@
-const nodemailerConfig = require('../config/nodeConfig');
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-const { Client } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
+const nodemailerConfig = require("../config/nodeConfig");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const { Client } = require("whatsapp-web.js");
+const qrcode = require("qrcode-terminal");
 const config = require("../config/auth.config.js");
 let cloudinary = require("cloudinary");
 cloudinary.config({
-    cloud_name: "dultedeh8",
-    api_key: "461991833927796",
-    api_secret: "ruuF-4CFhQVh205cif_tQqNBBcA",
+  cloud_name: "dultedeh8",
+  api_key: "461991833927796",
+  api_secret: "ruuF-4CFhQVh205cif_tQqNBBcA",
 });
 
 module.exports = {
+  getOTP() {
+    var otp = Math.floor(100000 + Math.random() * 900000);
+    return otp;
+  },
 
-    getOTP() {
-        var otp = Math.floor(100000 + Math.random() * 900000);
-        return otp;
-    },
+  getToken: async (payload) => {
+    var token = await jwt.sign(payload, config.secret, { expiresIn: "24h" });
+    return token;
+  },
 
-    getToken: async (payload) => {
-        var token = await jwt.sign(payload,config.secret, { expiresIn: "24h" })
-        return token;
-    },
-
-    sendSignUpEmailOtp: async (to, otp) => {
-        let html = `<!DOCTYPE html>
+  sendSignUpEmailOtp: async (to, otp) => {
+    let html = `<!DOCTYPE html>
         <html lang="en">
         
         <head>
@@ -51,27 +50,25 @@ module.exports = {
             </div>
         
         </body>
-        </html>`
-        var transporter = nodemailerConfig.createTransport({
-            service: nodemailerConfig.service,
-            auth: {
-                "user": nodemailerConfig.user,
-                "pass": nodemailerConfig.pass
+        </html>`;
+    var transporter = nodemailerConfig.createTransport({
+      service: nodemailerConfig.service,
+      auth: {
+        user: nodemailerConfig.user,
+        pass: nodemailerConfig.pass,
+      },
+    });
+    var mailOptions = {
+      from: nodemailerConfig.user,
+      to: to,
+      subject: "Verification Mail",
+      html: html,
+    };
+    return await transporter.sendMail(mailOptions);
+  },
 
-            },
-
-        });
-        var mailOptions = {
-            from: nodemailerConfig.user,
-            to: to,
-            subject: 'Verification Mail',
-            html: html
-        };
-        return await transporter.sendMail(mailOptions)
-    },
-
-    sendSignUpEmailOtp: async (to, otp) => {
-        let html = `<!DOCTYPE html>
+  sendSignUpEmailOtp: async (to, otp) => {
+    let html = `<!DOCTYPE html>
         <html lang="en">
         
         <head>
@@ -99,36 +96,32 @@ module.exports = {
             </div>
         
         </body>
-        </html>`
-        var transporter = nodemailerConfig.createTransport({
-            service: nodemailerConfig.service,
-            auth: {
-                "user": nodemailerConfig.user,
-                "pass": nodemailerConfig.pass
+        </html>`;
+    var transporter = nodemailerConfig.createTransport({
+      service: nodemailerConfig.service,
+      auth: {
+        user: nodemailerConfig.user,
+        pass: nodemailerConfig.pass,
+      },
+    });
+    var mailOptions = {
+      from: nodemailerConfig.user,
+      to: to,
+      subject: "Verification Mail",
+      html: html,
+    };
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log("Email sent: " + info.response);
+      return info;
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      throw error;
+    }
+  },
 
-            },
-
-        });
-        var mailOptions = {
-            from: nodemailerConfig.user,
-            to: to,
-            subject: 'Verification Mail',
-            html: html
-        };
-        try {
-            const info = await transporter.sendMail(mailOptions);
-            console.log('Email sent: ' + info.response);
-            return info;
-        } catch (error) {
-            console.error('Email sending failed:', error);
-            throw error;
-        }
-    },
-
-
-    sendHotelBookingConfirmation: async (to) => {
-       
-        let html = `<!DOCTYPE html>
+  sendHotelBookingConfirmation: async (to) => {
+    let html = `<!DOCTYPE html>
         <html lang="en">
         
         <head>
@@ -155,47 +148,44 @@ module.exports = {
             </div>
         
         </body>
-        </html>`
-        var transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                "user": nodemailerConfig.options.auth.user,
-                "pass": nodemailerConfig.options.auth.pass
-
-            },
-        });
-        var mailOptions = {
-            from: nodemailerConfig.options.auth.user,
-            to: to.email,
-            subject: 'Hotel Booking Confirmation',
-            html: html
-        };
-        try {
-            // Verify the connection
-            transporter.verify(function (error, success) {
-                if (error) {
-                    console.log("SMTP Connection Error: " + error);
-                } else {
-                    console.log("SMTP Connection Success: " + success);
-                }
-            });
-
-            // Send the email
-            const info = await transporter.sendMail(mailOptions);
-            console.log('Email sent: ' + info.response);
-            return info;
-        } catch (error) {
-            console.error('Email sending failed:', error);
-            throw error;
+        </html>`;
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: nodemailerConfig.options.auth.user,
+        pass: nodemailerConfig.options.auth.pass,
+      },
+    });
+    var mailOptions = {
+      from: nodemailerConfig.options.auth.user,
+      to: to.email,
+      subject: "Hotel Booking Confirmation",
+      html: html,
+    };
+    try {
+      // Verify the connection
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log("SMTP Connection Error: " + error);
+        } else {
+          console.log("SMTP Connection Success: " + success);
         }
+      });
 
+      // Send the email
+      const info = await transporter.sendMail(mailOptions);
+      console.log("Email sent: " + info.response);
+      return info;
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      throw error;
+    }
+  },
 
-    },
-
-    sendBusBookingConfirmation: async (to) => {
-        let html = `<!DOCTYPE html>
+  sendBusBookingConfirmation: async (to) => {
+    let html = `<!DOCTYPE html>
         <html lang="en">
         
         <head>
@@ -222,51 +212,48 @@ module.exports = {
             </div>
         
         </body>
-        </html>`
-        var transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                "user": nodemailerConfig.options.auth.user,
-                "pass": nodemailerConfig.options.auth.pass
-
-            },
-        });
-        var mailOptions = {
-            from: nodemailerConfig.options.auth.user,
-            to: to.email,
-            subject: 'Hotel Booking Confirmation',
-            html: html
-        };
-        try {
-            // Verify the connection
-            transporter.verify(function (error, success) {
-                if (error) {
-                    console.log("SMTP Connection Error: " + error);
-                } else {
-                    console.log("SMTP Connection Success: " + success);
-                }
-            });
-
-            // Send the email
-            const info = await transporter.sendMail(mailOptions);
-            console.log('Email sent: ' + info.response);
-            return info;
-        } catch (error) {
-            console.error('Email sending failed:', error);
-            throw error;
+        </html>`;
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: nodemailerConfig.options.auth.user,
+        pass: nodemailerConfig.options.auth.pass,
+      },
+    });
+    var mailOptions = {
+      from: nodemailerConfig.options.auth.user,
+      to: to.email,
+      subject: "Hotel Booking Confirmation",
+      html: html,
+    };
+    try {
+      // Verify the connection
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log("SMTP Connection Error: " + error);
+        } else {
+          console.log("SMTP Connection Success: " + success);
         }
+      });
 
+      // Send the email
+      const info = await transporter.sendMail(mailOptions);
+      console.log("Email sent: " + info.response);
+      return info;
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      throw error;
+    }
+  },
 
-    },
+  //==========================================================
+  //========== Send Email Visa Apply Confirmation Mail =======
+  //==========================================================
 
-    //==========================================================
-    //========== Send Email Visa Apply Confirmation Mail =======
-    //==========================================================
-
-    VisaApplyConfirmationMail: async (to) => {
-        let html = `<!DOCTYPE html>
+  VisaApplyConfirmationMail: async (to) => {
+    let html = `<!DOCTYPE html>
         <html lang="en">
         
         <head>
@@ -294,47 +281,47 @@ module.exports = {
         
         </body>
         </html>`;
-        var transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                user: nodemailerConfig.options.auth.user,
-                pass: nodemailerConfig.options.auth.pass,
-            },
-        });
-        var mailOptions = {
-            from: nodemailerConfig.options.auth.user,
-            to: to.email,
-            subject: "Visa Apply Confirmation Mail",
-            html: html,
-        };
-        try {
-            // Verify the connection
-            transporter.verify(function (error, success) {
-                if (error) {
-                    console.log("SMTP Connection Error: " + error);
-                } else {
-                    console.log("SMTP Connection Success: " + success);
-                }
-            });
-
-            // Send the email
-            const info = await transporter.sendMail(mailOptions);
-            console.log("Email sent: " + info.response);
-            return info;
-        } catch (error) {
-            console.error("Email sending failed:", error);
-            throw error;
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: nodemailerConfig.options.auth.user,
+        pass: nodemailerConfig.options.auth.pass,
+      },
+    });
+    var mailOptions = {
+      from: nodemailerConfig.options.auth.user,
+      to: to.email,
+      subject: "Visa Apply Confirmation Mail",
+      html: html,
+    };
+    try {
+      // Verify the connection
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log("SMTP Connection Error: " + error);
+        } else {
+          console.log("SMTP Connection Success: " + success);
         }
-    },
+      });
 
-     //==========================================================
-    //========== Send Email Flight Booking Confirmation Mail =======
-    //==========================================================
+      // Send the email
+      const info = await transporter.sendMail(mailOptions);
+      console.log("Email sent: " + info.response);
+      return info;
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      throw error;
+    }
+  },
 
-    FlightBookingConfirmationMail: async (to, pdfFilePath) => {
-        let html = `<!DOCTYPE html>S
+  //==========================================================
+  //========== Send Email Flight Booking Confirmation Mail =======
+  //==========================================================
+
+  FlightBookingConfirmationMail: async (to, pdfFilePath) => {
+    let html = `<!DOCTYPE html>S
         <html lang="en">
         
         <head>
@@ -362,48 +349,126 @@ module.exports = {
         
         </body>
         </html>`;
-        var transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                user: nodemailerConfig.options.auth.user,
-                pass: nodemailerConfig.options.auth.pass,
-            },
-        });
-        const passengerEmail = to.passengerDetails[0].email;
-        var mailOptions = {
-            from: nodemailerConfig.options.auth.user,
-            to: passengerEmail,
-            subject: "Flight Booking Confirmation Mail",
-            html: html,
-            attachments: [{ filename: 'api_data.pdf', path: pdfFilePath }],
-        };
-        try {
-            // Verify the connection
-            transporter.verify(function (error, success) {
-                if (error) {
-                    console.log("SMTP Connection Error: " + error);
-                } else {
-                    console.log("SMTP Connection Success: " + success);
-                }
-            });
-
-            // Send the email
-            const info = await transporter.sendMail(mailOptions);
-            console.log("Email sent: " + info.response);
-            return info;
-        } catch (error) {
-            console.error("Email sending failed:", error);
-            throw error;
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: nodemailerConfig.options.auth.user,
+        pass: nodemailerConfig.options.auth.pass,
+      },
+    });
+    const passengerEmail = to.passengerDetails[0].email;
+    var mailOptions = {
+      from: nodemailerConfig.options.auth.user,
+      to: passengerEmail,
+      subject: "Flight Booking Confirmation Mail",
+      html: html,
+      attachments: [{ filename: "api_data.pdf", path: pdfFilePath }],
+    };
+    try {
+      // Verify the connection
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log("SMTP Connection Error: " + error);
+        } else {
+          console.log("SMTP Connection Success: " + success);
         }
-    },
+      });
 
-   //upload image on cloudinary***************************************
-   getSecureUrl: async (base64) => {
+      // Send the email
+      const info = await transporter.sendMail(mailOptions);
+      console.log("Email sent: " + info.response);
+      return info;
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      throw error;
+    }
+  },
+
+  //upload image on cloudinary***************************************
+  getSecureUrl: async (base64) => {
     var result = await cloudinary.v2.uploader.upload(base64);
     return result.secure_url;
-
   },
-    
-}
+
+  //===============================================================================================
+  //===================== Send Email For Admin ====================================================
+  //===============================================================================================
+
+  // Send mail for hotel booking cencel Request user to admin ////////////////////
+
+  hotelBookingCencelRequestForAdmin: async (to) => {
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: nodemailerConfig.options.auth.user,
+        pass: nodemailerConfig.options.auth.pass,
+      },
+    });
+    var mailOptions = {
+      from: nodemailerConfig.options.auth.user,
+      to: to.email,
+      subject: "Hotel Booking Cancellation Request",
+      text: to.message,
+    };
+    try {
+      // Verify the connection
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log("SMTP Connection Error: " + error);
+        } else {
+          console.log("SMTP Connection Success: " + success);
+        }
+      });
+
+      // Send the email
+      const info = await transporter.sendMail(mailOptions);
+      console.log("Email sent: " + info.response);
+      return info;
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      throw error;
+    }
+  },
+
+  // Send mail for flight Booking cencel Request user to admin =========
+
+  flightBookingCencelRequestForAdmin: async (to) => {
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: nodemailerConfig.options.auth.user,
+        pass: nodemailerConfig.options.auth.pass,
+      },
+    });
+    var mailOptions = {
+      from: nodemailerConfig.options.auth.user,
+      to: to.email,
+      subject: "Flight Booking Cancellation Request",
+      text: to.message,
+    };
+    try {
+      // Verify the connection
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log("SMTP Connection Error: " + error);
+        } else {
+          console.log("SMTP Connection Success: " + success);
+        }
+      });
+
+      // Send the email
+      const info = await transporter.sendMail(mailOptions);
+      console.log("Email sent: " + info.response);
+      return info;
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      throw error;
+    }
+  },
+};

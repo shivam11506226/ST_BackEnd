@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const userType = require('../enums/userType');
+const userType = require("../enums/userType");
 const { user } = require(".");
-const status=require('../enums/status');
+const status = require("../enums/status");
 const approveStatus = require("../enums/approveStatus");
 var bcrypt = require("bcryptjs");
 const User = mongoose.model(
@@ -25,44 +25,58 @@ const User = mongoose.model(
         },
       ],
       socialId: {
-        type: String
+        type: String,
       },
       socialType: {
-        type: String
+        type: String,
       },
       deviceType: {
-        type: String
+        type: String,
       },
       isOnline: {
         type: Boolean,
-        default: false
+        default: false,
       },
       firstTime: {
         type: Boolean,
-        default: false
+        default: false,
       },
       Address: {
-        type: String
+        type: String,
       },
-      approveStatus:{
-        type:String,
-        enum:[approveStatus.APPROVED,approveStatus.PENDING,approveStatus.REJECT],
-        default:approveStatus.PENDING
+      approveStatus: {
+        type: String,
+        enum: [
+          approveStatus.APPROVED,
+          approveStatus.PENDING,
+          approveStatus.REJECT,
+        ],
+        default: approveStatus.PENDING,
       },
-      userType:{
-        type:String,
-        enum:[userType.ADMIN,userType.AGENT,userType.USER,userType.SUBADMIN],
-        default:userType.USER
+      userType: {
+        type: String,
+        enum: [
+          userType.ADMIN,
+          userType.AGENT,
+          userType.USER,
+          userType.SUBADMIN,
+        ],
+        default: userType.USER,
       },
-      status:{
-        type:String,
-        enum:[status.ACTIVE,status.BLOCK,status.DELETE],
-        default:status.ACTIVE
+      status: {
+        type: String,
+        enum: [status.ACTIVE, status.BLOCK, status.DELETE],
+        default: status.ACTIVE,
       },
-      isApproved:{
+      isApproved: {
         type: Boolean,
-        default: false
-      }
+        default: false,
+      },
+      fcmToken: {
+        type: [],
+        _id: false,
+        default: [],
+      },
     },
     {
       timestamps: true,
@@ -71,7 +85,6 @@ const User = mongoose.model(
 );
 
 module.exports = User;
-
 
 // Find admin user(s)
 User.find({ userType: userType.ADMIN }, async (err, result) => {
@@ -89,7 +102,7 @@ User.find({ userType: userType.ADMIN }, async (err, result) => {
         country_code: "+91",
         mobile_number: "8115199076",
       },
-      password: bcrypt.hashSync("theskytrails@1",10),
+      password: bcrypt.hashSync("theskytrails@1", 10),
       Address: "New Delhi, India", // Use "Address" instead of "address" if that's your schema field
       isOnline: false,
       approveStatus: approveStatus.APPROVED, // Set approveStatus as needed

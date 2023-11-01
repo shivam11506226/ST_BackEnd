@@ -462,6 +462,15 @@ module.exports = {
           console.log("SMTP Connection Success: " + success);
         }
       });
+       // Send the email
+       const info = await transporter.sendMail(mailOptions);
+       console.log("Email sent: " + info.response);
+       return info;
+     } catch (error) {
+       console.error("Email sending failed:", error);
+       throw error;
+     }
+   },
 
 
 
@@ -532,10 +541,7 @@ module.exports = {
 
   },
 
-  },
-
-
-  sendVerificationMail:async(to,otp)=>{
+  sendVerificationMail:async(to,otp)=> {
     let html = `<!DOCTYPE html>
     <html lang="en">
     
@@ -625,4 +631,5 @@ return await transporter.sendMail(mailOptions);
     };
     return await transporter.sendMail(mailOptions)
   },
+
 };

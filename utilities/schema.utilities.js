@@ -172,6 +172,29 @@ const schemas = {
     mobileNumber: joi.string().optional(),
     password: joi.string().required(),
   }),
+
+  userLoginSchema:joi.object().keys({
+    email: joi.string().required(),
+    password: joi.string().required(),
+  }),
+
+  userSignupSchema:joi.object().keys({
+    email: joi.string().required(),
+    mobileNumber: joi.string().required(),
+    password: joi.string().required(),
+    username: joi.string().required(),
+    Address:joi.string().required(),
+    profilePic:joi.string().optional(),
+    userType:joi.string().optional(),
+  }),
+  userVerifySchema:joi.object().keys({
+    email: joi.string().required(),
+    otp: joi.string().required(),
+  }),
+
+  userForgetSchema:joi.object().keys({
+    email: joi.string().required(),
+  }),
 };
 
 module.exports = schemas;

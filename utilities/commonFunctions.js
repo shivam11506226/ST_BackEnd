@@ -392,6 +392,7 @@ module.exports = {
     return result.secure_url;
   },
 
+
   //===============================================================================================
   //===================== Send Email For Admin ====================================================
   //===============================================================================================
@@ -462,6 +463,64 @@ module.exports = {
         }
       });
 
+
+
+  sendHotelBookingCancelation: async (to, hotelName) => {
+    let html = `<!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <div class="card" style=" box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            width: 100%; margin: auto; min-height:15em;margin-top: 25px;">
+            <div class="main" style="background-image: url('');">
+                <div class="main-container" style="text-align: center;">
+                    <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
+                    <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
+                        style="width: 30%;" alt="logo">
+    
+                    <div style="width: 90%;margin: auto; text-align: left;">
+                        <br><br>
+                        <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear ${to.name},
+                            your hotel booking of hotel ${hotelName} is canceled successfully from skyTrails.
+                            You get your refund with in 7 days as per our policy. 
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    
+    </body>
+    </html>`;
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: nodemailerConfig.options.auth.user,
+        pass: nodemailerConfig.options.auth.pass,
+      },
+    });
+    var mailOptions = {
+      from: nodemailerConfig.options.auth.user,
+      to: to.email,
+      subject: "Hotel Booking Confirmation",
+      html: html,
+    };
+    try {
+      // Verify the connection
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log("SMTP Connection Error: " + error);
+        } else {
+          console.log("SMTP Connection Success: " + success);
+        }
+      });
+
+
       // Send the email
       const info = await transporter.sendMail(mailOptions);
       console.log("Email sent: " + info.response);
@@ -470,5 +529,100 @@ module.exports = {
       console.error("Email sending failed:", error);
       throw error;
     }
+
+  },
+
+  },
+
+
+  sendVerificationMail:async(to,otp)=>{
+    let html = `<!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <title>Reset Password</title>
+    </head>
+    <body>
+        <div class="card" style=" box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            width: 100%; margin: auto; min-height:15em;margin-top: 25px;">
+            <div class="main" style="background-image: url('');">
+                <div class="main-container" style="text-align: center;">
+                    <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
+                    <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
+                        style="width: 30%;" alt="logo">
+    
+                    <div style="width: 90%;margin: auto; text-align: left;">
+                        <br><br>
+                        <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear User,
+                            ${otp} is your OTP for verify and reset your password.
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    
+    </body>
+    </html>`;
+var transporter = nodemailerConfig.createTransport({
+  service: nodemailerConfig.service,
+  auth: {
+    user: nodemailerConfig.user,
+    pass: nodemailerConfig.pass,
+  },
+});
+var mailOptions = {
+  from: nodemailerConfig.user,
+  to: to,
+  subject: "Reset Password",
+  html: html,
+};
+return await transporter.sendMail(mailOptions);
+  },
+
+  sendEmailOtp: async (email, otp) => {
+    let html = `<!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <div class="card" style=" box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            width: 100%; margin: auto; min-height:15em;margin-top: 25px;">
+            <div class="main" style="background-image: url('');">
+                <div class="main-container" style="text-align: center;">
+                    <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
+                    <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
+                        style="width: 30%;" alt="logo">
+    
+                    <div style="width: 90%;margin: auto; text-align: left;">
+                        <br><br>
+                        <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear User,
+                        Use the One Time Password(OTP) ${otp} to verify your accoount.
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    
+    </body>
+    </html>`;
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        "user": config.get('nodemailer.email'),
+        "pass": config.get('nodemailer.password')
+
+      }
+    });
+    var mailOptions = {
+      from: config.get('nodemailer.email'),
+      to: email,
+      subject: 'Otp for verication',
+      html: html,
+    };
+    return await transporter.sendMail(mailOptions)
   },
 };

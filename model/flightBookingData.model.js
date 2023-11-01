@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
-
-const flightBookingData = mongoose.model(
-  "flightBookingData",
-  new mongoose.Schema(
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
+const mongoosePaginate = require('mongoose-paginate-v2');
+const flightBookingData = new mongoose.Schema(
     {
       userId: {
         type: Schema.Types.ObjectId,
         required: [true, "user ID is required"],
-        ref: "User",
+        ref: "users",
       },
       passengerDetails: {
         type: [
@@ -82,6 +81,7 @@ const flightBookingData = mongoose.model(
     },
     { timestamps: true }
   )
-);
+  flightBookingData.plugin(mongoosePaginate);
+  flightBookingData.plugin(aggregatePaginate)
+  module.exports = mongoose.model("flightbookingdatas", flightBookingData);
 
-module.exports = flightBookingData;

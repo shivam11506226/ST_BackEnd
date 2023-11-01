@@ -392,6 +392,79 @@ module.exports = {
     return result.secure_url;
   },
 
+
+  //===============================================================================================
+  //===================== Send Email For Admin ====================================================
+  //===============================================================================================
+
+  // Send mail for hotel booking cencel Request user to admin ////////////////////
+
+  hotelBookingCencelRequestForAdmin: async (to) => {
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: nodemailerConfig.options.auth.user,
+        pass: nodemailerConfig.options.auth.pass,
+      },
+    });
+    var mailOptions = {
+      from: nodemailerConfig.options.auth.user,
+      to: to.email,
+      subject: "Hotel Booking Cancellation Request",
+      text: to.message,
+    };
+    try {
+      // Verify the connection
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log("SMTP Connection Error: " + error);
+        } else {
+          console.log("SMTP Connection Success: " + success);
+        }
+      });
+
+      // Send the email
+      const info = await transporter.sendMail(mailOptions);
+      console.log("Email sent: " + info.response);
+      return info;
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      throw error;
+    }
+  },
+
+  // Send mail for flight Booking cencel Request user to admin =========
+
+  flightBookingCencelRequestForAdmin: async (to) => {
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: nodemailerConfig.options.auth.user,
+        pass: nodemailerConfig.options.auth.pass,
+      },
+    });
+    var mailOptions = {
+      from: nodemailerConfig.options.auth.user,
+      to: to.email,
+      subject: "Flight Booking Cancellation Request",
+      text: to.message,
+    };
+    try {
+      // Verify the connection
+      transporter.verify(function (error, success) {
+        if (error) {
+          console.log("SMTP Connection Error: " + error);
+        } else {
+          console.log("SMTP Connection Success: " + success);
+        }
+      });
+
+
+
   sendHotelBookingCancelation: async (to, hotelName) => {
     let html = `<!DOCTYPE html>
     <html lang="en">
@@ -447,6 +520,7 @@ module.exports = {
         }
       });
 
+
       // Send the email
       const info = await transporter.sendMail(mailOptions);
       console.log("Email sent: " + info.response);
@@ -455,6 +529,9 @@ module.exports = {
       console.error("Email sending failed:", error);
       throw error;
     }
+
+  },
+
   },
 
 

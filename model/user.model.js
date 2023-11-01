@@ -1,6 +1,84 @@
 const mongoose = require("mongoose");
-const userType = require('../enums/userType');
+const userType = require("../enums/userType");
 const { user } = require(".");
+
+const status = require("../enums/status");
+const approveStatus = require("../enums/approveStatus");
+var bcrypt = require("bcryptjs");
+const User = mongoose.model(
+  "User",
+  new mongoose.Schema(
+    {
+      username: { type: String },
+      email: { type: String },
+      password: { type: String },
+      phone: {
+        country_code: {
+          type: String,
+          default: "+91",
+        },
+        mobile_number: { type: String },
+      },
+      roles: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Role",
+        },
+      ],
+      socialId: {
+        type: String,
+      },
+      socialType: {
+        type: String,
+      },
+      deviceType: {
+        type: String,
+      },
+      isOnline: {
+        type: Boolean,
+        default: false,
+      },
+      firstTime: {
+        type: Boolean,
+        default: false,
+      },
+      Address: {
+        type: String,
+      },
+      approveStatus: {
+        type: String,
+        enum: [
+          approveStatus.APPROVED,
+          approveStatus.PENDING,
+          approveStatus.REJECT,
+        ],
+        default: approveStatus.PENDING,
+      },
+      userType: {
+        type: String,
+        enum: [
+          userType.ADMIN,
+          userType.AGENT,
+          userType.USER,
+          userType.SUBADMIN,
+        ],
+        default: userType.USER,
+      },
+      status: {
+        type: String,
+        enum: [status.ACTIVE, status.BLOCK, status.DELETE],
+        default: status.ACTIVE,
+      },
+      isApproved: {
+        type: Boolean,
+        default: false,
+      },
+      fcmToken: {
+        type: [],
+        _id: false,
+        default: [],
+      },
+
 const status = require('../enums/status');
 const approveStatus = require("../enums/approveStatus");
 var bcrypt = require("bcryptjs");
@@ -89,6 +167,7 @@ const userSchema = new mongoose.Schema(
         type: [Number],
         default: [0, 0]
       }
+
     },
   },
   {
@@ -99,7 +178,6 @@ userSchema.plugin(mongoosePaginate);
 
 const User = mongoose.model("users", userSchema);
 module.exports = User;
-
 
 // Find admin user(s)
 User.find({ userType: userType.ADMIN }, async (err, result) => {

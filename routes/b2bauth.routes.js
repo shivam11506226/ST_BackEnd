@@ -33,5 +33,8 @@ module.exports = function (app) {
 
   app.post('/payVerify',controller.payVerify);
 
+  //subtractBalance
+  app.post("/skyTrails/subtractBalance", controller.subtractBalance);
+
 
 };

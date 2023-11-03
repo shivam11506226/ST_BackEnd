@@ -2,7 +2,7 @@ const { required } = require("joi");
 const mongoose = require("mongoose");
 const { activeStatus } = require("../common/const");
 const internationl = mongoose.model(
-  "internationl",
+  "internationls",
   mongoose.Schema(
     {
       pakage_title: {

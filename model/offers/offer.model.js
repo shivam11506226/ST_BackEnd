@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require('mongoose-paginate-v2');
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2")
+mongoose.pluralize(null);
 const offertype = require("../../enums/offerType");
 const status = require('../../enums/status');
 const Joi = require('joi');
@@ -7,6 +10,10 @@ const Joi = require('joi');
 const offerSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
+    userId: {
+      type: mongoose.Types.ObjectId,
+      ref: 'users',
+  },
     media: {
       type: [
         {
@@ -41,6 +48,8 @@ const offerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+offerSchema.plugin(mongoosePaginate);
+offerSchema.plugin(aggregatePaginate);
 // Create a Mongoose model for the offers collection
 const Offer = mongoose.model("Offer", offerSchema);
 
@@ -48,6 +57,10 @@ const Offer = mongoose.model("Offer", offerSchema);
 // Define a Joi schema that matches your Mongoose model
 const offerSchemaValidation = Joi.object({
   title: Joi.string().required(),
+  userId: Joi.alternatives().try(
+    Joi.string(),
+    Joi.object(),
+  ).required(),
   media: Joi.array().items(
     Joi.object({
       mediaType: Joi.string().valid('photo').required(),

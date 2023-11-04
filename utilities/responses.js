@@ -55,5 +55,6 @@ module.exports = {
 	INVALID_MODEL:"Invalid model type.",
 	REGISTER_SUCCESS:"Registration successful",
 	PASSWORD_NOT_MATCH:"Password and confirm password are not match",
-	ALREADY_VERIFIED:"Your account is already verified"
+	ALREADY_VERIFIED:"Your account is already verified",
+	SIGNUP_SUCCESS:"You are register successfully, kindly verify your OTP"
 };

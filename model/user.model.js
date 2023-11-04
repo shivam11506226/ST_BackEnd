@@ -96,6 +96,9 @@ const userSchema = new mongoose.Schema(
       _id: false,
       default: [],
     },
+    balance:{
+      type:Number
+    }
   },
   {
     timestamps: true,

@@ -98,8 +98,8 @@ const hotelBookingServicess = {
         }
         let aggregate = hotelBookingModel.aggregate(pipeline)
         let options = {
-            page: parseInt(page, 10) || 1,
-            limit: parseInt(limit, 10) || 10,
+            page: parseInt(page) || 1,
+            limit: parseInt(limit) || 5,
             sort: { createdAt: -1 },
         };
         return await hotelBookingModel.aggregatePaginate(aggregate, options)

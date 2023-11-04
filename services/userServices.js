@@ -31,21 +31,21 @@ const userServices = {
 
     paginateUserSearch: async (body) => {
         // userType: { $ne: [userType.ADMIN,userType.SUBADMIN] }
-        let query = {}
-        const { page, limit, usersType, search } = body;
+        let query = {userType:{ $nin: [userType.ADMIN, userType.SUBADMIN] }}
+        const { page, limit, usersType1, search } = body;
         if (search) {
             query.$or = [
                 { username: { $regex: search, $options: 'i' } },
                 { email: { $regex: search, $options: 'i' } },
             ]
         }
-        if (usersType) {
-            query.userType = usersType
+        if (usersType1) {
+            query.userType = usersType1
         }
 
         let options = {
             page: Number(page) || 1,
-            limit: Number(limit) || 15,
+            limit: Number(limit) || 8,
             sort: { createdAt: -1 },
         };
         return await userModel.paginate(query, options);

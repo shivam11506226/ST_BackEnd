@@ -167,7 +167,9 @@ exports.searchHotelBookingDetails = async (req, res) => {
     };
 
     const response = await axios.post(`${api.hotelBookingDetailsURL}`, data);
+    
     msg = "Hotel Booking Details Searched Successfully!";
+    
     actionCompleteResponse(res, response.data, msg);
   } catch (err) {
     console.log(err);

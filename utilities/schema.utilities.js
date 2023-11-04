@@ -195,6 +195,13 @@ const schemas = {
   userForgetSchema:joi.object().keys({
     email: joi.string().required(),
   }),
+
+  approveAgentSchema:joi.object().keys({
+    userId:joi.string().required(), 
+    approveStatus:joi.string().required(),
+    reason:joi.string().optional()
+  }),
+
 };
 
 module.exports = schemas;

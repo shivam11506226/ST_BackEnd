@@ -1,7 +1,8 @@
 const { responseFlags, responseMessages } = require("./const");
 const cloudinary = require("cloudinary").v2;
 exports.mongoUrl = {
-  DEVELOPMENT:process.env.MONGO_URL,
+  // DEVELOPMENT:process.env.MONGO_URL,
+  DEVELOPMENT:"mongodb+srv://travvolt:asdf1234@cluster.ob9cb9w.mongodb.net/?retryWrites=true&w=majority",
 };
 
 exports.actionCompleteResponse = function (res, data, msg) {

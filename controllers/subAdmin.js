@@ -93,10 +93,10 @@ exports.deleteSubAdmin = async (req, res, next) => {
 
 exports.getSubAdmin = async (req, res, next) => {
     try {
-        const isAdmin = await findUser({ _id: req.userId, userType: [userType.ADMIN] });
-        if (!isAdmin) {
-            return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
-        }
+        // const isAdmin = await findUser({ _id: req.userId, userType: [userType.ADMIN] });
+        // if (!isAdmin) {
+        //     return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
+        // }
         const result = await findUserData({ userType: userType.SUBADMIN });
         return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND,result:result });
     } catch (error) {

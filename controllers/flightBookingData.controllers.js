@@ -27,16 +27,12 @@ exports.addFlightBookingData = async (req, res) => {
     First Name: ${response.passengerDetails[0].firstName}
     Last Name: ${response.passengerDetails[0].lastName}
     Gender: ${response.passengerDetails[0].gender}
-    Phone: ${response.passengerDetails[0].phone.country_code} ${response.passengerDetails[0].phone.mobile_number}
-    Date of Birth: ${response.passengerDetails[0].dob}
+    Phone: ${response.passengerDetails[0].ContactNo}
+    Date of Birth: ${response.passengerDetails[0].DateOfBirth}
     Email: ${response.passengerDetails[0].email}
-    Address: ${response.passengerDetails[0].address}
+    Address: ${response.passengerDetails[0].addressLine1}
     City: ${response.passengerDetails[0].city}
-    Country: ${response.passengerDetails[0].country}
-    Flight Name: ${response.flightName}
     PNR: ${response.pnr}
-    Payment Status: ${response.paymentStatus}
-    Transaction ID: ${response.transactionId}
 `;
       page.drawText(content, {
         x: 50,

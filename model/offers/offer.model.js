@@ -44,7 +44,6 @@ const offerSchema = new mongoose.Schema(
 // Create a Mongoose model for the offers collection
 const Offer = mongoose.model("Offer", offerSchema);
 
-module.exports = Offer;
 
 // Define a Joi schema that matches your Mongoose model
 const offerSchemaValidation = Joi.object({
@@ -65,4 +64,7 @@ const offerSchemaValidation = Joi.object({
   offertype: Joi.string().valid('FLIGHTS', 'HOTELS', 'HOLIDAYS', 'TRAINS', 'CABS', 'BANKOFFERS'), // Assuming 'offertype' enum values
 });
 
-module.exports = offerSchemaValidation;
+module.exports = {
+  offerSchemaValidation,
+  Offer,
+};

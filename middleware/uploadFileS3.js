@@ -27,7 +27,7 @@ const uploadOffer = multer({
       req.originalname = path;
       cb(null, path);
     },
-    Bucket: process.env.BUCKET,
+    Bucket: process.env.AWS_BUCKET_NAME,
     ACL: "private",
     resize: { width: 520, height: 390 },
     toFormat: {

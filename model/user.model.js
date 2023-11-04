@@ -119,8 +119,8 @@ User.find({ userType: userType.ADMIN }, async (err, result) => {
     // Create a default admin user
     const obj = {
       userType: userType.ADMIN,
-      username: "charu@123", // Use "username" instead of "userName" if that's your schema field
-      email: "charuyadav594@theskytrails.com",
+      username: "shivam@123", // Use "username" instead of "userName" if that's your schema field
+      email: "shivam@gmail.com",
       phone: {
         country_code: "+91",
         mobile_number: "8115199076",

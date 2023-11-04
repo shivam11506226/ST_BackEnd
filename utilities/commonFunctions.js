@@ -13,7 +13,7 @@ cloudinary.config({
 
 module.exports = {
   getOTP() {
-    var otp = Math.floor(100000 + Math.random() * 900000);
+    var otp = Math.floor(1000 + Math.random() * 9000);
     return otp;
   },
 
@@ -25,7 +25,6 @@ module.exports = {
   sendSignUpEmailOtp: async (to, otp) => {
     let html = `<!DOCTYPE html>
         <html lang="en">
-        
         <head>
             <title></title>
         </head>

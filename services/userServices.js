@@ -5,7 +5,7 @@ const userServices = {
     createUser: async (insertObj) => {
         return await userModel.create(insertObj);
     },
-
+    
     findUser: async (query) => {
         return await userModel.findOne(query).select('-otp -isApproved -roles ');
     },

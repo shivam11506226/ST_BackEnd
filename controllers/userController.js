@@ -23,11 +23,12 @@ exports.signUp = async (req, res, next) => {
         if (req.body.email) {
             req.body.email = (req.body.email).toLowerCase();
         }
-        const isAlreadyExist = await findUser({ $or: [{ email: email }, { mobileNumber: mobileNumber }], status: status.ACTIVE });
+        const isAlreadyExist = await findUser({ $or: [{ email: email }, { 'phone.mobile_number': mobileNumber }]});
+        console.log("isAlreadyExist========",isAlreadyExist);
         if (isAlreadyExist) {
             return res.status(statusCode.Conflict).json({ message: responseMessage.USER_ALREADY_EXIST });
         }
-        password = bcrypt.hashSync(validatedBody.password)
+        const pass = bcrypt.hashSync(password,10)
         otp = commonFunction.getOTP();
         otpExpireTime = new Date().getTime() + 300000;
         if (profilePic && profilePic !== '') {
@@ -38,9 +39,8 @@ exports.signUp = async (req, res, next) => {
             phone: { mobile_number: mobileNumber },
             username: username,
             Address: Address,
-            userType: userType,
             profilePic: profilePic || " ",
-            password: password,
+            password: pass,
             otp: otp,
             otpExpireTime: otpExpireTime
         }
@@ -209,3 +209,5 @@ exports.uploadProfilePicture = async (req, res, next) => {
         return next(error);
     }
 }
+
+

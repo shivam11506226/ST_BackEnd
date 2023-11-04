@@ -9,6 +9,37 @@ const flightBookingData = new mongoose.Schema(
         required: [true, "user ID is required"],
         ref: "users",
       },
+      bookingId: {
+        type:String,
+        required: [true, "Booking id is required"],
+      },
+      pnr: {
+        type: String,
+        required: [true, "pnr is required"],
+      },
+      origin: {
+        type: String,
+        required : [true, "origin is required"],
+
+      },
+      destination : {
+        type : String,
+        required :[true, "destination is required"],
+      },
+      amount: {
+        type : Number,
+        required: [true, 'Amount is required'],
+      },
+      airlineDetails : {
+        AirlineName:{
+          type: String,
+          required :[true, "airline name is required"],
+        },
+        DepTime : {
+          type: String,
+          required :[true, "Departure Time is required"],
+        },
+      },
       passengerDetails: {
         type: [
           {
@@ -25,18 +56,11 @@ const flightBookingData = new mongoose.Schema(
               enum: ["male", "female", "transgender"],
               required: [true, "gender is required"],
             },
-            phone: {
-              country_code: {
+            ContactNo: {
                 type: String,
-                default: "+91",
-                required: [true, "country_code is required"],
-              },
-              mobile_number: {
-                type: Number,
                 required: [true, "mobile_number is required"],
-              },
             },
-            dob: {
+            DateOfBirth: {
               type: String,
               required: [true, "dob is required"],
             },
@@ -45,7 +69,7 @@ const flightBookingData = new mongoose.Schema(
               required: [true, "email is required"],
               match: [/.+\@.+\..+/, "Please enter a valid email"],
             },
-            address: {
+            addressLine1: {
               type: String,
               required: [true, "address is required"],
             },
@@ -53,31 +77,18 @@ const flightBookingData = new mongoose.Schema(
               type: String,
               required: [true, "city is required"],
             },
-            country: {
-              type: String,
-              required: [true, "country is required"],
-            },
           },
         ],
-      },
-
-      flightName: {
-        type: String,
-        required: [true, "flight name ountry is required"],
-      },
-      pnr: {
-        type: Number,
-        required: [true, "pnr is required"],
       },
       paymentStatus: {
         type: String,
         enum: ["success", "failure", "pending"],
         default: "pending",
       },
-      transactionId: {
-        type: String,
-        required: [true, "transaction Id is required"],
-      },
+      // transactionId: {
+      //   type: String,
+      //   required: [true, "transaction Id is required"],
+      // },
     },
     { timestamps: true }
   )

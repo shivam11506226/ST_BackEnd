@@ -10,10 +10,10 @@ module.exports = function (app) {
       next();
     });
 
-    app.post("/skytrails/api/user/login",SchemaValidator(schemas.btoCuserLoginSchema),userController.login)
+    app.post("/skytrails/api/user/mobileLogin",SchemaValidator(schemas.btoCuserLoginSchema),userController.login)
     app.post("/skytrails/api/user/signUp",SchemaValidator(schemas.userSignupSchema),controller.signUp);
-    // app.post("/skytrails/api/user/verifyOtp",SchemaValidator(schemas.userVerifySchema1),controller.verifyOtp);
-    // app.post("/skytrails/api/user/login",SchemaValidator(schemas.userLoginSchema),controller.login)
+    app.post("/skytrails/api/user/verifyOtp",SchemaValidator(schemas.userVerifySchema1),controller.verifyOtp);
+     app.post("/skytrails/api/user/login",SchemaValidator(schemas.userLoginSchema),controller.login)
     app.post("/skytrails/api/user/forgetPassword",SchemaValidator(schemas.userForgetSchema),controller.forgetPassword);
     app.put("/skytrails/api/user/verifyOtp",SchemaValidator(schemas.userVerifySchema),[authJwt.verifcationToken],userController.verifyOtp)
 

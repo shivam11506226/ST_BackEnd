@@ -52,7 +52,7 @@ exports.addFlightBookingData = async (req, res) => {
 
       // Clean up the temporary PDF file
       fs.unlinkSync(pdfFilePath);
-      sendSMS.sendSMSForFlightBookingConfirmation(response);
+      await sendSMS.sendSMSForFlightBooking(response);
     }
     actionCompleteResponse(res, response, msg);
   } catch (error) {

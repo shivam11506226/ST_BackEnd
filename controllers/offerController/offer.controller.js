@@ -1,9 +1,15 @@
 const Joi = require("joi");
+
+const {
+  offers,
+} = require("../../model/offers/offer.model");
+
 const { offerSchemaValidation } = require("../../model/offers/offer.model");
 const { Offer } = require("../../model/offers/offer.model");
 const { userServices } = require("../../services/userServices");
 const { createUser, findUser, getUser, findUserData, updateUser } =
   userServices;
+
 const {
   actionCompleteResponse,
   sendActionFailedResponse,
@@ -79,6 +85,49 @@ exports.createOffer = async (req, res) => {
   }
 };
 
+
+// exports.getOffer = async (req, res) => {
+//   try {
+//     const { offertype } = req.query;
+//     console.log("======================",req.query);
+//     let response;
+//     if (offertype === offerType.BANKOFFERS) {
+//       response = await offers.find({
+//         offertype: offerType.BANKOFFERS,
+//       });
+//     } else if (offertype === offerType.CABS) {
+//       response = await offers.find({
+//         offertype: offerType.CABS,
+//       });
+//     } else if (offertype === offerType.FLIGHTS) {
+//       response = await offers.find({
+//         offertype: offerType.FLIGHTS,
+//       });
+//     } else if (offertype === offerType.HOLIDAYS) {
+//       response = await offers.find({
+//         offertype: offerType.HOLIDAYS,
+//       });
+//     } else if (offertype === offerType.HOTELS) {
+//       response = await offers.find({
+//         offertype: offerType.HOTELS,
+//       });
+//     } else if (offertype === offerType.TRAINS) {
+//       response = await offers.find({
+//         offertype: offerType.TRAINS,
+//       });
+//     } else {
+//       console.log("=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+//       response = await offers.find({});
+//       console.log("response==========",response);
+//     }
+//     const msg = "Offer get data successfully.";
+//     actionCompleteResponse(res, result, msg);
+//   } catch (error) {
+//     console.log("error=====>>>",error);
+//     sendActionFailedResponse(res, {}, err.message);
+//   }
+// };
+
 exports.getOffer = async (req, res) => {
   try {
     const { offertype, page = 1, pageSize = 10 } = req.query; // Set default values for page and pageSize
@@ -136,6 +185,7 @@ exports.getOffer = async (req, res) => {
     sendActionFailedResponse(res, {}, error.message);
   }
 };
+
 
 
 exports.updateOffer = async (req, res) => {

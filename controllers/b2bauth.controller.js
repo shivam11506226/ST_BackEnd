@@ -1,5 +1,6 @@
 const db = require("../model");
 const b2bUser = db.userb2b;
+const mongoose=require('mongoose')
 var bcrypt = require("bcryptjs");
 const wallet = require('../model/wallet.model');
 const User = require('../model/user.model');
@@ -587,8 +588,8 @@ exports.flightBookingQueue = async (req, res, next) => {
 exports.getAllAgentHotelBookingList = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate, toDate, userId } = req.query;
-    const isAdmin = await findUser({ _id: userId, userType: userType.ADMIN });
-    if (!isAdmin) {
+    const isAgent = await findUser({_id: userId});
+    if (!isAgent) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
     const result = await aggregatePaginateHotelBookingList1(req.query);
@@ -607,7 +608,7 @@ exports.getAllAgentHotelBookingList = async (req, res, next) => {
 exports.getAllAgentFlightBookingList = async (req, res, next) => {
   try {
     const { page, limit, search, userId } = req.query;
-    const isAgent = await findUser({ _id: userId, userType: userType.ADMIN });
+    const isAgent = await findUser({ _id: userId});
     if (!isAgent) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
     }
@@ -688,8 +689,12 @@ exports.getAllAgentFlightBookingList = async (req, res, next) => {
 
 exports.getAllAgentBusBookingList = async (req, res, next) => {
   try {
-    const { page, limit, search } = req.query;
-    const isAgent = await findUser({ _id: userId, userType: userType.ADMIN });
+    const { page, limit, search,userId } = req.query;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).send({ message: 'Invalid userId' });
+    }
+
+    const isAgent = await findUser({ _id: userId});
     if (!isAgent) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
     }
@@ -701,7 +706,7 @@ exports.getAllAgentBusBookingList = async (req, res, next) => {
       {
         $match: {
           userId: mongoose.Types.ObjectId(userId)
-        }
+        },
       },
       {
         $lookup: {

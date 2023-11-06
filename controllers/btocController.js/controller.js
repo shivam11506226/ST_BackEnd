@@ -111,14 +111,15 @@ exports.verifyUserOtp = async (req, res, next) => {
         };
         const updation = await updateUser({ _id: isUserExist._id, status: status.ACTIVE }, { otpVerified: true });
         if (updation.firstTime === false) {
+            const updateData=await updateUser({_id:updation._id},{firstTime:true});
             const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number });
             const result = {
-                firstTime: updation.firstTime,
-                _id: updation._id,
-                phone: updation.phone,
-                userType: updation.userType,
-                otpVerified: updation.otpVerified,
-                status: updation.status,
+                firstTime: updateData.firstTime,
+                _id: updateData._id,
+                phone: updateData.phone,
+                userType: updateData.userType,
+                otpVerified: updateData.otpVerified,
+                status: updateData.status,
                 token: token
             }
             return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.OTP_VERIFY, result: result });

@@ -9,7 +9,6 @@ const busBookingDataSchema =
     {
       userId: {
         type: Schema.Types.ObjectId,
-        required: [true, 'user ID is required'],
         ref: "users",
       },
       name: {

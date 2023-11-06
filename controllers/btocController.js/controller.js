@@ -75,7 +75,7 @@ exports.login = async (req, res, next) => {
         return res.status(statusCode.OK).send({ message: responseMessage.LOGIN_SUCCESS, result: result });
     } catch (error) {
         console.log("error====>>>>>", error);
-        return next(EvalError)
+        return next(error)
     }
 }
 
@@ -120,4 +120,63 @@ exports.verifyOtp=async(req,res,next)=>{
         return next(error)
     }
 }
+
+exports.verifyUserOtp=async(req,res,next)=>{
+    try {
+        const {otp,fullName,dob}=req.body;
+        // status: status.ACTIVE
+        const isUserExist = await findUserData({ _id:req.userId });
+        if (isUserExist.otp !== otp) {
+            return res.status(statusCode.badRequest).json({ message: responseMessage.INCORRECT_OTP });
+        }
+        if (new Date().getTime() > isUserExist.otpExpireTime) {
+            return res.status(statusCode.badRequest).json({ message: responseMessage.OTP_EXPIRED });
+        };
+        const updation=await updateUser({_id:isUserExist._id,status:status.ACTIVE},{otpVerified:true,otp:" "});
+        console.log("updation==========",updation);
+        const object={
+            firstTime:updation.firstTime,
+            _id:updation._id,
+            phone:updation.phone,
+            userType:updation.userType,
+            otpVerified:updation.otpVerified,
+            status:updation.status,
+        }
+        if(updation.firstTime===false){
+            const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number });
+            const result={
+                object,
+                token
+            }
+            return res.status(statusCode.OK).send({statusCode:statusCode.OK,message:responseMessage.OTP_VERIFY,result:result});
+        }
+        if(!fullName&!dob){
+            return res.status(statusCode.Forbidden).send({statusCode:statusCode.Forbidden,message:responseMessage.FIELD_REQUIRED})
+        }
+       const data={
+        username:fullName,
+        dob:dob
+       }
+       const updateData=await updateUser({_id:updation._id},data);
+       const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number,username:fullName });
+const result={
+    updateData,token
+}
+return res.status(statusCode.OK).send({statusCode:statusCode.OK,message:responseMessage.REGISTER_SUCCESS,result:result});
+    } catch (error) {
+        console.log("Error==============>",error);
+        return next(error);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 

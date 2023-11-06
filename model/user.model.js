@@ -17,6 +17,15 @@ const userSchema = new mongoose.Schema(
       },
       mobile_number: { type: String },
     },
+    firstName:{
+      type: String
+    },
+    lastName:{
+      type: String
+    },
+    dob:{
+      type:String
+    },
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -38,7 +47,7 @@ const userSchema = new mongoose.Schema(
     },
     firstTime: {
       type: Boolean,
-      default: false
+      default: true
     },
     Address: {
       type: String

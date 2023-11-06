@@ -58,5 +58,6 @@ module.exports = {
 	ALREADY_VERIFIED:"Your account is already verified",
 	LOGIN_SUCCESS:"Otp send to your registered number. Please verify OTP",
 	FLIGHT_BOOKED:"FlightBooked Successfully.",
-	AGENT_NOT_FOUND:"Agent not found"
+	AGENT_NOT_FOUND:"Agent not found",
+	FIELD_REQUIRED:"Name and Date of Birth is required."
 };

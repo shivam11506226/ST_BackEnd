@@ -100,9 +100,7 @@ exports.verifyUserOtp = async (req, res, next) => {
         const isUserExist = await findUserData({ _id: req.userId });
         if (!isUserExist) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
-        } else if (isUserExist.otpVerified === true) {
-            return res.status(statusCode.badRequest).send({ statusCode: statusCode.badRequest, message: responseMessage.ALREADY_VERIFIED })
-        }
+        } 
         if (isUserExist.otp !== otp) {
             return res.status(statusCode.badRequest).json({ statusCode: statusCode.badRequest, message: responseMessage.INCORRECT_OTP });
         }
@@ -111,7 +109,6 @@ exports.verifyUserOtp = async (req, res, next) => {
         };
         const updation = await updateUser({ _id: isUserExist._id, status: status.ACTIVE }, { otpVerified: true });
         if (updation.firstTime === false) {
-            const updateData=await updateUser({_id:updation._id},{firstTime:true});
             const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number });
             const result = {
                 firstTime: updateData.firstTime,
@@ -127,12 +124,12 @@ exports.verifyUserOtp = async (req, res, next) => {
         if (!fullName & !dob) {
             return res.status(statusCode.OK).send({ statusCode: statusCode.Forbidden, message: responseMessage.FIELD_REQUIRED })
         }
-        const updateData = await updateUser({ _id: updation._id }, { username: fullName, dob: dob, otp: "" });
+        const updateData = await updateUser({ _id: updation._id }, { username: fullName, dob: dob, otp: "" ,firstTime:true});
         const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number, username: fullName });
         const result = {
             phoneNumber: updateData.phone,
             _id: updateData._id,
-            firstTime: updateData.firstTime,
+            firstTime: updation.firstTime,
             dob: updateData.dob,
             token: token,
             status: updateData.status,
@@ -159,9 +156,7 @@ exports.resendOtp = async (req, res, next) => {
         const updateData = await updateUser({ _id: isExist._id, status: status.ACTIVE }, { otp: otp, otpExpireTime: otpExpireTime });
         if (!updateData) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
-        } else if (updateData.otpVerified === true) {
-            return res.status(statusCode.badRequest).send({ statusCode: statusCode.badRequest, message: responseMessage.ALREADY_VERIFIED })
-        }
+        } 
         // await commonFunction.sendSMS(mobileNumber,otp);
         const token = await commonFunction.getToken({ _id: updateData._id, 'mobile_number': updateData.phone.mobile_number });
         const result = {

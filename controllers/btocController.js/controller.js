@@ -54,16 +54,22 @@ exports.login = async (req, res, next) => {
         }
         const isExist = await findUser({ 'phone.mobile_number': mobileNumber, status: status.ACTIVE });
         if (!isExist) {
-            const result = await createUser(obj);
-            result.token = await commonFunction.getToken({ _id: result._id, mobile_number: result.mobile_number });
+            const result1 = await createUser(obj);
+            token = await commonFunction.getToken({ _id: result1._id, mobile_number: result1.mobile_number });
             await sendSMS.sendSMSForOtp(mobileNumber, otp);
+            const result={
+                result1,token
+            }
             return res.status(statusCode.OK).send({ message: responseMessage.LOGIN_SUCCESS, result: result });
         }
-        let result = await updateUser({ 'phone.mobile_number': mobileNumber, status: status.ACTIVE }, obj);
+        let result1 = await updateUser({ 'phone.mobile_number': mobileNumber, status: status.ACTIVE }, obj);
         await sendSMS.sendSMSForOtp(mobileNumber, otp);
-        result.token = await commonFunction.getToken({ _id: result._id, 'mobile_number': result.phone.mobile_number });
-        console.log("result.token=========",result.token);
-        if (!result) {
+        token = await commonFunction.getToken({ _id: result1._id, 'mobile_number': result1.phone.mobile_number });
+       const result={
+        result1,
+        token
+       }
+        if (!result1) {
             return res.status(statusCode.InternalError).json({ message: responseMessage.INTERNAL_ERROR });
         }
         return res.status(statusCode.OK).send({ message: responseMessage.LOGIN_SUCCESS, result: result });

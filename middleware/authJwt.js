@@ -4,6 +4,8 @@ const db = require("../model");
 const User = db.user;
 const Role = db.role;
 const userModel=require("../model/user.model.js");
+const responseMessage = require('../utilities/responses');
+const statusCode = require('../utilities/responceCode')
 verifyToken = (req, res, next) => {
   let token = req.session.token;
 
@@ -139,7 +141,7 @@ verifcationToken = (req, res, next) => {
         }
       })
     } else {
-      throw apiError.invalid(responseMessage.NO_TOKEN);
+      throw res.status(404).send({statusCode:statusCode.Conflict,message:"Please provide token.!"})
     }
   } catch (error) {
     console.log("error=>>",error);

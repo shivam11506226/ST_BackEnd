@@ -48,14 +48,19 @@ const busBookingDataSchema =
       },
       pnr: {
         type: String,
-        required: [true, 'pnr is required']
+        required: [true, 'pnr is required'],
       },
       busId: {
         type: Number,
-        required: [true, 'bus Id is required']
+        required: [true, 'bus Id is required'],
       },
       noOfSeats: {
-        type: Number, required: [true, '']
+        type: Number, required: [true, 'no of seats is required'],
+      },
+      amount:{
+        type:Number,
+        required:[true, 'amount is required'],
+
       },
       status: {
         type: String,

@@ -27,14 +27,13 @@ exports.addHotelBookingData = async (req, res) => {
       destination: req.body.destination,
       BookingId: req.body.origin,
       CheckInDate: req.body.CheckInDate,
-      CheckOutDate: req.body.CheckOutDate,
       hotelName: req.body.hotelName,
       hotelId: req.body.hotelId,
       noOfPeople: req.body.noOfPeople,
       cityName: req.body.cityName,
       country: req.body.country,
       room: req.body.room,
-      night: req.body.night,
+      noOfNight: req.body.noOfNight,
       bookingStatus: bookingStatus.BOOKED,
     };
     const response = await hotelBookingModel.create(data);

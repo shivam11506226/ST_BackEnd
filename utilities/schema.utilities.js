@@ -59,7 +59,8 @@ const schemas = {
     busType: joi.string().required(),
     pnr: joi.string().required(),
     busId: joi.number().required(),
-    noOfSeats: joi.number().required()
+    noOfSeats: joi.number().required(),
+    amount:joi.number().required()
   }),
 
   //hotelBooking schema validation via JOI

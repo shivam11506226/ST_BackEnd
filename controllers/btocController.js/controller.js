@@ -90,47 +90,7 @@ exports.login = async (req, res, next) => {
     }
 }
 
-// exports.verifyOtp=async(req,res,next)=>{
-//     try {
-//         console.log("========req.userId===========",req.userId);
-//         var {otp,email,username,Address,profilePic,password}=req.body;
-//         const isUserExist = await findUserData({ _id:req.userId, status: status.ACTIVE });
-//         if (!isUserExist) {
-//             return res.status(statusCode.badRequest).json({ message: responseMessage.USERS_NOT_FOUND })
-//         }
-//         if (isUserExist.otp !== otp) {
-//             return res.status(statusCode.badRequest).json({ message: responseMessage.INCORRECT_OTP });
-//         }
-//         if (new Date().getTime() > isUserExist.otpExpireTime) {
-//             return res.status(statusCode.badRequest).json({ message: responseMessage.OTP_EXPIRED });
-//         };
-//         const updation=await updateUser({_id:isUserExist._id,status:status.ACTIVE},{otpVerified:true,otp:" "});
-//         if(updation.email===null||updation.email===""||updation.email===undefined||updation.username===null||updation.username===""||updation.username===undefined){
-//             const hashPass= bcrypt.hashSync(password,10);
-//             if (profilePic && profilePic !== '') {
-//                 req.body.profilePic = await commonFunction.uploadImage(profilePic);
-//             }
-//             const object={
-//                 email:email,
-//                 username:username,
-//                 Address:Address,
-//                 password:hashPass,
-//                 profilePic:profilePic
-//             }
-//             const result=await createUser(object);
-//             return res.status(statusCode.OK).send({ message: responseMessage.REGISTER_SUCCESS, result: result })
-//         }
-//         const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number });
-//         const result={
-//             updation,
-//             token
-//         }
-//         return res.status(statusCode.OK).send({message:responseMessage.OTP_VERIFY,result:result});
-//     } catch (error) {
-//         console.log("error===========",error);
-//         return next(error)
-//     }
-// }
+
 
 exports.verifyUserOtp = async (req, res, next) => {
     try {
@@ -179,7 +139,21 @@ exports.verifyUserOtp = async (req, res, next) => {
 }
 
 
-
+exports.resendOtp=async(req,res,next)=>{
+    try {
+        const {mobileNumber}=req.body;
+        const otp = commonFunction.getOTP();
+        const otpExpireTime = new Date().getTime() + 300000;
+        const isExist = await findUser({ 'phone.mobile_number': mobileNumber, status: status.ACTIVE });
+        if(!isExist){
+            return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,message:responseMessage.USERS_NOT_FOUND});
+        }
+        
+    } catch (error) {
+        console.log("error==========>>>>>>.",error);
+        return next(error);
+    }
+}
 
 
 

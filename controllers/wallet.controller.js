@@ -138,7 +138,6 @@ exports.rechargeWallet = (req, res) => {
       key_id: process.env.Razorpay_KEY_ID,
       key_secret: process.env.Razorpay_KEY_SECRET,
     });
-
     var options = {
       amount: amount * 100, // amount in the smallest currency unit
       currency: "INR",

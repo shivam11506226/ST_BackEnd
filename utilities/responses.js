@@ -56,5 +56,7 @@ module.exports = {
 	REGISTER_SUCCESS:"Registration successful",
 	PASSWORD_NOT_MATCH:"Password and confirm password are not match",
 	ALREADY_VERIFIED:"Your account is already verified",
-	SIGNUP_SUCCESS:"You are register successfully, kindly verify your OTP"
+	LOGIN_SUCCESS:"Otp send to your registered number. Please verify OTP",
+	FLIGHT_BOOKED:"FlightBooked Successfully.",
+	AGENT_NOT_FOUND:"Agent not found"
 };

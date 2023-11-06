@@ -193,9 +193,14 @@ const schemas = {
     profilePic:joi.string().optional(),
     userType:joi.string().optional(),
   }),
+  
   userVerifySchema:joi.object().keys({
-    email: joi.string().required(),
     otp: joi.string().required(),
+    email: joi.string().optional(),
+    password: joi.string().optional(),
+    username: joi.string().optional(),
+    Address:joi.string().optional(),
+    profilePic:joi.string().optional(),
   }),
 
   userForgetSchema:joi.object().keys({
@@ -207,6 +212,9 @@ const schemas = {
     approveStatus:joi.string().required(),
     reason:joi.string().optional()
   }),
+  btoCuserLoginSchema:joi.object().keys({
+    mobileNumber:joi.string().required()
+  })
 
 };
 

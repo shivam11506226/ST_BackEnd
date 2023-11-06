@@ -11,6 +11,11 @@ const { log } = require("console");
 const sendSMS = require("../utilities/sendSms");
 const PushNotification = require("../utilities/commonFunForPushNotification");
 
+
+//****************************************SERVICES**************************************/
+const { hotelBookingServicess } = require("../services/hotelBookingServices");
+const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking } = hotelBookingServicess;
+
 exports.addHotelBookingData = async (req, res) => {
   try {
     const data = {
@@ -36,9 +41,8 @@ exports.addHotelBookingData = async (req, res) => {
     const msg = "Hotel booking  successfully";
     if (response.bookingStatus === "BOOKED") {
       await commonFunction.sendHotelBookingConfirmation(data);
-      sendSMS.sendSMSForHotelBookingConfirmation(response);
+      await sendSMS.sendSMSForHotelBooking(response);
     }
-
     actionCompleteResponse(res, response, msg);
   } catch (error) {
     sendActionFailedResponse(res, {}, error.message);

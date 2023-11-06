@@ -137,8 +137,8 @@ forumQueAnsCommRoutes(app);
 
 require("./routes/offerRoutes/offer.routes")(app);
 require("./routes/visaEnquiry.routes")(app);
-
-
+const userRoutes=require("./routes/userRoutes")
+userRoutes(app)
 //Set Up a WebSocket Client:  handling
 
 

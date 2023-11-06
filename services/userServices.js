@@ -31,12 +31,14 @@ const userServices = {
 
     paginateUserSearch: async (body) => {
         // userType: { $ne: [userType.ADMIN,userType.SUBADMIN] }
-        let query = {userType:{ $nin: [userType.ADMIN, userType.SUBADMIN] }}
+        let query = { userType: { $nin: [userType.ADMIN, userType.SUBADMIN] } }
         const { page, limit, usersType1, search } = body;
         if (search) {
             query.$or = [
                 { username: { $regex: search, $options: 'i' } },
                 { email: { $regex: search, $options: 'i' } },
+                { _id: { $regex: search, $options: 'i' } },
+                { status: { $regex: search, $options: 'i' } }
             ]
         }
         if (usersType1) {
@@ -50,7 +52,7 @@ const userServices = {
         };
         return await userModel.paginate(query, options);
     },
-    countTotalUser:async(body)=>{
+    countTotalUser: async (body) => {
         return await userModel.countDocuments(body)
     }
 }

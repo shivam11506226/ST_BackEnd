@@ -1,6 +1,15 @@
 const Joi = require("joi");
+
+const {
+  offers,
+} = require("../../model/offers/offer.model");
+
 const { offerSchemaValidation } = require("../../model/offers/offer.model");
 const { Offer } = require("../../model/offers/offer.model");
+const { userServices } = require("../../services/userServices");
+const { createUser, findUser, getUser, findUserData, updateUser } =
+  userServices;
+
 const {
   actionCompleteResponse,
   sendActionFailedResponse,
@@ -9,10 +18,20 @@ const {
 const offerType = require("../../enums/offerType");
 
 exports.createOffer = async (req, res) => {
-  const { title, discount, promocode, offerdetails, status, offertype } =
-    req.body;
+  const {
+    userId,
+    title,
+    discount,
+    promocode,
+    offerdetails,
+    status,
+    offertype,
+  } = req.body;
   var media;
-
+  const isUser = await findUser({ _id: userId });
+  if (!isUser) {
+    return sendActionFailedResponse(res, {}, "User not found");
+  }
   media = req.files.map(async (singleFile) => {
     const finalLocation = `/${singleFile.Key}`;
     return {
@@ -24,6 +43,7 @@ exports.createOffer = async (req, res) => {
 
   // Example data to validate
   const dataToValidate = {
+    userId: isUser._id,
     title: title,
     media: media,
     discount: {
@@ -65,45 +85,107 @@ exports.createOffer = async (req, res) => {
   }
 };
 
+
+// exports.getOffer = async (req, res) => {
+//   try {
+//     const { offertype } = req.query;
+//     console.log("======================",req.query);
+//     let response;
+//     if (offertype === offerType.BANKOFFERS) {
+//       response = await offers.find({
+//         offertype: offerType.BANKOFFERS,
+//       });
+//     } else if (offertype === offerType.CABS) {
+//       response = await offers.find({
+//         offertype: offerType.CABS,
+//       });
+//     } else if (offertype === offerType.FLIGHTS) {
+//       response = await offers.find({
+//         offertype: offerType.FLIGHTS,
+//       });
+//     } else if (offertype === offerType.HOLIDAYS) {
+//       response = await offers.find({
+//         offertype: offerType.HOLIDAYS,
+//       });
+//     } else if (offertype === offerType.HOTELS) {
+//       response = await offers.find({
+//         offertype: offerType.HOTELS,
+//       });
+//     } else if (offertype === offerType.TRAINS) {
+//       response = await offers.find({
+//         offertype: offerType.TRAINS,
+//       });
+//     } else {
+//       console.log("=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+//       response = await offers.find({});
+//       console.log("response==========",response);
+//     }
+//     const msg = "Offer get data successfully.";
+//     actionCompleteResponse(res, result, msg);
+//   } catch (error) {
+//     console.log("error=====>>>",error);
+//     sendActionFailedResponse(res, {}, err.message);
+//   }
+// };
+
 exports.getOffer = async (req, res) => {
   try {
-    const { offertype } = req.body;
-    let response;
+    const { offertype, page = 1, pageSize = 10 } = req.query; // Set default values for page and pageSize
 
-    if (offertype === offerType.BANKOFFERS) {
-      response = await Offer.find({
-        offertype: offerType.BANKOFFERS,
-      });
-    } else if (offertype === offerType.CABS) {
-      response = await Offer.find({
-        offertype: offerType.CABS,
-      });
-    } else if (offertype === offerType.FLIGHTS) {
-      response = await Offer.find({
-        offertype: offerType.FLIGHTS,
-      });
-    } else if (offertype === offerType.HOLIDAYS) {
-      response = await Offer.find({
-        offertype: offerType.HOLIDAYS,
-      });
-    } else if (offertype === offerType.HOTELS) {
-      response = await Offer.find({
-        offertype: offerType.HOTELS,
-      });
-    } else if (offertype === offerType.TRAINS) {
-      response = await Offer.find({
-        offertype: offerType.TRAINS,
-      });
-    } else {
-      response = await Offer.find({});
-    }
+    const matchStage = {
+      $match: {
+        offertype: offertype ? offertype : offerType.BANKOFFERS,
+      },
+    };
 
-    const msg = "Offer get data successfully.";
-    actionCompleteResponse(res, response, msg); // Use 'response' instead of 'result'
+    const lookupStage = {
+      $lookup: {
+        from: 'users', // Replace 'users' with the actual name of your User collection
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'user',
+      },
+    };
+
+    const unwindStage = { $unwind: '$user' };
+
+    const totalOffers = await Offer.aggregate([
+      matchStage,
+      lookupStage,
+      unwindStage,
+      {
+        $count: 'total',
+      },
+    ]);
+
+    const options = [
+      matchStage,
+      lookupStage,
+      unwindStage,
+      {
+        $skip: (page - 1) * pageSize,
+      },
+      {
+        $limit: pageSize,
+      },
+    ];
+
+    const response = await Offer.aggregate(options);
+
+    const msg = "Offer data retrieved successfully.";
+    const result = {
+      offers: response,
+      totalOffers: totalOffers.length > 0 ? totalOffers[0].total : 0,
+      currentPage: page,
+      pageSize: pageSize,
+    };
+
+    actionCompleteResponse(res, result, msg);
   } catch (error) {
-    sendActionFailedResponse(res, {}, error.message); // Use 'error' instead of 'err'
+    sendActionFailedResponse(res, {}, error.message);
   }
 };
+
 
 
 exports.updateOffer = async (req, res) => {
@@ -113,14 +195,14 @@ exports.updateOffer = async (req, res) => {
       const msg = "id is required";
       sendActionFailedResponse(res, {}, msg);
     }
-    const isDataExist = await offers.findOne({
+    const isDataExist = await Offer.findOne({
       _id: id,
     });
     if (!isDataExist) {
       const msg = "Data not found";
       sendActionFailedResponse(res, {}, msg);
     }
-    const result = await offers.updateOne({ _id: isDataExist._id }, req.body);
+    const result = await Offer.updateOne({ _id: isDataExist._id }, req.body);
     const msg = "Offer updated successfully.";
     actionCompleteResponse(res, result, msg);
   } catch (error) {
@@ -135,14 +217,14 @@ exports.deleteOffer = async (req, res) => {
       const msg = "OfferDataId is required";
       sendActionFailedResponse(res, {}, msg);
     }
-    const isDataExist = await offers.findOne({
+    const isDataExist = await Offer.findOne({
       _id: OfferDataId,
     });
     if (!isDataExist) {
       const msg = "Data not found";
       sendActionFailedResponse(res, {}, msg);
     }
-    const result = await offers.deleteOne({ _id: isDataExist._id });
+    const result = await Offer.deleteOne({ _id: isDataExist._id });
     const msg = "Offer delete successfully.";
     actionCompleteResponse(res, result, msg);
   } catch (error) {

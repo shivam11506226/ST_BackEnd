@@ -32,6 +32,7 @@ exports.addBusBookingData = async (req, res) => {
 
     const msg = "Bus booking details added successfully";
     if(response.bookingStatus === "BOOKED"){
+
       const pdfDoc = await PDFDocument.create();
       const page = pdfDoc.addPage([600, 400]);
       const content=`      
@@ -64,7 +65,11 @@ exports.addBusBookingData = async (req, res) => {
       const pdfFilePath = "bus_booking.pdf";
       fs.writeFileSync(pdfFilePath, pdfBytes);
       await commonFunction.BusBookingConfirmationMail(data, pdfFilePath);
-      sendSMS.sendSMSForBusBookingConfirmation(response);
+      await sendSMS.sendSMSForBusBookingConfirmation(response);
+
+     // await commonFunction.sendBusBookingConfirmation(data);
+     // await sendSMS.sendSMSBusBooking(response);
+
     }
     
     actionCompleteResponse(res, response, msg);

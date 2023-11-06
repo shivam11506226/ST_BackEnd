@@ -10,6 +10,17 @@ module.exports = function (app) {
   });
   app.post("/skyTrails/offers/add", uploadOffer.array("media", 1),controller.createOffer);
 
+
+  // app.get("/skyTrails/offers/getAllOffer", controller.getOffer);
+  app.put(
+    "/skyTrails/offers/updateOffer",
+    controller.updateOffer
+  );
+  app.delete(
+    "/skyTrails/offers/deleteOffer",
+    controller.deleteOffer
+  );
+
   app.get("/skyTrails/offers/getAllOffer", controller.getOffer);
   app.put("/skyTrails/offers/updateOffer", controller.updateOffer);
   app.delete("/skyTrails/offers/deleteOffer", controller.deleteOffer);

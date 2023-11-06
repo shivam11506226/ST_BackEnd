@@ -1,4 +1,7 @@
+const { PDFDocument, rgb } = require("pdf-lib");
+const fs = require("fs");
 const busBookingData = require("../model/busBookingData.model");
+const commonFunction = require("../utilities/commonFunctions");
 const bookingStatus = require("../enums/bookingStatus");
 const {
   actionCompleteResponse,
@@ -21,12 +24,46 @@ exports.addBusBookingData = async (req, res) => {
       pnr: req.body.pnr,
       busId: req.body.busId,
       noOfSeats: req.body.noOfSeats,
-      bookingStatus: bookingStatus.BOOKED,
+      amount:req.body.amount,
+      bookingStatus:"BOOKED",
     };
     const response = await busBookingData.create(data);
+    console.log(response.bookingStatus,"status")
+
     const msg = "Bus booking details added successfully";
     if(response.bookingStatus === "BOOKED"){
-      await commonFunction.sendBusBookingConfirmation(data);
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage([600, 400]);
+      const content=`      
+      name:${response.name},
+      phone:${response.phone},
+      email:${response.email},
+      address:${response.address},
+      destination":${response.destination},
+      origin:${response.origin},
+      dateOfJourney:${response.dateOfJourney},
+      busType:${response.busType},
+      pnr:${response.pnr},
+      busId:${response.busId},
+      noOfSeats:${response.noOfSeats},
+      amount:${response.amount},
+      bookingStatus:${response.bookingStatus}
+      `;
+
+      page.drawText(content, {
+        x: 50,
+        y: 350,
+        size: 12,
+        color: rgb(0, 0, 0),
+      });
+
+      // Serialize the PDF to bytes  
+      const pdfBytes = await pdfDoc.save();
+
+      // Write the PDF to a temporary file
+      const pdfFilePath = "bus_booking.pdf";
+      fs.writeFileSync(pdfFilePath, pdfBytes);
+      await commonFunction.BusBookingConfirmationMail(data, pdfFilePath);
       sendSMS.sendSMSForBusBookingConfirmation(response);
     }
     

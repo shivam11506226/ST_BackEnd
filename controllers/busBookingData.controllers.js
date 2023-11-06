@@ -28,13 +28,14 @@ exports.addBusBookingData = async (req, res) => {
       bookingStatus:"BOOKED",
     };
     const response = await busBookingData.create(data);
-    console.log(response.bookingStatus,"status")
+    // console.log(response.bookingStatus,"status")
 
     const msg = "Bus booking details added successfully";
     if(response.bookingStatus === "BOOKED"){
 
       const pdfDoc = await PDFDocument.create();
       const page = pdfDoc.addPage([600, 400]);
+      
       const content=`      
       name:${response.name},
       phone:${response.phone},

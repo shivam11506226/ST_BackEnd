@@ -1,3 +1,5 @@
+const { PDFDocument, rgb } = require("pdf-lib");
+const fs = require("fs");
 const hotelBookingModel = require("../model/hotelBooking.model");
 const Notification = require("../model/notification.model");
 const User = require("../model/user.model");
@@ -25,7 +27,7 @@ exports.addHotelBookingData = async (req, res) => {
       email: req.body.email,
       address: req.body.address,
       destination: req.body.destination,
-      BookingId: req.body.origin,
+      BookingId: req.body.BookingId,
       CheckInDate: req.body.CheckInDate,
       hotelName: req.body.hotelName,
       hotelId: req.body.hotelId,
@@ -34,17 +36,57 @@ exports.addHotelBookingData = async (req, res) => {
       country: req.body.country,
       room: req.body.room,
       noOfNight: req.body.noOfNight,
+      amount:req.body.amount,
       bookingStatus: bookingStatus.BOOKED,
     };
     const response = await hotelBookingModel.create(data);
-    console.log("response==========", response);
+    // console.log("response==========", response);
     const msg = "Hotel booking  successfully";
     if (response.bookingStatus === "BOOKED") {
-      await commonFunction.sendHotelBookingConfirmation(data);
-      await sendSMS.sendSMSForHotelBooking(response);
+      // await commonFunction.sendHotelBookingConfirmation(data);
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage([600, 400]);
+      const content=`      
+      name:${response.name},
+      phone:${response.phone},
+      email:${response.email},
+      address:${response.address},
+      destination":${response.destination},
+      hotelName:${response.hotelName},
+      CheckInDate:${response.CheckInDate},
+      BookingId:${response.BookingId},
+      noOfNight:${response.noOfNight},
+      noOfPeople:${response.noOfPeople},
+      cityName:${response.cityName},
+      country:${response.country},
+      amount:${response.amount},
+      bookingStatus:${response.bookingStatus}
+      `;
+
+      page.drawText(content, {
+        x: 50,
+        y: 350,
+        size: 12,
+        color: rgb(0, 0, 0),
+      });
+
+      // Serialize the PDF to bytes  
+      const pdfBytes = await pdfDoc.save();
+
+      // Write the PDF to a temporary file
+      const pdfFilePath = "hotel_booking.pdf";
+      fs.writeFileSync(pdfFilePath, pdfBytes);
+
+      await commonFunction.HotelBookingConfirmationMail(data, pdfFilePath);  
+      
+      // await sendSMS.sendSMSForHotelBooking(response);
     }
+
+    
     actionCompleteResponse(res, response, msg);
+    
   } catch (error) {
+    console.log("heelelele")
     sendActionFailedResponse(res, {}, error.message);
   }
 };

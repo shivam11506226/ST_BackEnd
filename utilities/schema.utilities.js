@@ -66,7 +66,6 @@ const schemas = {
   //hotelBooking schema validation via JOI
 
   hotelBookingSchema: joi.object().keys({
-
     userId: joi.objectId,
     name: joi.string().required(),
     phone: joi.string().max(13).required(),
@@ -75,14 +74,14 @@ const schemas = {
     destination: joi.string().required(),
     BookingId: joi.string().required(),
     CheckInDate: joi.string().required(),
-    CheckOutDate: joi.string().required(),
     hotelName: joi.string().required(),
-    hotelId: joi.string().required(),
+    hotelId: joi.number().required(),
     noOfPeople: joi.number().required(),
     cityName: joi.string().required(),
     room: joi.number().required(),
-    night: joi.number().required(),
-    country: joi.string().required()
+    noOfNight: joi.number().required(),
+    country: joi.string().required(),
+    amount: joi.number().required()
   }),
 
   //weeklyVisa schema validation via joi

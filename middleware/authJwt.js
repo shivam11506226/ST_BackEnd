@@ -141,7 +141,7 @@ verifcationToken = (req, res, next) => {
         }
       })
     } else {
-      throw res.status(404).send({statusCode:statusCode.Conflict,message:"Please provide token.!"})
+      throw res.status(404).send({statusCode:statusCode.OK,message:"Please provide token.!"})
     }
   } catch (error) {
     console.log("error=>>",error);

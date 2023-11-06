@@ -197,10 +197,8 @@ const schemas = {
   userVerifySchema:joi.object().keys({
     otp: joi.string().required(),
     email: joi.string().optional(),
-    password: joi.string().optional(),
-    username: joi.string().optional(),
-    Address:joi.string().optional(),
-    profilePic:joi.string().optional(),
+    fullName: joi.string().optional(),
+    dob:joi.string().optional(),
   }),
 
   userForgetSchema:joi.object().keys({

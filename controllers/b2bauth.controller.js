@@ -420,6 +420,7 @@ exports.UserChangePassword = async (req, res) => {
   }
 }
 
+
 exports.agentQues=async(req,res,next)=>{
   try {
     // const{userId}=req.userId;
@@ -536,5 +537,33 @@ exports.agentQues=async(req,res,next)=>{
   } catch (error) {
     console.log("error==============",error);
     return next(error);
+  }
+}
+
+
+//subtract Balance
+
+exports.subtractBalance = async (req, res) => {
+  try {
+    const { _id, amount } = req.body;
+
+    const user = await b2bUser.findById(_id);
+
+    if (!user) {
+      return sendActionFailedResponse(res, {}, "Invalid userId");
+    }
+
+     // Update the user's balance by subtracting balance
+     user.balance -= Number(amount);
+
+     // Save the updated user
+     const updatedUser = await user.save();
+ 
+     // Respond with the updated user object
+     actionCompleteResponse(res, updatedUser, "User balance updated successfully");
+    
+  } catch (error) {
+    sendActionFailedResponse(res, {}, "Internal server error");
+    console.log(error);
   }
 }

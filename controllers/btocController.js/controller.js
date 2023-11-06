@@ -55,6 +55,7 @@ exports.login = async (req, res, next) => {
         const isExist = await findUser({ 'phone.mobile_number': mobileNumber, status: status.ACTIVE });
         if (!isExist) {
             const result1 = await createUser(obj);
+            // await commonFunction.sendSMS(mobileNumber,otp);
             token = await commonFunction.getToken({ _id: result1._id, mobile_number: result1.mobile_number });
             const result = {
                 firstTime: result1.firstTime,
@@ -69,7 +70,8 @@ exports.login = async (req, res, next) => {
             return res.status(statusCode.OK).send({ statusCode:statusCode.OK,message: responseMessage.LOGIN_SUCCESS, result: result });
         }
         let result1 = await updateUser({ 'phone.mobile_number': mobileNumber, status: status.ACTIVE }, obj);
-         if (!result1) {
+        // await commonFunction.sendSMS(mobileNumber,otp)
+        if (!result1) {
             return res.status(statusCode.InternalError).json({statusCode:statusCode.OK, message: responseMessage.INTERNAL_ERROR });
         }
         token = await commonFunction.getToken({ _id: result1._id, 'mobile_number': result1.phone.mobile_number });
@@ -148,7 +150,23 @@ exports.resendOtp=async(req,res,next)=>{
         if(!isExist){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,message:responseMessage.USERS_NOT_FOUND});
         }
-        
+        const updateData=await updateUser({_id:isExist._id,status:status.ACTIVE},{otp:otp,otpExpireTime:otpExpireTime});
+        if (!updateData) {
+            return res.status(statusCode.InternalError).json({statusCode:statusCode.OK, message: responseMessage.INTERNAL_ERROR });
+        }
+        // await commonFunction.sendSMS(mobileNumber,otp);
+       const token = await commonFunction.getToken({ _id: updateData._id, 'mobile_number': updateData.phone.mobile_number });
+       const result = {
+        firstTime: updateData.firstTime,
+        _id: updateData._id,
+        phone: updateData.phone,
+        userType: updateData.userType,
+        otpVerified: updateData.otpVerified,
+        otp:updateData.otp,
+        status: updateData.status,
+        token: token
+    }
+    return res.status(statusCode.OK).send({statusCode:statusCode.OK,message: responseMessage.OTP_SEND, result: result })
     } catch (error) {
         console.log("error==========>>>>>>.",error);
         return next(error);

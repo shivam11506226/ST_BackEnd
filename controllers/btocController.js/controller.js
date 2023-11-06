@@ -64,7 +64,7 @@ exports.login = async (req, res, next) => {
                 userType: result1.userType,
                 otpVerified: result1.otpVerified,
                 status: result1.status,
-                otp:result1.otp,
+                otp:otp,
                 token: token
             }
             return res.status(statusCode.OK).send({ statusCode:statusCode.OK,message: responseMessage.LOGIN_SUCCESS, result: result });
@@ -81,7 +81,7 @@ exports.login = async (req, res, next) => {
             phone: result1.phone,
             userType: result1.userType,
             otpVerified: result1.otpVerified,
-            otp:result1.otp,
+            otp:otp,
             status: result1.status,
             token: token
         }
@@ -152,7 +152,9 @@ exports.resendOtp=async(req,res,next)=>{
         }
         const updateData=await updateUser({_id:isExist._id,status:status.ACTIVE},{otp:otp,otpExpireTime:otpExpireTime});
         if (!updateData) {
-            return res.status(statusCode.InternalError).json({statusCode:statusCode.OK, message: responseMessage.INTERNAL_ERROR });
+            return res.status(statusCode.InternalError).send({statusCode:statusCode.OK, message: responseMessage.INTERNAL_ERROR });
+        }else if( updateData){
+            return res.status(statusCode.badRequest).send({statusCode:statusCode.badRequest, message: responseMessage.ALREADY_VERIFIED })
         }
         // await commonFunction.sendSMS(mobileNumber,otp);
        const token = await commonFunction.getToken({ _id: updateData._id, 'mobile_number': updateData.phone.mobile_number });
@@ -162,10 +164,11 @@ exports.resendOtp=async(req,res,next)=>{
         phone: updateData.phone,
         userType: updateData.userType,
         otpVerified: updateData.otpVerified,
-        otp:updateData.otp,
+        otp:otp,
         status: updateData.status,
         token: token
     }
+    console.log("result========",result);
     return res.status(statusCode.OK).send({statusCode:statusCode.OK,message: responseMessage.OTP_SEND, result: result })
     } catch (error) {
         console.log("error==========>>>>>>.",error);

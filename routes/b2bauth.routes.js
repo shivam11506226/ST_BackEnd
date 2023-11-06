@@ -18,7 +18,7 @@ module.exports = function (app) {
   app.get("/skyTrails/user/getallusers", controller.Getallusers);
   app.post("/skyTrails/user/setmarkup", controller.SetMarkup);
   app.get("/skyTrails/user/getmarkup/:userId", controller.GetMarkup);
-  
+  app.get("/skytrails/user/agentQueues",controller.agentQues)
 
   //get singleuserbyid
   app.get("/skyTrails/user/:userId",controller.UserById);

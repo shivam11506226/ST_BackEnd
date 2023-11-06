@@ -13,7 +13,7 @@ module.exports = function (app) {
     controller.createOffer
   );
 
-  app.get("/skyTrails/offers/getAllOffer", controller.getOffer);
+  // app.get("/skyTrails/offers/getAllOffer", controller.getOffer);
   app.put(
     "/skyTrails/offers/updateOffer",
     controller.updateOffer

@@ -27,7 +27,7 @@ exports.addBusBookingData = async (req, res) => {
     const msg = "Bus booking details added successfully";
     if(response.bookingStatus === "BOOKED"){
       await commonFunction.sendBusBookingConfirmation(data);
-      sendSMS.sendSMSForBusBookingConfirmation(response);
+      await sendSMS.sendSMSBusBooking(response);
     }
     
     actionCompleteResponse(res, response, msg);

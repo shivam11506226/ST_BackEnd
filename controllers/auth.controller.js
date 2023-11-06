@@ -9,7 +9,7 @@ const commonFunction = require('../utilities/commonFunctions');
 const approvestatus = require('../enums/approveStatus')
 //require responsemessage and statusCode
 const statusCode = require('../utilities/responceCode');
-const responseMessage = require('../utilities/responses')
+const responseMessage = require('../utilities/responses');
 //***********************************SERVICES********************************************** */
 
 const { userServices } = require('../services/userServices');

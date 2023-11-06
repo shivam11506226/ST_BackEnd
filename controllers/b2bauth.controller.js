@@ -5,6 +5,29 @@ const wallet = require('../model/wallet.model');
 const User = require('../model/user.model');
 const Role = require('../model/role.model');
 const Razorpay = require("razorpay");
+const config = require("../config/auth.config");
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcryptjs");
+const { userInfo } = require("os");
+const commonFunction = require('../utilities/commonFunctions');
+const approvestatus = require('../enums/approveStatus')
+//require responsemessage and statusCode
+const statusCode = require('../utilities/responceCode');
+const responseMessage = require('../utilities/responses');
+//***********************************SERVICES********************************************** */
+
+const { userServices } = require('../services/userServices');
+const userType = require("../enums/userType");
+const status = require("../enums/status");
+const { hotelBookingServicess } = require("../services/hotelBookingServices");
+const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking } = hotelBookingServicess;
+const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
+const { visaServices } = require('../services/visaServices');
+const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
+//***************************Necessary models**********************************/
+const flightModel = require('../model/flightBookingData.model')
+const hotelBookingModel = require('../model/hotelBooking.model')
+const busBookingModel = require("../model/busBookingData.model");
 
 const aws = require("aws-sdk");
 const {
@@ -397,3 +420,121 @@ exports.UserChangePassword = async (req, res) => {
   }
 }
 
+exports.agentQues=async(req,res,next)=>{
+  try {
+    // const{userId}=req.userId;
+    // const {userId}=req.body;
+    const { page, limit, search,userId } = req.query;
+    const isUSerExist=await findUser({_id:userId});
+    if(!isUSerExist){
+      return res.status(statusCode.NotFound).send(responseMessage.AGENT_NOT_FOUND);
+    }
+    const hotelData = await aggregatePaginateHotelBookingList(req.query);
+    console.log("hotelData============",busBookData);
+    if (search) {
+      var filter = search;
+    }
+    let data = filter || "";
+    const aggregateQuery = [
+      {
+        $lookup: {
+          from: "users",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "userDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          "userDetails.username": 1,
+          "userDetails.email": 1,
+          "userDetails.userType": 1,
+          "flightName": 1,
+          "paymentStatus": 1,
+          "pnr": 1,
+          "transactionId":1,
+          "transactionId":1,
+          "country":1,
+          "city":1,
+          "address":1,
+          "gender":1,
+          "firstName":1,
+          "lastName":1,
+          "userId": 1,
+          "_id":1,
+          "phone":1
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { "flightName": { $regex: data, $options: "i" } },
+            { "userDetails.username": { $regex: data, $options: "i" } },
+            { "userDetails.email": { $regex: data, $options: "i" } },
+            { "paymentStatus": { $regex: data, $options: "i" } },
+            { "pnr": parseInt(data) },
+          ],
+        }
+      },
+    ]
+    let aggregate = flightModel.aggregate(aggregateQuery);
+    const options = {
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 5,
+    };
+    const flightData = await flightModel.aggregatePaginate(aggregate, options);
+    const pipeline = [
+      {
+        $lookup: {
+          from: "users",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "userDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      }, 
+      {
+        $match: {
+          $or: [
+            { "destination": { $regex: data, $options: "i" } },
+            { "userDetails.username": { $regex: data, $options: "i" } },
+            { "userDetails.email": { $regex: data, $options: "i" } },
+            { "paymentStatus": { $regex: data, $options: "i" } },
+            { "pnr": { $regex: data, $options: "i" } },
+            { "origin": { $regex: data, $options: "i" } },
+            { "dateOfJourney": { $regex: data, $options: "i" } },
+            { "busType": { $regex: data, $options: "i" } },
+            { "busId": parseInt(data) },
+            { "name": { $regex: data, $options: "i" } },
+            { "bookingStatus": { $regex: data, $options: "i" } }
+          ],
+        }
+      },
+    ]
+    console.log("flightData=========",flightData);
+    let aggregate1 = busBookingModel.aggregate(pipeline);
+    const options1 = {
+      page: parseInt(page, 10) || 1,
+      limit: parseInt(limit, 10) || 10,
+    };
+    const busBookData = await busBookingModel.aggregatePaginate(aggregate1, options1);
+    const combinedData=[hotelData,flightData,busBookData]
+    console.log("busBookData===========",busBookData);
+    return res.status(statusCode.OK).send({message:responseMessage.DATA_FOUND, result:combinedData});
+
+  } catch (error) {
+    console.log("error==============",error);
+    return next(error);
+  }
+}

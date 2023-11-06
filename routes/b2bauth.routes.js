@@ -20,9 +20,9 @@ module.exports = function (app) {
   app.post("/skyTrails/user/setmarkup", controller.SetMarkup);
   app.get("/skyTrails/user/getmarkup/:userId", controller.GetMarkup);
   app.get("/skytrails/user/agentQueues", controller.agentQues)
-  app.get("/skytrails/user/getAllAgentHotelBookingList",SchemaValidator(schemas.agetHotelBooking), controller.getAllAgentHotelBookingList);
-  app.get("/skytrails/user/getAllAgentFlightBookingList",SchemaValidator(schemas.agetHotelBooking), controller.getAllAgentFlightBookingList);
-  app.get("/skytrails/user/getAllAgentFlightBookingList",SchemaValidator(schemas.agetHotelBooking), controller.getAllAgentBusBookingList);
+  app.get("/skytrails/user/getAllAgentHotelBookingList", controller.getAllAgentHotelBookingList);
+  app.get("/skytrails/user/getAllAgentFlightBookingList", controller.getAllAgentFlightBookingList);
+  app.get("/skytrails/user/getAllAgentBusBookingList", controller.getAllAgentBusBookingList);
   //get singleuserbyid
   app.get("/skyTrails/user/:userId", controller.UserById);
 

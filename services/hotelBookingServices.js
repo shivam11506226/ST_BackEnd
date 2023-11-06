@@ -1,6 +1,7 @@
 const hotelBookingModel = require('../model/hotelBooking.model');
 const status = require("../enums/status");
-const bookingStatus=require("../enums/bookingStatus")
+const bookingStatus=require("../enums/bookingStatus");
+const mongoose =require('mongoose');
 const hotelBookingServicess = {
     createhotelBooking: async (insertObj) => {
         return await hotelBookingModel.create(insertObj);
@@ -110,7 +111,7 @@ const hotelBookingServicess = {
         return await hotelBookingModel.countDocuments({bookingStatus:bookingStatus.BOOKED})
     },
     aggregatePaginateHotelBookingList1: async (body) => {
-        const { page, limit, search, fromDate, toDate } = body;
+        const { page, limit, search, fromDate, toDate,userId } = body;
         if (search) {
             var filter = search;
         }

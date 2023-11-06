@@ -86,7 +86,7 @@ isModerator = (req, res, next) => {
 
 verifcationToken = (req, res, next) => {
   try {
-    // console.log("req.headers.token====>>>",req.headers.token);
+    console.log("req.headers.token====>>>",req.headers.token);
     if (req.headers.token) {
       jwt.verify(req.headers.token, config.secret, (err, result) => {
         if (err) {

@@ -20,7 +20,7 @@ const { userServices } = require('../services/userServices');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
 const { hotelBookingServicess } = require("../services/hotelBookingServices");
-const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking } = hotelBookingServicess;
+const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking, aggregatePaginateHotelBookingList1 } = hotelBookingServicess;
 const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
 const { visaServices } = require('../services/visaServices');
 const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
@@ -70,7 +70,7 @@ exports.RegisterUser = async (req, res) => {
             country_code: "+91",
             mobile_number: reqData.personal_details.mobile.mobile_number,
           },
-          password: bcrypt.hashSync(reqData.personal_details.password,salt),
+          password: bcrypt.hashSync(reqData.personal_details.password, salt),
         },
         agency_details: {
           ...reqData.agency_details,
@@ -89,13 +89,13 @@ exports.RegisterUser = async (req, res) => {
 
       try {
         var size = Object.keys(user).length;
-        if(size > 0) {
-          const walletdata = await wallet.create({userId:user._id.toString(),currency:reqData.currency,status:"successful"});
+        if (size > 0) {
+          const walletdata = await wallet.create({ userId: user._id.toString(), currency: reqData.currency, status: "successful" });
           user.walletid = walletdata._id.toString();
         }
         const response = await user.save();
         msg = "Data Saved Successfully";
-        actionCompleteResponse(res,response, msg);
+        actionCompleteResponse(res, response, msg);
       } catch (err) {
         console.log(err);
         sendActionFailedResponse(res, {}, err.message);
@@ -145,7 +145,7 @@ exports.RegisterUser = async (req, res) => {
 //     });
 // };
 
-exports.LoginUser= async (req, res) =>{
+exports.LoginUser = async (req, res) => {
   try {
     const user = await b2bUser.findOne({ "personal_details.email": req.body.email });
 
@@ -207,22 +207,22 @@ exports.UserUpdate = async (req, res) => {
   }
 };
 
-exports.deleteUser = async (req,res)=>{
+exports.deleteUser = async (req, res) => {
   const userId = req.body.userId;
   try {
     const user = await User.findById(req.body.isAdmin);
     const role = await Role.findById(user.roles[0].toString());
-   if(role.name === 'admin'){
+    if (role.name === 'admin') {
       const response = await b2bUser.findByIdAndDelete(userId);
       // console.log(response.walletid.toString());
-       await wallet.findByIdAndDelete(response.walletid.toString());
+      await wallet.findByIdAndDelete(response.walletid.toString());
       const msg = "user deleted successfully"
       actionCompleteResponse(res, {}, msg);
-   }
-  else{
-    const msg = "only Admin can delete b2b users "
-    actionCompleteResponse(res, {}, msg);
-  }
+    }
+    else {
+      const msg = "only Admin can delete b2b users "
+      actionCompleteResponse(res, {}, msg);
+    }
   } catch (error) {
     sendActionFailedResponse(res, {}, error.message);
   }
@@ -230,7 +230,7 @@ exports.deleteUser = async (req,res)=>{
 
 exports.Getallusers = async (req, res) => {
   try {
-   const users = await b2bUser.find();
+    const users = await b2bUser.find();
     msg = "User Fetched";
     actionCompleteResponse(res, users, msg);
   } catch (error) {
@@ -242,16 +242,20 @@ exports.SetMarkup = async (req, res) => {
   try {
     const { userId } = req.body; //destructure userId and amount from request body
     //check if userId is valid in table
-    const resData = await b2bUser.findById(userId); 
+    const resData = await b2bUser.findById(userId);
     console.log(resData);
     const user = await b2bUser.findOneAndUpdate(
       { _id: userId },
-      { $set: { markup:{
-         bus: req.body.markup.bus ||resData.markup.bus,
-         hotel:req.body.markup.hotel ||resData.markup.hotel,
-         flight:req.body.markup.flight ||resData.markup.flight,
-         holiday:req.body.markup.holiday ||resData.markup.holiday
-      }} },
+      {
+        $set: {
+          markup: {
+            bus: req.body.markup.bus || resData.markup.bus,
+            hotel: req.body.markup.hotel || resData.markup.hotel,
+            flight: req.body.markup.flight || resData.markup.flight,
+            holiday: req.body.markup.holiday || resData.markup.holiday
+          }
+        }
+      },
       { new: true }
     );
     if (!user) {
@@ -269,7 +273,7 @@ exports.SetMarkup = async (req, res) => {
 exports.GetMarkup = async (req, res) => {
   try {
     const { userId } = req.params; //destructure userId from request params
-    const user = await b2bUser.findOne({ _id: userId },"markup");
+    const user = await b2bUser.findOne({ _id: userId }, "markup");
     if (!user) {
       sendActionFailedResponse(res, {}, "Invalid userId");
     } else {
@@ -282,14 +286,14 @@ exports.GetMarkup = async (req, res) => {
 };
 
 //update b2b balance using razorpay
-exports.updateUserBalance= async (req,res)=>{
+exports.updateUserBalance = async (req, res) => {
 
   try {
     const { _id, amount } = req.body; // Destructure userId and additionalBalance from the request body
 
     // Check if userId is valid in your user table
-     console.log(req.body);
-    
+    console.log(req.body);
+
 
     let instance = new Razorpay({
       key_id: process.env.Razorpay_KEY_ID,
@@ -303,11 +307,11 @@ exports.updateUserBalance= async (req,res)=>{
     };
     console.log(req.body.amount);
     instance.orders.create(options, function (err, order) {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ code: 500, message: "Server Error" });
-        }
-           
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ code: 500, message: "Server Error" });
+      }
+
       console.log(order);
       // return res.send({
       //   code: 200,
@@ -329,34 +333,34 @@ exports.updateUserBalance= async (req,res)=>{
 
     // Respond with the updated user object
     actionCompleteResponse(res, updatedUser, "User balance updated successfully");
-     
+
   } catch (error) {
     sendActionFailedResponse(res, {}, "Internal server error");
-    console.log(error);    
+    console.log(error);
   }
 
 };
 
-exports.payVerify= (req,res)=>{
+exports.payVerify = (req, res) => {
   try {
     console.log(req.body);
-    body=req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
+    body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
     var crypto = require("crypto");
     var expectedSignature = crypto.createHmac('sha256', process.env.Razorpay_KEY_SECRET)
-                                    .update(body.toString())
-                                    .digest('hex');
-                                    console.log("sig"+req.body.razorpay_signature);
-                                    console.log("sig"+expectedSignature);
-    
-    if(expectedSignature === req.body.razorpay_signature){
+      .update(body.toString())
+      .digest('hex');
+    console.log("sig" + req.body.razorpay_signature);
+    console.log("sig" + expectedSignature);
+
+    if (expectedSignature === req.body.razorpay_signature) {
       console.log("Payment Success");
-    }else{
+    } else {
       console.log("Payment Fail");
     }
-    
+
   } catch (error) {
     sendActionFailedResponse(res, {}, "Internal server error");
-    console.log(error.message);    
+    console.log(error.message);
   }
 }
 
@@ -364,7 +368,7 @@ exports.payVerify= (req,res)=>{
 
 // get userById
 
-exports.UserById=async (req,res)=>{
+exports.UserById = async (req, res) => {
   try {
     const userId = req.params.userId;
     // Query MongoDB to find a user by userId
@@ -373,10 +377,10 @@ exports.UserById=async (req,res)=>{
       return res.status(404).json({ message: 'User not found' });
     }
     actionCompleteResponse(res, user, "User Found");
-    
+
   } catch (error) {
     sendActionFailedResponse(res, {}, "Internal server error");
-    console.log(error);      
+    console.log(error);
   }
 }
 
@@ -409,10 +413,10 @@ exports.UserChangePassword = async (req, res) => {
 
     // Update the user's password field (assuming it's under personal_details)
     user.personal_details.password = hashedPassword;
-    const updaeUser= await user.save();
+    const updaeUser = await user.save();
 
     // Send a success response
-    return actionCompleteResponse(res,updaeUser, { message: "Password updated successfully" });
+    return actionCompleteResponse(res, updaeUser, { message: "Password updated successfully" });
 
   } catch (error) {
     sendActionFailedResponse(res, {}, "Internal server error");
@@ -421,17 +425,17 @@ exports.UserChangePassword = async (req, res) => {
 }
 
 
-exports.agentQues=async(req,res,next)=>{
+exports.agentQues = async (req, res, next) => {
   try {
     // const{userId}=req.userId;
     // const {userId}=req.body;
-    const { page, limit, search,userId } = req.query;
-    const isUSerExist=await findUser({_id:userId});
-    if(!isUSerExist){
+    const { page, limit, search, userId } = req.query;
+    const isUSerExist = await findUser({ _id: userId });
+    if (!isUSerExist) {
       return res.status(statusCode.NotFound).send(responseMessage.AGENT_NOT_FOUND);
     }
     const hotelData = await aggregatePaginateHotelBookingList(req.query);
-    console.log("hotelData============",busBookData);
+    console.log("hotelData============", busBookData);
     if (search) {
       var filter = search;
     }
@@ -459,17 +463,17 @@ exports.agentQues=async(req,res,next)=>{
           "flightName": 1,
           "paymentStatus": 1,
           "pnr": 1,
-          "transactionId":1,
-          "transactionId":1,
-          "country":1,
-          "city":1,
-          "address":1,
-          "gender":1,
-          "firstName":1,
-          "lastName":1,
+          "transactionId": 1,
+          "transactionId": 1,
+          "country": 1,
+          "city": 1,
+          "address": 1,
+          "gender": 1,
+          "firstName": 1,
+          "lastName": 1,
           "userId": 1,
-          "_id":1,
-          "phone":1
+          "_id": 1,
+          "phone": 1
         }
       },
       {
@@ -504,7 +508,7 @@ exports.agentQues=async(req,res,next)=>{
           path: "$userDetails",
           preserveNullAndEmptyArrays: true
         }
-      }, 
+      },
       {
         $match: {
           $or: [
@@ -523,19 +527,19 @@ exports.agentQues=async(req,res,next)=>{
         }
       },
     ]
-    console.log("flightData=========",flightData);
+    console.log("flightData=========", flightData);
     let aggregate1 = busBookingModel.aggregate(pipeline);
     const options1 = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 10,
     };
     const busBookData = await busBookingModel.aggregatePaginate(aggregate1, options1);
-    const combinedData=[hotelData,flightData,busBookData]
-    console.log("busBookData===========",busBookData);
-    return res.status(statusCode.OK).send({message:responseMessage.DATA_FOUND, result:combinedData});
+    const combinedData = [hotelData, flightData, busBookData];
+    console.log("busBookData===========", busBookData);
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: combinedData });
 
   } catch (error) {
-    console.log("error==============",error);
+    console.log("error==============", error);
     return next(error);
   }
 }
@@ -553,17 +557,196 @@ exports.subtractBalance = async (req, res) => {
       return sendActionFailedResponse(res, {}, "Invalid userId");
     }
 
-     // Update the user's balance by subtracting balance
-     user.balance -= Number(amount);
+    // Update the user's balance by subtracting balance
+    user.balance -= Number(amount);
 
-     // Save the updated user
-     const updatedUser = await user.save();
- 
-     // Respond with the updated user object
-     actionCompleteResponse(res, updatedUser, "User balance updated successfully");
-    
+    // Save the updated user
+    const updatedUser = await user.save();
+
+    // Respond with the updated user object
+    actionCompleteResponse(res, updatedUser, "User balance updated successfully");
+
   } catch (error) {
     sendActionFailedResponse(res, {}, "Internal server error");
     console.log(error);
+  }
+}
+
+
+exports.flightBookingQueue = async (req, res, next) => {
+  try {
+
+  } catch (error) {
+    console.log("Error============", error);
+    return next(error)
+  }
+}
+
+//***********************************GET ALL HOTEL BOOKING LIST ****************************************/
+
+exports.getAllAgentHotelBookingList = async (req, res, next) => {
+  try {
+    const { page, limit, search, fromDate, toDate, userId } = req.query;
+    const isAdmin = await findUser({ _id: userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+    }
+    const result = await aggregatePaginateHotelBookingList1(req.query);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}
+
+//***************************************GET ALL FLIGHT BOOKING LIST**************************************/
+
+exports.getAllAgentFlightBookingList = async (req, res, next) => {
+  try {
+    const { page, limit, search, userId } = req.query;
+    const isAgent = await findUser({ _id: userId, userType: userType.ADMIN });
+    if (!isAgent) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
+    }
+    if (search) {
+      var filter = search;
+    }
+    let data = filter || ""
+    const aggregateQuery = [
+      {
+        $match: {
+          userId: mongoose.Types.ObjectId(userId)
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "userDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          "userDetails.username": 1,
+          "userDetails.email": 1,
+          "userDetails.userType": 1,
+          "flightName": 1,
+          "paymentStatus": 1,
+          "pnr": 1,
+          "transactionId": 1,
+          "transactionId": 1,
+          "country": 1,
+          "city": 1,
+          "address": 1,
+          "gender": 1,
+          "firstName": 1,
+          "lastName": 1,
+          "userId": 1,
+          "_id": 1,
+          "phone": 1
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { "flightName": { $regex: data, $options: "i" } },
+            { "userDetails.username": { $regex: data, $options: "i" } },
+            { "userDetails.email": { $regex: data, $options: "i" } },
+            { "paymentStatus": { $regex: data, $options: "i" } },
+            { "pnr": parseInt(data) },
+          ],
+        }
+      },
+    ]
+    let aggregate = flightModel.aggregate(aggregateQuery);
+    const options = {
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 5,
+    };
+    const result = await flightModel.aggregatePaginate(aggregate, options);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}
+
+//*********************************GETALL BUSBOKING DETAILS*********************************************/
+
+exports.getAllAgentBusBookingList = async (req, res, next) => {
+  try {
+    const { page, limit, search } = req.query;
+    const isAgent = await findUser({ _id: userId, userType: userType.ADMIN });
+    if (!isAgent) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
+    }
+    if (search) {
+      var filter = search;
+    }
+    let data = filter || "";
+    const pipeline = [
+      {
+        $match: {
+          userId: mongoose.Types.ObjectId(userId)
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "userDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { "destination": { $regex: data, $options: "i" } },
+            { "userDetails.username": { $regex: data, $options: "i" } },
+            { "userDetails.email": { $regex: data, $options: "i" } },
+            { "paymentStatus": { $regex: data, $options: "i" } },
+            { "pnr": { $regex: data, $options: "i" } },
+            { "origin": { $regex: data, $options: "i" } },
+            { "dateOfJourney": { $regex: data, $options: "i" } },
+            { "busType": { $regex: data, $options: "i" } },
+            { "busId": parseInt(data) },
+            { "name": { $regex: data, $options: "i" } },
+            { "bookingStatus": { $regex: data, $options: "i" } }
+          ],
+        }
+      },
+    ]
+    let aggregate = busBookingModel.aggregate(pipeline);
+    const options = {
+      page: parseInt(page, 10) || 1,
+      limit: parseInt(limit, 10) || 10,
+    };
+    const result = await busBookingModel.aggregatePaginate(aggregate, options);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
   }
 }

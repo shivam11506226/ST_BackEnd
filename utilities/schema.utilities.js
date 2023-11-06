@@ -212,6 +212,14 @@ const schemas = {
   }),
   btoCuserLoginSchema:joi.object().keys({
     mobileNumber:joi.string().required()
+  }),
+  agetHotelBooking:joi.object().keys({
+    page:joi.string().optional(),
+    limit:joi.string().optional(), 
+    search:joi.string().optional(), 
+    fromDate:joi.string().optional(), 
+    toDate:joi.string().optional(),
+    userId:joi.string().required()
   })
 
 };

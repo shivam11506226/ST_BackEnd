@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
 const status = require('../enums/status');
-const bookingStatus = require("../enums/bookingStatus");
+const approveStatus = require("../enums/approveStatus");
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');
-const cancelBookingDataSchema =
+mongoose.pluralize(null);
+const changeBookingDataSchema =
     new mongoose.Schema({
-        userId: {
+        agentId: {
             type: Schema.Types.ObjectId,
             ref: "userb2bs"
         },
@@ -29,15 +30,26 @@ const cancelBookingDataSchema =
             type: String,
             default: "ACTIVE"
         },
-        bookingStatus: {
-            type: String,
-            enums: [bookingStatus.BOOKED, busBookingData.CANCEL, bookingStatus.PENDING],
+        contactNumber: {
+            country_code: {
+                type: String,
+                default: "+91",
+            },
+            mobile_number: { type: String },
         },
+        changerequest: {
+            type: String
+        },
+        approveStatus:{
+            type: String,
+           enum:[approveStatus.APPROVED, approveStatus.REJECT,approveStatus.PENDING],
+           default: approveStatus.PENDING
+        }
     }, { timestamps: true }
     )
-cancelBookingDataSchema.plugin(mongoosePaginate);
+changeBookingDataSchema.plugin(mongoosePaginate);
 
-cancelBookingDataSchema.plugin(aggregatePaginate);
+changeBookingDataSchema.plugin(aggregatePaginate);
 
-const cancelBookingData = mongoose.model("busBookingData", cancelBookingDataSchema);
-module.exports = cancelBookingData;
+const changeBookingData = mongoose.model("changeRequestData", changeBookingDataSchema);
+module.exports = changeBookingData;

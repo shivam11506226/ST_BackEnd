@@ -8,7 +8,7 @@ const flightBookingData = new mongoose.Schema(
       userId: {
         type: Schema.Types.ObjectId,
         required: [true, "user ID is required"],
-        ref: "Userb2b",
+        ref: "userb2bs",
       },
       bookingId: {
         type:String,

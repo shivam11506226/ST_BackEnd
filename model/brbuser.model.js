@@ -3,6 +3,7 @@ const userType = require("../enums/userType");
 const { activeStatus } = require("../common/const");
 const approveStatus = require("../enums/approveStatus");
 const mongoosePaginate = require('mongoose-paginate-v2');
+mongoose.pluralize(null);
 const Userb2bSchema = 
   new mongoose.Schema(
     {
@@ -262,6 +263,6 @@ const Userb2bSchema =
     }
   )
   Userb2bSchema.plugin(mongoosePaginate);
-const Userb2b= mongoose.model('Userb2b',Userb2bSchema);
+const Userb2b= mongoose.model('userb2bs',Userb2bSchema);
 
 module.exports = Userb2b;

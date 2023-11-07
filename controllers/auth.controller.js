@@ -389,7 +389,6 @@ exports.getAllFlightBookingList = async (req, res, next) => {
         }
       },
     ]
-    console.log('Aggregate Query:', aggregateQuery);
     let aggregate = flightModel.aggregate(aggregateQuery);
     const options = {
       page: parseInt(page) || 1,
@@ -607,10 +606,10 @@ exports.uploadProfilePicture = async (req, res, next) => {
 exports.cancelHotel = async (req, res, next) => {
   try {
     const { bookingID } = req.body;
-    const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
-    if (!isAdmin) {
-      return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
-    }
+    // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    // if (!isAdmin) {
+    //   return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    // }
     const currentDate = new Date().toISOString();
     const isBookingExist = await findhotelBooking({ _id: bookingID, status: status.ACTIVE, CheckInDate: { $gt: currentDate } });
     if (!isBookingExist) {
@@ -623,5 +622,6 @@ exports.cancelHotel = async (req, res, next) => {
     console.log("error===========>>>.", error);
   }
 }
+
 
 

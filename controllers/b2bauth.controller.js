@@ -1,6 +1,6 @@
 const db = require("../model");
 const b2bUser = db.userb2b;
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 var bcrypt = require("bcryptjs");
 const wallet = require('../model/wallet.model');
 const User = require('../model/user.model');
@@ -15,6 +15,7 @@ const approvestatus = require('../enums/approveStatus')
 //require responsemessage and statusCode
 const statusCode = require('../utilities/responceCode');
 const responseMessage = require('../utilities/responses');
+const bookingStatus = require('../enums/bookingStatus')
 //***********************************SERVICES********************************************** */
 
 const { brbuserServices } = require('../services/btobagentServices');
@@ -22,9 +23,11 @@ const userType = require("../enums/userType");
 const status = require("../enums/status");
 const { hotelBookingServicess } = require("../services/hotelBookingServices");
 const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking, aggregatePaginateHotelBookingList1 } = hotelBookingServicess;
-const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser,deletebrbuser,brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
+const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser, deletebrbuser, brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
 const { visaServices } = require('../services/visaServices');
 const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
+const { changeRequestServices } = require('../services/changeRequest');
+const { createchangeRequest, findchangeRequest, findchangeRequestData, deletechangeRequest, changeRequestList, updatechangeRequest, paginatechangeRequestSearch, aggregatePaginatechangeRequestList, countTotalchangeRequest } = changeRequestServices;
 //***************************Necessary models**********************************/
 const flightModel = require('../model/flightBookingData.model')
 const hotelBookingModel = require('../model/hotelBooking.model')
@@ -35,6 +38,7 @@ const {
   actionCompleteResponse,
   sendActionFailedResponse,
 } = require("../common/common");
+const { log } = require("console");
 
 console.log(process.env.AWS_ACCESS_KEY_ID, process.env.AWS_SECRET_ACCESS_KEY);
 
@@ -579,7 +583,7 @@ exports.subtractBalance = async (req, res) => {
 exports.getAllAgentHotelBookingList = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate, toDate, userId } = req.query;
-    const isAgent = await findbrbuser({_id: userId});
+    const isAgent = await findbrbuser({ _id: userId });
     if (!isAgent) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
@@ -599,7 +603,7 @@ exports.getAllAgentHotelBookingList = async (req, res, next) => {
 exports.getAllAgentFlightBookingList = async (req, res, next) => {
   try {
     const { page, limit, search, userId } = req.query;
-    const isAgent = await findbrbuser({ _id: userId});
+    const isAgent = await findbrbuser({ _id: userId });
     if (!isAgent) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
     }
@@ -615,7 +619,7 @@ exports.getAllAgentFlightBookingList = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "Userb2b",
+          from: "userb2bs",
           localField: 'userId',
           foreignField: '_id',
           as: "userDetails",
@@ -659,12 +663,12 @@ exports.getAllAgentFlightBookingList = async (req, res, next) => {
 
 exports.getAllAgentBusBookingList = async (req, res, next) => {
   try {
-    const { page, limit, search,userId } = req.query;
+    const { page, limit, search, userId } = req.query;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).send({ message: 'Invalid userId' });
     }
 
-    const isAgent = await findbrbuser({ _id: userId});
+    const isAgent = await findbrbuser({ _id: userId });
     if (!isAgent) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
     }
@@ -680,7 +684,7 @@ exports.getAllAgentBusBookingList = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "Userb2b",
+          from: "userb2bs",
           localField: 'userId',
           foreignField: '_id',
           as: "userDetails",
@@ -731,9 +735,96 @@ exports.getAllAgentBusBookingList = async (req, res, next) => {
 
 exports.cancelBookingByAgent = async (req, res, next) => {
   try {
-    const {}=req.body;
+    const { } = req.body;
   } catch (error) {
     console.log("error", error);
     return next(error);
   }
 }
+
+
+//change hotel booking details request by agent **************************************************************
+
+exports.changeHotelDetailsRequest = async (req, res, next) => {
+  try {
+    const { reason, changerequest, bookingId, agentId, contactNumber } = req.body;
+    const isAgentExists = await findbrbuser({ _id: agentId });
+    console.log("==============",isAgentExists);
+    if (!isAgentExists) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
+    }
+    const isBookingExist = await findhotelBooking({ _id: bookingId, userId: isAgentExists._id, status: status.ACTIVE });
+    if (!isBookingExist) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+    }
+    const object = {
+      reason: reason,
+      changerequest: changerequest,
+      hotelBookingId: bookingId,
+      agentId: agentId,
+      contactNumber: { mobile_number: contactNumber }
+    }
+    const result = await createchangeRequest(object);
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+  } catch (error) {
+    console.log("error", error);
+    return next(error);
+  }
+}
+
+//change flight booking details request by agent **************************************************************
+
+exports.changeFlightDetailsRequest = async (req, res, next) => {
+  try {
+    const { reason, changerequest, bookingId, agentId, contactNumber } = req.body;
+    const isAgentExists = await findbrbuser({_id: agentId});
+    console.log("==============",isAgentExists);
+    if (!isAgentExists) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
+    }
+    const isBookingExist = await flightModel.findOne({ _id: bookingId, userId: isAgentExists._id, status: status.ACTIVE });
+    if (!isBookingExist) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+    }
+    const object = {
+      reason: reason,
+      changerequest: changerequest,
+      flightBookingId: bookingId,
+      agentId: agentId,
+      contactNumber: { mobile_number: contactNumber }
+    }
+    const result = await createchangeRequest(object);
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+  } catch (error) {
+    console.log("error", error);
+    return next(error);
+  }
+}
+
+//change bus booking details request by agent **************************************************************
+exports.changeBusBookingDetailsRequest = async (req, res, next) => {
+  try {
+    const { reason, changerequest, bookingId, agentId, contactNumber } = req.body;
+    const isUSerExists = await findbrbuser({ _id: agentId });
+    if (!isUSerExists) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
+    }
+    const isBookingExist = await busBookingModel.findOne({ _id: bookingId, userId: isUSerExists._id, status: status.ACTIVE });
+    if (!isBookingExist) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+    }
+    const object = {
+      reason: reason,
+      changerequest: changerequest,
+      flightBookingId: bookingId,
+      agentId: agentId,
+      contactNumber: { mobile_number: contactNumber }
+    }
+    const result = await createchangeRequest(object);
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+  } catch (error) {
+    console.log("error", error);
+    return next(error);
+  }
+}
+

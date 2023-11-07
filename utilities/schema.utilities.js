@@ -219,6 +219,13 @@ const schemas = {
     fromDate:joi.string().optional(), 
     toDate:joi.string().optional(),
     userId:joi.string().required()
+  }),
+  changeRequest:joi.object().keys({
+    reason:joi.string().required(),
+    changerequest:joi.string().required(),
+    bookingId:joi.string().required(),
+    agentId:joi.string().required(),
+    contactNumber:joi.string().required()
   })
 
 };

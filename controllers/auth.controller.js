@@ -376,27 +376,6 @@ exports.getAllFlightBookingList = async (req, res, next) => {
         }
       },
       {
-        $project: {
-          "userDetails.username": 1,
-          "userDetails.email": 1,
-          "userDetails.userType": 1,
-          "flightName": 1,
-          "paymentStatus": 1,
-          "pnr": 1,
-          "transactionId":1,
-          "transactionId":1,
-          "country":1,
-          "city":1,
-          "address":1,
-          "gender":1,
-          "firstName":1,
-          "lastName":1,
-          "userId": 1,
-          "_id":1,
-          "phone":1
-        }
-      },
-      {
         $match: {
           $or: [
             { "flightName": { $regex: data, $options: "i" } },

@@ -574,15 +574,6 @@ exports.subtractBalance = async (req, res) => {
 }
 
 
-exports.flightBookingQueue = async (req, res, next) => {
-  try {
-
-  } catch (error) {
-    console.log("Error============", error);
-    return next(error)
-  }
-}
-
 //***********************************GET ALL HOTEL BOOKING LIST ****************************************/
 
 exports.getAllAgentHotelBookingList = async (req, res, next) => {
@@ -637,27 +628,6 @@ exports.getAllAgentFlightBookingList = async (req, res, next) => {
         }
       },
       {
-        $project: {
-          "userDetails.username": 1,
-          "userDetails.email": 1,
-          "userDetails.userType": 1,
-          "flightName": 1,
-          "paymentStatus": 1,
-          "pnr": 1,
-          "transactionId": 1,
-          "transactionId": 1,
-          "country": 1,
-          "city": 1,
-          "address": 1,
-          "gender": 1,
-          "firstName": 1,
-          "lastName": 1,
-          "userId": 1,
-          "_id": 1,
-          "phone": 1
-        }
-      },
-      {
         $match: {
           $or: [
             { "flightName": { $regex: data, $options: "i" } },
@@ -672,7 +642,7 @@ exports.getAllAgentFlightBookingList = async (req, res, next) => {
     let aggregate = flightModel.aggregate(aggregateQuery);
     const options = {
       page: parseInt(page) || 1,
-      limit: parseInt(limit) || 5,
+      limit: parseInt(limit) || 10,
     };
     const result = await flightModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {
@@ -752,6 +722,18 @@ exports.getAllAgentBusBookingList = async (req, res, next) => {
     return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
   } catch (error) {
     console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}
+
+
+//*****************************************CANCEL BOOKINGS BY AGENT*********************************************/
+
+exports.cancelBookingByAgent = async (req, res, next) => {
+  try {
+    const {}=req.body;
+  } catch (error) {
+    console.log("error", error);
     return next(error);
   }
 }

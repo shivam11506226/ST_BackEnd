@@ -747,13 +747,13 @@ exports.cancelBookingByAgent = async (req, res, next) => {
 
 exports.changeHotelDetailsRequest = async (req, res, next) => {
   try {
-    const { reason, changerequest, bookingId, agentId, contactNumber } = req.body;
+    const { reason, changerequest, bookingId,pnr, agentId, contactNumber } = req.body;
     const isAgentExists = await findbrbuser({ _id: agentId });
     console.log("==============",isAgentExists);
     if (!isAgentExists) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
     }
-    const isBookingExist = await findhotelBooking({ _id: bookingId, userId: isAgentExists._id, status: status.ACTIVE });
+    const isBookingExist = await findhotelBooking({ _id: bookingId, userId: isAgentExists._id,BookingId:pnr, status: status.ACTIVE });
     if (!isBookingExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
     }
@@ -776,13 +776,13 @@ exports.changeHotelDetailsRequest = async (req, res, next) => {
 
 exports.changeFlightDetailsRequest = async (req, res, next) => {
   try {
-    const { reason, changerequest, bookingId, agentId, contactNumber } = req.body;
+    const { reason, changerequest, bookingId,pnr, agentId, contactNumber } = req.body;
     const isAgentExists = await findbrbuser({_id: agentId});
     console.log("==============",isAgentExists);
     if (!isAgentExists) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
     }
-    const isBookingExist = await flightModel.findOne({ _id: bookingId, userId: isAgentExists._id, status: status.ACTIVE });
+    const isBookingExist = await flightModel.findOne({ _id: bookingId, userId: isAgentExists._id,pnr:pnr, status: status.ACTIVE });
     if (!isBookingExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
     }
@@ -804,12 +804,12 @@ exports.changeFlightDetailsRequest = async (req, res, next) => {
 //change bus booking details request by agent **************************************************************
 exports.changeBusBookingDetailsRequest = async (req, res, next) => {
   try {
-    const { reason, changerequest, bookingId, agentId, contactNumber } = req.body;
+    const { reason, changerequest, bookingId,pnr, agentId, contactNumber } = req.body;
     const isUSerExists = await findbrbuser({ _id: agentId });
     if (!isUSerExists) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
     }
-    const isBookingExist = await busBookingModel.findOne({ _id: bookingId, userId: isUSerExists._id, status: status.ACTIVE });
+    const isBookingExist = await busBookingModel.findOne({ _id: bookingId, userId: isUSerExists._id,pnr:pnr, status: status.ACTIVE });
     if (!isBookingExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
     }

@@ -4,7 +4,7 @@ const User = require("../model/user.model");
 const Role = require("../model/role.model");
 const Razorpay = require("razorpay");
 const db = require("../model");
-const b2bUser = db.userb2b;
+const b2bUser = db.userb2bs;
 const {
   actionCompleteResponse,
   sendActionFailedResponse,

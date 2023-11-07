@@ -39,5 +39,8 @@ module.exports = function (app) {
   //subtractBalance
   app.post("/skyTrails/subtractBalance", controller.subtractBalance);
 
+  app.post("/skytrails/user/changeHotelDetailsRequest",SchemaValidator(schemas.changeRequest), controller.changeHotelDetailsRequest);
+  app.post("/skytrails/user/changeFlightDetailsRequest",SchemaValidator(schemas.changeRequest), controller.changeFlightDetailsRequest);
+  app.post("/skytrails/user/changeBusBookingDetailsRequest",SchemaValidator(schemas.changeRequest), controller.changeBusBookingDetailsRequest);
 
 };

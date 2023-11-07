@@ -34,7 +34,7 @@ const hotelBookingDetailSchema = new mongoose.Schema(
       type: String,
       required: [true, 'destination is required'],
     },
-    BookingId: {
+    bookingId: {
       type: String,
       required: [true, 'booking id is required'],
     },

@@ -17,12 +17,12 @@ const statusCode = require('../utilities/responceCode');
 const responseMessage = require('../utilities/responses');
 //***********************************SERVICES********************************************** */
 
-const { userServices } = require('../services/userServices');
+const { brbuserServices } = require('../services/btobagentServices');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
 const { hotelBookingServicess } = require("../services/hotelBookingServices");
 const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking, aggregatePaginateHotelBookingList1 } = hotelBookingServicess;
-const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
+const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser,deletebrbuser,brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
 const { visaServices } = require('../services/visaServices');
 const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
 //***************************Necessary models**********************************/
@@ -431,7 +431,7 @@ exports.agentQues = async (req, res, next) => {
     // const{userId}=req.userId;
     // const {userId}=req.body;
     const { page, limit, search, userId } = req.query;
-    const isUSerExist = await findUser({ _id: userId });
+    const isUSerExist = await findbrbuser({ _id: userId });
     if (!isUSerExist) {
       return res.status(statusCode.NotFound).send(responseMessage.AGENT_NOT_FOUND);
     }
@@ -579,7 +579,7 @@ exports.subtractBalance = async (req, res) => {
 exports.getAllAgentHotelBookingList = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate, toDate, userId } = req.query;
-    const isAgent = await findUser({_id: userId});
+    const isAgent = await findbrbuser({_id: userId});
     if (!isAgent) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
@@ -599,7 +599,7 @@ exports.getAllAgentHotelBookingList = async (req, res, next) => {
 exports.getAllAgentFlightBookingList = async (req, res, next) => {
   try {
     const { page, limit, search, userId } = req.query;
-    const isAgent = await findUser({ _id: userId});
+    const isAgent = await findbrbuser({ _id: userId});
     if (!isAgent) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
     }
@@ -664,7 +664,7 @@ exports.getAllAgentBusBookingList = async (req, res, next) => {
       return res.status(400).send({ message: 'Invalid userId' });
     }
 
-    const isAgent = await findUser({ _id: userId});
+    const isAgent = await findbrbuser({ _id: userId});
     if (!isAgent) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
     }

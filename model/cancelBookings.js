@@ -8,7 +8,7 @@ const cancelBookingDataSchema =
     new mongoose.Schema({
         userId: {
             type: Schema.Types.ObjectId,
-            ref: "users"
+            ref: "Userb2b"
         },
         reason: {
             type: String

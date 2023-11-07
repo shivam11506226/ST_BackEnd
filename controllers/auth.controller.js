@@ -21,7 +21,7 @@ const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSea
 const { visaServices } = require('../services/visaServices');
 const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
 const { brbuserServices } = require('../services/btobagentServices');
-const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser,deletebrbuser,brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
+const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser, deletebrbuser, brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
 //***************************Necessary models**********************************/
 const flightModel = require('../model/flightBookingData.model')
 const hotelBookingModel = require('../model/hotelBooking.model')
@@ -208,16 +208,16 @@ exports.socialLogin = async (req, res, next) => {
 
 exports.approveAgent = async (req, res, next) => {
   try {
-    const { userId, approveStatus,reason } = req.body;
+    const { userId, approveStatus, reason } = req.body;
     // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
     // if (!isAdmin) {
     //   return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
     // }
-    const iUserExist = await findbrbuser({ _id: userId, userType:userType.AGENT});
+    const iUserExist = await findbrbuser({ _id: userId, userType: userType.AGENT });
     if (!iUserExist) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.USER_NOT_FOUND });
     }
-    let updateResult = await updatebrbuser({ _id: iUserExist._id }, { approveStatus: approveStatus, isApproved: true,reason:reason });
+    let updateResult = await updatebrbuser({ _id: iUserExist._id }, { approveStatus: approveStatus, isApproved: true, reason: reason });
     if (approveStatus === approvestatus.APPROVED) {
       return res.status(statusCode.OK).send({ message: responseMessage.APPROVED, result: updateResult });
     } else {
@@ -321,7 +321,7 @@ exports.getAgents = async (req, res, next) => {
     if (result.docs.length == 0) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
     }
-    console.log("result========",result);
+    console.log("result========", result);
     return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
   } catch (error) {
     console.log("error=======>>>>>>", error);
@@ -365,15 +365,15 @@ exports.getAllFlightBookingList = async (req, res, next) => {
     const aggregateQuery = [
       {
         $lookup: {
-          from: "users",
+          from: "userb2bs",
           localField: 'userId',
           foreignField: '_id',
-          as: "userDetails",
+          as: "Userb2bDetails",
         }
       },
       {
         $unwind: {
-          path: "$userDetails",
+          path: "$Userb2bDetails",
           preserveNullAndEmptyArrays: true
         }
       },
@@ -381,14 +381,15 @@ exports.getAllFlightBookingList = async (req, res, next) => {
         $match: {
           $or: [
             { "flightName": { $regex: data, $options: "i" } },
-            { "userDetails.username": { $regex: data, $options: "i" } },
-            { "userDetails.email": { $regex: data, $options: "i" } },
+            { "Userb2bDetails.username": { $regex: data, $options: "i" } },
+            { "Userb2bDetails.email": { $regex: data, $options: "i" } },
             { "paymentStatus": { $regex: data, $options: "i" } },
             { "pnr": parseInt(data) },
           ],
         }
       },
     ]
+    console.log('Aggregate Query:', aggregateQuery);
     let aggregate = flightModel.aggregate(aggregateQuery);
     const options = {
       page: parseInt(page) || 1,
@@ -398,6 +399,7 @@ exports.getAllFlightBookingList = async (req, res, next) => {
     if (result.docs.length == 0) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
     }
+
     return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
   } catch (error) {
     console.log("error=======>>>>>>", error);
@@ -455,7 +457,7 @@ exports.getAllBusBookingList = async (req, res, next) => {
           path: "$userDetails",
           preserveNullAndEmptyArrays: true
         }
-      }, 
+      },
       {
         $match: {
           $or: [

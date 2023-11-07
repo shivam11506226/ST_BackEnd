@@ -4,5 +4,6 @@ module.exports = Object.freeze({
     HOLIDAYS: 'HOLIDAYS',
     TRAINS: 'TRAINS',
     CABS: 'CABS',
-    BANKOFFERS: 'BANKOFFERS'
+    BANKOFFERS: 'BANKOFFERS',
+    BUS:'BUS',
 })

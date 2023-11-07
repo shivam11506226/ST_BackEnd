@@ -61,5 +61,6 @@ module.exports = {
 	AGENT_NOT_FOUND:"Agent not found",
 	FIELD_REQUIRED:"fullName and Date of Birth is required.",
 	AGENT_NOT_FOUND:"Agent not found",
-	BOOKING_NOT_FOUND:"Booking is not available"
+	BOOKING_NOT_FOUND:"Booking is not available",
+	BUS_BOOKING_CREATED:"Bus booking successfully !",
 };

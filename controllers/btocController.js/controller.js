@@ -108,15 +108,16 @@ exports.verifyUserOtp = async (req, res, next) => {
             return res.status(statusCode.badRequest).json({ statusCode: statusCode.badRequest, message: responseMessage.OTP_EXPIRED });
         };
         const updation = await updateUser({ _id: isUserExist._id, status: status.ACTIVE }, { otpVerified: true });
+        console.log("======================",updation);
         if (updation.firstTime === false) {
             const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number });
             const result = {
-                firstTime: updateData.firstTime,
-                _id: updateData._id,
-                phone: updateData.phone,
-                userType: updateData.userType,
-                otpVerified: updateData.otpVerified,
-                status: updateData.status,
+                firstTime: updation.firstTime,
+                _id: updation._id,
+                phone: updation.phone,
+                userType: updation.userType,
+                otpVerified: updation.otpVerified,
+                status: updation.status,
                 token: token
             }
             return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.OTP_VERIFY, result: result });
@@ -124,7 +125,7 @@ exports.verifyUserOtp = async (req, res, next) => {
         if (!fullName & !dob) {
             return res.status(statusCode.OK).send({ statusCode: statusCode.Forbidden, message: responseMessage.FIELD_REQUIRED })
         }
-        const updateData = await updateUser({ _id: updation._id }, { username: fullName, dob: dob, otp: "" ,firstTime:true});
+        const updateData = await updateUser({ _id: updation._id }, { username: fullName, dob: dob, otp: "" ,firstTime:false});
         const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number, username: fullName });
         const result = {
             phoneNumber: updateData.phone,

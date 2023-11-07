@@ -20,6 +20,8 @@ const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingDat
 const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
 const { visaServices } = require('../services/visaServices');
 const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
+const { brbuserServices } = require('../services/btobagentServices');
+const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser,deletebrbuser,brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
 //***************************Necessary models**********************************/
 const flightModel = require('../model/flightBookingData.model')
 const hotelBookingModel = require('../model/hotelBooking.model')
@@ -211,11 +213,11 @@ exports.approveAgent = async (req, res, next) => {
     // if (!isAdmin) {
     //   return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
     // }
-    const iUserExist = await findUser({ _id: userId, userType:userType.AGENT});
+    const iUserExist = await findbrbuser({ _id: userId, userType:userType.AGENT});
     if (!iUserExist) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.USER_NOT_FOUND });
     }
-    let updateResult = await updateUser({ _id: iUserExist._id }, { approveStatus: approveStatus, isApproved: true,reason:reason });
+    let updateResult = await updatebrbuser({ _id: iUserExist._id }, { approveStatus: approveStatus, isApproved: true,reason:reason });
     if (approveStatus === approvestatus.APPROVED) {
       return res.status(statusCode.OK).send({ message: responseMessage.APPROVED, result: updateResult });
     } else {
@@ -315,7 +317,7 @@ exports.getAgents = async (req, res, next) => {
     //   return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
     // }
     console.log("=---------------=-=-=>");
-    const result = await paginateUserSearch(req.query);
+    const result = await paginatebrbuserSearch(req.query);
     if (result.docs.length == 0) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
     }
@@ -418,7 +420,7 @@ exports.adminDashBoard = async (req, res, next) => {
     result.TotalBooking = result.NoOfHotelBookings + result.NoOfBusBookings + result.NoOfFlightBookings;
     result.NoOfSubAdmin = await countTotalUser({ userType: userType.SUBADMIN });
     result.NoOfUser = await countTotalUser({ userType: userType.USER });
-    result.NoOfAgent = await countTotalUser({ userType: userType.AGENT });
+    result.NoOfAgent = await countTotalbrbUser({ userType: userType.AGENT });
     return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
   } catch (error) {
     console.log("error=======>>>>>>", error);

@@ -25,6 +25,8 @@ export class busController {
                 return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
               }
               const result=await createUserBusBooking(data);
+              await commonFunction.BusBookingConfirmationMail(data)
+              // await commonFunction.sendSMS(mobileNumber,otp);
               if(result){
                 return res.status(statusCode.OK).send({statusCode:statusCode.OK, message: responseMessage.BUS_BOOKING_CREATED });
               }

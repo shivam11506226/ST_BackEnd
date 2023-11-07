@@ -14,6 +14,9 @@ const changeBookingDataSchema =
         reason: {
             type: String
         },
+        bookingId: {
+            type: String
+        },
         flightBookingId: {
             type: Schema.Types.ObjectId,
             ref: "flightbookingdatas"
@@ -31,19 +34,15 @@ const changeBookingDataSchema =
             default: "ACTIVE"
         },
         contactNumber: {
-            country_code: {
-                type: String,
-                default: "+91",
-            },
-            mobile_number: { type: String },
+            type: String
         },
         changerequest: {
             type: String
         },
-        approveStatus:{
+        approveStatus: {
             type: String,
-           enum:[approveStatus.APPROVED, approveStatus.REJECT,approveStatus.PENDING],
-           default: approveStatus.PENDING
+            enum: [approveStatus.APPROVED, approveStatus.REJECT, approveStatus.PENDING],
+            default: approveStatus.PENDING
         }
     }, { timestamps: true }
     )

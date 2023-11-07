@@ -11,7 +11,7 @@ const hotelBookingDetailSchema = new mongoose.Schema(
     userId: {
       type: Schema.Types.ObjectId,
       required: [true, "user ID is required"],
-      ref: "users",
+      ref: "Userb2b",
     },
     name: {
       type: String,

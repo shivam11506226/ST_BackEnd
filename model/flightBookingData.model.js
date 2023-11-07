@@ -2,12 +2,13 @@ const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');
+const status =require("../enums/status")
 const flightBookingData = new mongoose.Schema(
     {
       userId: {
         type: Schema.Types.ObjectId,
         required: [true, "user ID is required"],
-        ref: "users",
+        ref: "Userb2b",
       },
       bookingId: {
         type:String,
@@ -85,10 +86,15 @@ const flightBookingData = new mongoose.Schema(
         enum: ["success", "failure", "pending"],
         default: "pending",
       },
-      // transactionId: {
-      //   type: String,
-      //   required: [true, "transaction Id is required"],
-      // },
+      bookingType:{
+        type: String,
+        enum: ['busBookingData', 'flightbookingdatas', 'hotelBookingDetail']
+      },
+      status: {
+        type: String,
+        enums:[status.ACTIVES, status.BLOCK, status.ACTIVE],
+        default: status.ACTIVE,
+    },
     },
     { timestamps: true }
   )

@@ -9,7 +9,7 @@ const busBookingDataSchema =
     {
       userId: {
         type: Schema.Types.ObjectId,
-        ref: "users",
+        ref: "Userb2b",
       },
       name: {
         type: String,

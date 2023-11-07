@@ -67,10 +67,6 @@ const userSchema = new mongoose.Schema(
       enum: [status.ACTIVE, status.BLOCK, status.DELETE],
       default: status.ACTIVE
     },
-    isApproved: {
-      type: Boolean,
-      default: false
-    },
     reason: {
       type: String,
       default: "",

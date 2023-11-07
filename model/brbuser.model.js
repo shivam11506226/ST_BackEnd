@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-
+const userType = require("../enums/userType");
 const { activeStatus } = require("../common/const");
-
-const Userb2b = mongoose.model(
-  "Userb2b",
+const approveStatus = require("../enums/approveStatus");
+const mongoosePaginate = require('mongoose-paginate-v2');
+const Userb2bSchema = 
   new mongoose.Schema(
     {
       personal_details: {
@@ -238,11 +238,30 @@ const Userb2b = mongoose.model(
         type: Number,
         default: activeStatus.IN_ACTIVE,
       },
+      userType: {
+        type: String,
+        enum: [userType.ADMIN, userType.AGENT, userType.USER, userType.SUBADMIN],
+        default: userType.AGENT
+      },
+      reason: {
+        type: String,
+        default: "",
+      },
+    isApproved: {
+      type: Boolean,
+      default: false
+    },
+    approveStatus: {
+      type: String,
+      enum: [approveStatus.APPROVED, approveStatus.PENDING, approveStatus.REJECT],
+      default: approveStatus.PENDING
+    },
     },
     {
       timestamps: true,
     }
   )
-);
+  Userb2bSchema.plugin(mongoosePaginate);
+const Userb2b= mongoose.model('Userb2b',Userb2bSchema);
 
 module.exports = Userb2b;

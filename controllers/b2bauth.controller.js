@@ -615,7 +615,7 @@ exports.getAllAgentFlightBookingList = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "users",
+          from: "Userb2b",
           localField: 'userId',
           foreignField: '_id',
           as: "userDetails",
@@ -680,7 +680,7 @@ exports.getAllAgentBusBookingList = async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "users",
+          from: "Userb2b",
           localField: 'userId',
           foreignField: '_id',
           as: "userDetails",

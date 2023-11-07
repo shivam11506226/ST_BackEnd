@@ -58,7 +58,7 @@ const hotelBookingServicess = {
         let pipeline = [
             {
                 $lookup: {
-                    from: "users",
+                    from: "Userb2b",
                     localField: 'userId',
                     foreignField: '_id',
                     as: "userDetails",

@@ -227,7 +227,7 @@ const schemas = {
     agentId: joi.string().required(),
     contactNumber: joi.string().required(),
     id: joi.string().required(),
-    amount:joi.string().required()
+    amount:joi.number().required()
   }),
   changeBusRequest: joi.object().keys({
     reason: joi.string().required(),
@@ -236,7 +236,7 @@ const schemas = {
     agentId: joi.string().required(),
     contactNumber: joi.string().required(),
     id: joi.string().required(),
-    amount:joi.string().required()
+    amount:joi.number().required()
   })
 
 };

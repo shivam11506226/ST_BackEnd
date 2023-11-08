@@ -9,9 +9,10 @@ module.exports = function (app) {
         res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
         next();
     });
-    app.post('/skyTrails/api/user/busBooking', SchemaValidator(schemas.userbusBookingSchema), busBookingController.busBooking);
-    app.post('/skyTrails/api/user/flighBooking',SchemaValidator(schemas.userflightBookingSchema),flightBookingController.flighBooking)
-    app.post('/skyTrails/api/user/hotelBooking',SchemaValidator(schemas.userhotelBookingSchema), hotelBookingController.hotelBooking);
+    // SchemaValidator(schemas.userbusBookingSchema),   SchemaValidator(schemas.userflightBookingSchema),  ,SchemaValidator(schemas.userhotelBookingSchema) 
+    app.post('/skyTrails/api/user/busBooking', busBookingController.busBooking);
+    app.post('/skyTrails/api/user/flighBooking',flightBookingController.flighBooking)
+    app.post('/skyTrails/api/user/hotelBooking', hotelBookingController.hotelBooking);
     // app.put('/skyTrails/api/user/', controller.updatePost);
     // app.delete('/skyTrails/api/user/', controller.deletePost);
 }

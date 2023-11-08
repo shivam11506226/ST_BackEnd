@@ -1,4 +1,4 @@
-const userBusBookingModel = require('../../model/user.model');
+const userBusBookingModel = require('../../model/btocModel/busBookingModel');
 const userType = require("../../enums/userType");
 const status = require("../../enums/status");
 

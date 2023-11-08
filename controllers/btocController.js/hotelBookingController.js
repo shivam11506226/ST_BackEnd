@@ -18,12 +18,11 @@ const { userhotelBookingModelServices } = require('../../services/btocServices/h
 const { createUserhotelBookingModel, findUserhotelBookingModel, getUserhotelBookingModel, deleteUserhotelBookingModel, userhotelBookingModelList, updateUserhotelBookingModel, paginateUserhotelBookingModelSearch,countTotalhotelBooking } = userhotelBookingModelServices
 exports.hotelBooking= async (req, res, next)=> {
     try {
-      const { userId } = req.userId;
       const data = {
         ...req.body,
       };
       console.log("Room=========>>>>>>>>>",req.body);
-      const isUserExist = await findUser({ _id: userId, status: status.ACTIVES });
+      const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE  });
       if (!isUserExist) {
         return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
       }
@@ -39,13 +38,17 @@ exports.hotelBooking= async (req, res, next)=> {
         cityName:req.body.cityName,
         hotelId:req.body.hotelId,
         noOfPeople:req.body.noOfPeople,
+        country:req.body.country,
+        room:req.body.room,
+        noOfNight:req.body.noOfNight,
+        amount:req.body.amount,
         phoneNumber:req.body.phoneNumber.mobile_number,
       }
       const result = await createUserhotelBookingModel(object);
       await commonFunction.HotelBookingConfirmationMail(data)
-    //   await sendSMS.sendSMSForHotelBooking(req.body.phoneNumber.mobile_number);
+    //await sendSMS.sendSMSForHotelBooking(req.body.phoneNumber.mobile_number);
       if(result){
-        return res.status(statusCode.OK).send({statusCode:statusCode.OK, message: responseMessage.BOOKING_SUCCESS });
+        return res.status(statusCode.OK).send({statusCode:statusCode.OK, message: responseMessage.BOOKING_SUCCESS,result:result });
       }
     } catch (error) {
       console.log("error: ", error);

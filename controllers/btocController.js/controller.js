@@ -100,7 +100,7 @@ exports.verifyUserOtp = async (req, res, next) => {
         const isUserExist = await findUserData({ _id: req.userId });
         if (!isUserExist) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
-        } 
+        }
         if (isUserExist.otp !== otp) {
             return res.status(statusCode.badRequest).json({ statusCode: statusCode.badRequest, message: responseMessage.INCORRECT_OTP });
         }
@@ -108,7 +108,7 @@ exports.verifyUserOtp = async (req, res, next) => {
             return res.status(statusCode.badRequest).json({ statusCode: statusCode.badRequest, message: responseMessage.OTP_EXPIRED });
         };
         const updation = await updateUser({ _id: isUserExist._id, status: status.ACTIVE }, { otpVerified: true });
-        console.log("======================",updation);
+        console.log("======================", updation);
         if (updation.firstTime === false) {
             const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number });
             const result = {
@@ -125,7 +125,7 @@ exports.verifyUserOtp = async (req, res, next) => {
         if (!fullName & !dob) {
             return res.status(statusCode.OK).send({ statusCode: statusCode.Forbidden, message: responseMessage.FIELD_REQUIRED })
         }
-        const updateData = await updateUser({ _id: updation._id }, { username: fullName, dob: dob, otp: "" ,firstTime:false});
+        const updateData = await updateUser({ _id: updation._id }, { username: fullName, dob: dob, otp: "", firstTime: false });
         const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number, username: fullName });
         const result = {
             phoneNumber: updateData.phone,
@@ -157,7 +157,7 @@ exports.resendOtp = async (req, res, next) => {
         const updateData = await updateUser({ _id: isExist._id, status: status.ACTIVE }, { otp: otp, otpExpireTime: otpExpireTime });
         if (!updateData) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
-        } 
+        }
         // await commonFunction.sendSMS(mobileNumber,otp);
         const token = await commonFunction.getToken({ _id: updateData._id, 'mobile_number': updateData.phone.mobile_number });
         const result = {
@@ -178,8 +178,38 @@ exports.resendOtp = async (req, res, next) => {
     }
 }
 
+exports.uploadImage = async (req, res, next) => {
+    try {
+        const { profilePic } = req;
+        const isUserExist = await findUserData({ _id: req.userId });
+        if (!isUserExist) {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+        }
+        const imageFiles = await commonFunction.getSecureUrl(profilePic);
+        if (!imageFiles) {
+            return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
+        }
+        const result = await updateUser({ _id: isUserExist._id }, { profilePic: imageFiles });
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.UPLOAD_SUCCESS, result: result });
+    } catch (error) {
+        console.log("error", error);
+        return next(error);
+    }
+}
 
 
+exports.getUserProfile = async (req, res, next) => {
+    try {
+        const isUserExist = await findUserData({ _id: req.userId ,status:status.ACTIVE });
+        if (!isUserExist) {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+        }
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.USERS_FOUND, result: isUserExist });
+    } catch (error) {
+        console.log("error", error);
+        return next(error);
+    }
+}
 
 
 

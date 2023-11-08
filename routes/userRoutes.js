@@ -17,8 +17,8 @@ module.exports = function (app) {
   app.post("/skytrails/api/user/forgetPassword", SchemaValidator(schemas.userForgetSchema), controller.forgetPassword);
   app.put("/skytrails/api/user/verifyUserOtp", SchemaValidator(schemas.userVerifySchema), [authJwt.verifcationToken], userController.verifyUserOtp)
   app.put("/skytrails/api/user/resendOtp", SchemaValidator(schemas.btoCuserLoginSchema), userController.resendOtp);
-
-
+  app.get("/skytrails/api/user/getUserProfile", [authJwt.verifcationToken], userController.getUserProfile)
+app.put('/skytrails/api/user/uploadImage', [authJwt.verifcationToken], userController.uploadImage)
 
 
 

@@ -15,7 +15,7 @@ const sendSMS = require("../../utilities/sendSms");
 const commonFunction = require('../../utilities/commonFunctions');
 const sendSMSUtils = require('../../utilities/sendSms');
 const { userhotelBookingModelServices } = require('../../services/btocServices/hotelBookingServices');
-const { createUserhotelBookingModel, findUserhotelBookingModel, getUserhotelBookingModel, deleteUserhotelBookingModel, userhotelBookingModelList, updateUserhotelBookingModel, paginateUserhotelBookingModelSearch,countTotalhotelBooking } = userhotelBookingModelServices
+const { createUserhotelBookingModel, findUserhotelBookingModel, getUserhotelBookingModel, deleteUserhotelBookingModel, userhotelBookingModelList, updateUserhotelBookingModel, paginateUserhotelBookingModelSearch,countTotalhotelBooking,aggregatePaginateHotelBookingList } = userhotelBookingModelServices
 exports.hotelBooking= async (req, res, next)=> {
     try {
       const data = {
@@ -52,6 +52,25 @@ exports.hotelBooking= async (req, res, next)=> {
       }
     } catch (error) {
       console.log("error: ", error);
+      return next(error);
+    }
+  }
+
+
+  exports.getAllHotelBookingList = async (req, res, next) => {
+    try {
+      const { page, limit, search, fromDate, toDate } = req.query;
+      // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+      // if (!isAdmin) {
+      //   return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+      // }
+      const result = await aggregatePaginateHotelBookingList(req.query);
+      if (result.docs.length == 0) {
+        return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+      }
+      return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+    } catch (error) {
+      console.log("error=======>>>>>>", error);
       return next(error);
     }
   }

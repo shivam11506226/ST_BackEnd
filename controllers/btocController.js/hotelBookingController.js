@@ -28,12 +28,22 @@ exports.hotelBooking= async (req, res, next)=> {
         return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
       }
       const object={
-        data,
         userId:isUserExist._id,
+        name:req.body.name,
+        email:req.body.email,
+        address:req.body.address,
+        destination:req.body.destination,
+        BookingId:req.body.BookingId,
+        CheckInDate:req.body.CheckInDate,
+        hotelName:req.body.hotelName,
+        cityName:req.body.cityName,
+        hotelId:req.body.hotelId,
+        noOfPeople:req.body.noOfPeople,
+        phoneNumber:req.body.phoneNumber.mobile_number,
       }
       const result = await createUserhotelBookingModel(object);
       await commonFunction.HotelBookingConfirmationMail(data)
-    //   await sendSMS.sendSMSForHotelBooking(req.body.phone.mobile_number);
+    //   await sendSMS.sendSMSForHotelBooking(req.body.phoneNumber.mobile_number);
       if(result){
         return res.status(statusCode.OK).send({statusCode:statusCode.OK, message: responseMessage.BOOKING_SUCCESS });
       }

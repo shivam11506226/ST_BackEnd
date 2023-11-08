@@ -41,6 +41,6 @@ module.exports = function (app) {
 
   app.post("/skytrails/user/changeHotelDetailsRequest",SchemaValidator(schemas.changeRequest), controller.changeHotelDetailsRequest);
   app.post("/skytrails/user/changeFlightDetailsRequest",SchemaValidator(schemas.changeRequest), controller.changeFlightDetailsRequest);
-  app.post("/skytrails/user/changeBusBookingDetailsRequest",SchemaValidator(schemas.changeRequest), controller.changeBusBookingDetailsRequest);
+  app.post("/skytrails/user/changeBusBookingDetailsRequest",SchemaValidator(schemas.changeBusRequest), controller.changeBusBookingDetailsRequest);
 
 };

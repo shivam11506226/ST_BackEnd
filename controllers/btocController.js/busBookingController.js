@@ -11,6 +11,7 @@ const sendSMS = require("../../utilities/sendSms");
 const commonFunction = require('../../utilities/commonFunctions');
 const sendSMSUtils = require('../../utilities/sendSms')
 const { userBusBookingServices } = require('../../services/btocServices/busBookingServices');
+const bookingStatus = require('../../enums/bookingStatus');
 const { createUserBusBooking, findUserBusBooking, getUserBusBooking, findUserBusBookingData, deleteUserBusBooking, userBusBookingList, updateUserBusBooking, paginateUserBusBookingSearch } = userBusBookingServices
 
 exports.busBooking = async (req, res, next) => {
@@ -25,8 +26,19 @@ exports.busBooking = async (req, res, next) => {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
     const object={
-      data,
       userId:isUserExist._id,
+      name: req.body.name,
+      phone: req.body.phone,
+      email: req.body.email,
+      address: req.body.address,
+      destination: req.body.destination,
+      origin: req.body.origin,
+      dateOfJourney: req.body.dateOfJourney,
+      busType: req.body.busType,
+      pnr: req.body.pnr,
+      busId: req.body.busId,
+      noOfSeats: req.body.noOfSeats,
+      amount:req.body.amount,
     }
     const result = await createUserBusBooking(object);
     await commonFunction.BusBookingConfirmationMail(data)

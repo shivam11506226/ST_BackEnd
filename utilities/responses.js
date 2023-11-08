@@ -63,4 +63,5 @@ module.exports = {
 	AGENT_NOT_FOUND:"Agent not found",
 	BOOKING_NOT_FOUND:"Booking is not available",
 	BUS_BOOKING_CREATED:"Bus booking successfully !",
+	BOOKING_SUCCESS:"Bokking successfully"
 };

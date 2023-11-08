@@ -747,7 +747,7 @@ exports.cancelBookingByAgent = async (req, res, next) => {
 
 exports.changeHotelDetailsRequest = async (req, res, next) => {
   try {
-    const { reason, changerequest, bookingId, hotelBookingId, agentId, contactNumber } = req.body;
+    const { reason, changerequest, bookingId, id, agentId, contactNumber,amount } = req.body;
     const isAgentExists = await findbrbuser({ _id: agentId });
     console.log("==============", isAgentExists);
     if (!isAgentExists) {
@@ -761,9 +761,10 @@ exports.changeHotelDetailsRequest = async (req, res, next) => {
       reason: reason,
       changerequest: changerequest,
       bookingId: bookingId,
-      hotelBookingId: hotelBookingId,
+      hotelBookingId: id,
       agentId: agentId,
-      contactNumber: contactNumber
+      contactNumber: contactNumber,
+      amount:amount
     }
     const result = await createchangeRequest(object);
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
@@ -777,7 +778,7 @@ exports.changeHotelDetailsRequest = async (req, res, next) => {
 
 exports.changeFlightDetailsRequest = async (req, res, next) => {
   try {
-    const { reason, changerequest, bookingId, id, agentId, contactNumber } = req.body;
+    const { reason, changerequest, bookingId, id, agentId, contactNumber ,amount} = req.body;
     console.log("=bacvdfd", req.body)
     const isAgentExists = await findbrbuser({ _id: agentId });
     console.log("==============", isAgentExists);
@@ -795,7 +796,8 @@ exports.changeFlightDetailsRequest = async (req, res, next) => {
       bookingId: bookingId,
       flightBookingId: id,
       agentId: agentId,
-      contactNumber: contactNumber
+      contactNumber: contactNumber,
+      amount:amount
     }
     const result = await createchangeRequest(object);
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
@@ -808,7 +810,7 @@ exports.changeFlightDetailsRequest = async (req, res, next) => {
 //change bus booking details request by agent **********************
 exports.changeBusBookingDetailsRequest = async (req, res, next) => {
   try {
-    const { reason, changerequest, busId, busBookingId, agentId, contactNumber } = req.body;
+    const { reason, changerequest, busId,id, agentId, contactNumber,amount } = req.body;
     const isUSerExists = await findbrbuser({ _id: agentId });
     if (!isUSerExists) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
@@ -820,10 +822,11 @@ exports.changeBusBookingDetailsRequest = async (req, res, next) => {
     const object = {
       reason: reason,
       changerequest: changerequest,
-      bookingId: bookingId,
-      busBookingId: busBookingId,
+      bookingId: busId,
+      busBookingId: id,
       agentId: agentId,
-      contactNumber: contactNumber
+      contactNumber: contactNumber,
+      amount:amount
     }
     const result = await createchangeRequest(object);
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });

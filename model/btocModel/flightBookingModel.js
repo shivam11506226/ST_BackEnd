@@ -75,11 +75,13 @@ const BookingDetailSchema = new mongoose.Schema(
         },
         bookingStatus: {
             type: String,
+            enum:[bookingStatus.BOOKED,bookingStatus.CANCEL,bookingStatus.PENDING],
             default: bookingStatus.PENDING
         },
         transactions: {
             type: mongoose.Types.ObjectId,
-            ref: 'transactions'
+            ref: 'transactions',
+            default:''
         },
         bookingType: {
             type: String,

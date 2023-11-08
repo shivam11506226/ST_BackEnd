@@ -16,7 +16,6 @@ const { createUserBusBooking, findUserBusBooking, getUserBusBooking, findUserBus
 
 exports.busBooking = async (req, res, next) => {
   try {
-    const { userId } = req.userId;
     const data = {
       ...req.body,
     };

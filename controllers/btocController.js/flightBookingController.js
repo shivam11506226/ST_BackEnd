@@ -34,7 +34,7 @@ const { createUserflightBooking, findUserflightBooking, getUserflightBooking, fi
       }
       const result = await createUserflightBooking(object);
       await commonFunction.FlightBookingConfirmationMail(data)
-      await sendSMSUtils.sendSMSForFlightBooking(mobileNumber,otp);
+      await sendSMSUtils.sendSMSForFlightBooking(req.body.mobileNumber,otp);
       if(result){
         return res.status(statusCode.OK).send({statusCode:statusCode.OK, message: responseMessage.FLIGHT_BOOKED });
       }

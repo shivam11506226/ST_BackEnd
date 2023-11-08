@@ -103,6 +103,14 @@ const userSchema = new mongoose.Schema(
     },
     balance:{
       type:Number
+    },
+    bio:{
+      type:String,
+      default:""
+    },
+    coverPic:{
+      type:String,
+      default:""
     }
   },
   {

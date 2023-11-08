@@ -31,3 +31,39 @@ exports.transaction= async (req, res, next)=> {
         return next(error);
     }
 }
+
+exports.userTransaction=async(req,res,next) => {
+    const {amount,ticketBookingId,bookingId} = req.body.amount;
+    try {
+        const userId=req.userId;
+        const data=req.body;
+        const isUserExist = await findUser({ _id: userId, status: status.ACTIVES });
+        if(isUserExist){
+            return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,message:responseMessage.USERS_NOT_FOUND});
+        }
+      let instance = new Razorpay({
+        key_id: process.env.Razorpay_KEY_ID,
+        key_secret: process.env.Razorpay_KEY_SECRET,
+      });
+      var options = {
+        amount: amount * 100, // amount in the smallest currency unit
+        currency: "INR",
+        receipt: "order_rcptid_11",
+      };
+      console.log(amount);
+      instance.orders.create(options, function (err, order) {
+        if (err) {
+          return res.send({ code: 500, message: "Server Error" });
+        }
+        console.log(order);
+        return res.send({
+          code: 200,
+          message: "order Created Successfully",
+          data: order,
+        });
+      });
+    } catch (err) {
+      console.log(err);
+      sendActionFailedResponse(res, {}, err.message);
+    }
+}

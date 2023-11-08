@@ -227,6 +227,14 @@ const schemas = {
     agentId: joi.string().required(),
     contactNumber: joi.string().required(),
     id: joi.string().required()
+  }),
+  changeBusRequest: joi.object().keys({
+    reason: joi.string().required(),
+    changerequest: joi.string().required(),
+    busId: joi.string().required(),
+    agentId: joi.string().required(),
+    contactNumber: joi.string().required(),
+    id: joi.string().required()
   })
 
 };

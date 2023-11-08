@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
 const status = require('../../enums/status');
 const bookingStatus = require("../../enums/bookingStatus");
+const offerType = require("../../enums/offerType");
 mongoose.pluralize(null);
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');

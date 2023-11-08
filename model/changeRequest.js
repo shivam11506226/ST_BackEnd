@@ -39,6 +39,9 @@ const changeBookingDataSchema =
         changerequest: {
             type: String
         },
+        amount: {
+            type: Number
+        },
         approveStatus: {
             type: String,
             enum: [approveStatus.APPROVED, approveStatus.REJECT, approveStatus.PENDING],

@@ -41,4 +41,4 @@ const transactionSchema = new Transaction({
 transactionSchema.plugin(aggregatePaginate);
 
 transactionSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("transactions", transactionSchema);
+module.exports = mongoose.model("userTransactions", transactionSchema);

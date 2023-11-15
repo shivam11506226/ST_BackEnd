@@ -1,7 +1,8 @@
-const flightBookingModel = require('../../model/flightBookingData.model');
+const flightBookingModel = require('../../model/btocModel/flightBookingModel');
 const userType = require("../../enums/userType");
 const status = require("../../enums/status");
-
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
+const mongoose = require('mongoose')
 const userflightBookingServices = {
     createUserflightBooking: async (insertObj) => {
         return await flightBookingModel.create(insertObj);
@@ -55,6 +56,118 @@ const userflightBookingServices = {
     },
     countTotalUser: async (body) => {
         return await flightBookingModel.countDocuments(body)
+    },
+
+    aggregatePaginateGetBooking: async (query) => {
+        const { toDate, fromDate, userId, page, limit, search } = query;
+       
+        if (search) {
+            var filter = search;
+        }
+        let data = filter || "";
+        let pipeline = [
+            {
+                $match: {
+                    userId: mongoose.Types.ObjectId(userId)
+                }
+
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: "userDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$userDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+        ]
+        if (fromDate && toDate) {
+            pipeline.push({
+                $match: {
+                    $and: [
+                        { CheckInDate: { $eq: new Date(fromDate) } },
+                        { CheckOutDate: { $eq: new Date(toDate) } },
+                    ]
+                }
+            });
+        } else if (fromDate) {
+            pipeline.push({
+                $match: { CheckInDate: { $eq: new Date(fromDate) } }
+            });
+        } else if (toDate) {
+            pipeline.push({
+                $match: { CheckOutDate: { $eq: new Date(toDate) } }
+            });
+        }
+        let aggregate = flightBookingModel.aggregate(pipeline);
+        console.log("aggregate========>>>>>>>", aggregate)
+        const options = {
+            page: Number(page) || 1,
+            limit: Number(limit) || 8,
+            sort: { createdAt: -1 },
+        };
+        const result = await flightBookingModel.aggregatePaginate(aggregate, options);
+        console.log("=--------=-=-=--------", result);
+        return result;
+    },
+    aggregatePaginateGetBooking1: async (query) => {
+        const { toDate, fromDate, userId, page, limit, search } = query;
+       
+        if (search) {
+            var filter = search;
+        }
+        let data = filter || "";
+        let pipeline = [
+           
+            {
+                $lookup: {
+                    from: "users",
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: "userDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$userDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+        ]
+        if (fromDate && toDate) {
+            pipeline.push({
+                $match: {
+                    $and: [
+                        { CheckInDate: { $eq: new Date(fromDate) } },
+                        { CheckOutDate: { $eq: new Date(toDate) } },
+                    ]
+                }
+            });
+        } else if (fromDate) {
+            pipeline.push({
+                $match: { CheckInDate: { $eq: new Date(fromDate) } }
+            });
+        } else if (toDate) {
+            pipeline.push({
+                $match: { CheckOutDate: { $eq: new Date(toDate) } }
+            });
+        }
+        let aggregate = flightBookingModel.aggregate(pipeline);
+        console.log("aggregate========>>>>>>>", aggregate)
+        const options = {
+            page: Number(page) || 1,
+            limit: Number(limit) || 8,
+            sort: { createdAt: -1 },
+        };
+        const result = await flightBookingModel.aggregatePaginate(aggregate, options);
+        console.log("=--------=-=-=--------", result);
+        return result;
     }
 }
 

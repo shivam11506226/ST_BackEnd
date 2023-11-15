@@ -60,11 +60,19 @@ exports.hotelBooking= async (req, res, next)=> {
   exports.getAllHotelBookingList = async (req, res, next) => {
     try {
       const { page, limit, search, fromDate, toDate } = req.query;
-      // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
-      // if (!isAdmin) {
-      //   return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
-      // }
-      const result = await aggregatePaginateHotelBookingList(req.query);
+      const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
+      if (!isUserExist) {
+        return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+      }
+      const body={
+        page,
+        limit,
+        search,
+        fromDate,
+        toDate,
+        userId:isUserExist._id, 
+      }
+      const result = await aggregatePaginateHotelBookingList(body );
       if (result.docs.length == 0) {
         return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
       }

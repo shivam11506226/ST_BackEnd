@@ -319,7 +319,7 @@ module.exports = {
   //========== Send Email Flight Booking Confirmation Mail with pdf=======
   //==========================================================
 
-  FlightBookingConfirmationMail: async (to, pdfFilePath) => {
+  FlightBookingConfirmationMail: async (to) => {
     let html = `<!DOCTYPE html>S
         <html lang="en">
         
@@ -357,13 +357,13 @@ module.exports = {
         pass: nodemailerConfig.options.auth.pass,
       },
     });
-    const passengerEmail = to.passengerDetails[0].email;
+    // const passengerEmail = to.passengerDetails[0].email;
     var mailOptions = {
       from: nodemailerConfig.options.auth.user,
-      to: passengerEmail,
+      to: 'charuyadav50@mailinator.com',
       subject: "Flight Booking Confirmation Mail",
       html: html,
-      attachments: [{ filename: "api_data.pdf", path: pdfFilePath }],
+      // attachments: [{ filename: "api_data.pdf", path: pdfFilePath }],
     };
     try {
       // Verify the connection

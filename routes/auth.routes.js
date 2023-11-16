@@ -39,4 +39,7 @@ module.exports = function (app) {
   app.get("/skytrails/api/admin/getAllBusBookingList",controller.getAllBusBookingList);
   app.get("/skytrails/api/admin/getDataById",[authJwt.verifcationToken],controller.getDataById);
   app.put("/skytrails/api/admin/approveAgent",SchemaValidator(schemas.approveAgentSchema),controller.approveAgent)
+  app.get("/skytrails/api/admin/getAllHotelBookingListAgent",controller.getAllHotelBookingListAgent);
+  app.get("/skytrails/api/admin/getAllFlightBookingListAgent",controller.getAllFlightBookingListAgent);
+  app.get("/skytrails/api/admin/getAllBusBookingListAgent",controller.getAllBusBookingListAgent);
 };

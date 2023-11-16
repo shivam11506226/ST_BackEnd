@@ -16,17 +16,21 @@ const { userServices } = require('../services/userServices');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
 const { hotelBookingServicess } = require("../services/hotelBookingServices");
-const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking } = hotelBookingServicess;
+const { aggregatePaginateHotelBookingList,aggregatePaginateHotelBookingList1, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking } = hotelBookingServicess;
 const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
 const { visaServices } = require('../services/visaServices');
 const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
 const { brbuserServices } = require('../services/btobagentServices');
 const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser, deletebrbuser, brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
+const {userflightBookingServices}=require('../services/btocServices/flightBookingServices')
+const{aggregatePaginateGetBooking1}=userflightBookingServices;
 //***************************Necessary models**********************************/
 const flightModel = require('../model/flightBookingData.model')
 const hotelBookingModel = require('../model/hotelBooking.model')
 const busBookingModel = require("../model/busBookingData.model");
-
+const userFlightBookingModel=require("../model/btocModel/flightBookingModel");
+const userhotelBookingModel=require("../model/btocModel/flightBookingModel");
+const userbusBookingModel=require("../model/btocModel/flightBookingModel")
 const bookingStatus = require("../enums/bookingStatus");
 exports.signup = (req, res) => {
   const user = new User({
@@ -253,7 +257,30 @@ exports.activeBlockUser = async (req, res, next) => {
     return next(error)
   }
 }
+//active block agents ****************************************************************
 
+exports.activeBlockUser = async (req, res, next) => {
+  try {
+    const { userId, actionStatus } = req.body;
+    const isAdmin = await findbrbuser({ _id: req.userId, userType: userType.ADMIN });
+    if (!isAdmin) {
+      return res.status(statusCode.Unauthorized).send({ message: "User not authorized ." });
+    }
+    const iUserExist = await findbrbuser({ _id: userId, status: status.ACTIVE });
+    if (!iUserExist) {
+      return res.status(statusCode.NotFound).send({ message: "User not Found ." });
+    }
+    let updateResult = await updatebrbuser({ _id: iUserExist._id }, { status: actionStatus });
+    if (actionStatus === status.ACTIVE) {
+      return res.status(statusCode.OK).send({ message: "User active successfully .", result: updateResult });
+    } else {
+      return res.status(statusCode.OK).send({ message: "User blocked successfully .", result: updateResult });
+    }
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error)
+  }
+}
 //adminLogin**********************************************************************************
 exports.adminLogin = async (req, res, next) => {
   try {
@@ -338,7 +365,7 @@ exports.getAllHotelBookingList = async (req, res, next) => {
     // if (!isAdmin) {
     //   return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
     // }
-    const result = await aggregatePaginateHotelBookingList(req.query);
+    const result = await aggregatePaginateHotelBookingList1(req.query);
     if (result.docs.length == 0) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
     }
@@ -365,7 +392,7 @@ exports.getAllFlightBookingList = async (req, res, next) => {
     const aggregateQuery = [
       {
         $lookup: {
-          from: "userb2bs",
+          from: "users",
           localField: 'userId',
           foreignField: '_id',
           as: "Userb2bDetails",
@@ -389,12 +416,12 @@ exports.getAllFlightBookingList = async (req, res, next) => {
         }
       },
     ]
-    let aggregate = flightModel.aggregate(aggregateQuery);
+    let aggregate = userFlightBookingModel.aggregate(aggregateQuery);
     const options = {
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 5,
     };
-    const result = await flightModel.aggregatePaginate(aggregate, options);
+    const result = await userFlightBookingModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
     }
@@ -475,12 +502,12 @@ exports.getAllBusBookingList = async (req, res, next) => {
         }
       },
     ]
-    let aggregate = busBookingModel.aggregate(pipeline);
+    let aggregate = userbusBookingModel.aggregate(pipeline);
     const options = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 10,
     };
-    const result = await busBookingModel.aggregatePaginate(aggregate, options);
+    const result = await userbusBookingModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
     }
@@ -624,4 +651,141 @@ exports.cancelHotel = async (req, res, next) => {
 }
 
 
+//***********************************GET ALL AGENT HOTEL BOOKING LIST ****************************************/
 
+exports.getAllHotelBookingListAgent = async (req, res, next) => {
+  try {
+    const { page, limit, search, fromDate, toDate } = req.query;
+    // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    // if (!isAdmin) {
+    //   return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    // }
+    const result = await aggregatePaginateHotelBookingList(req.query);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}
+
+//***************************************GET ALL AGENT FLIGHT BOOKING LIST**************************************/
+
+exports.getAllFlightBookingListAgent = async (req, res, next) => {
+  try {
+    const { page, limit, search } = req.query;
+    // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    // if (!isAdmin) {
+    //   return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    // }
+    if (search) {
+      var filter = search;
+    }
+    let data = filter || ""
+    const aggregateQuery = [
+      {
+        $lookup: {
+          from: "userb2bs",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "Userb2bDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$Userb2bDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { "flightName": { $regex: data, $options: "i" } },
+            { "Userb2bDetails.username": { $regex: data, $options: "i" } },
+            { "Userb2bDetails.email": { $regex: data, $options: "i" } },
+            { "paymentStatus": { $regex: data, $options: "i" } },
+            { "pnr": parseInt(data) },
+          ],
+        }
+      },
+    ]
+    let aggregate = flightModel.aggregate(aggregateQuery);
+    const options = {
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 5,
+    };
+    const result = await flightModel.aggregatePaginate(aggregate, options);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}
+
+//*********************************GET ALL AGENT BUSBOKING DETAILS*********************************************/
+
+exports.getAllBusBookingListAgent = async (req, res, next) => {
+  try {
+    const { page, limit, search } = req.query;
+    // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    // if (!isAdmin) {
+    //   return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    // }
+    if (search) {
+      var filter = search;
+    }
+    let data = filter || "";
+    const pipeline = [
+      {
+        $lookup: {
+          from: "userb2bs",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "userDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { "destination": { $regex: data, $options: "i" } },
+            { "userDetails.username": { $regex: data, $options: "i" } },
+            { "userDetails.email": { $regex: data, $options: "i" } },
+            { "paymentStatus": { $regex: data, $options: "i" } },
+            { "pnr": { $regex: data, $options: "i" } },
+            { "origin": { $regex: data, $options: "i" } },
+            { "dateOfJourney": { $regex: data, $options: "i" } },
+            { "busType": { $regex: data, $options: "i" } },
+            { "busId": parseInt(data) },
+            { "name": { $regex: data, $options: "i" } },
+            { "bookingStatus": { $regex: data, $options: "i" } }
+          ],
+        }
+      },
+    ]
+    let aggregate = busBookingModel.aggregate(pipeline);
+    const options = {
+      page: parseInt(page, 10) || 1,
+      limit: parseInt(limit, 10) || 10,
+    };
+    const result = await busBookingModel.aggregatePaginate(aggregate, options);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
+}

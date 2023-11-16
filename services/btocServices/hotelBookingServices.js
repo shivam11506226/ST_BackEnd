@@ -1,6 +1,7 @@
 const hotelBookingModel = require('../../model/btocModel/hotelBookingModel');
 const userType = require("../../enums/userType");
 const status = require("../../enums/status");
+const mongoose=require('mongoose')
 const userhotelBookingModelServices = {
     createUserhotelBookingModel: async (insertObj) => {
         return await hotelBookingModel.create(insertObj);

@@ -7,6 +7,7 @@ const gender=require("../../enums/gender");
 mongoose.pluralize(null);
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');
+const offerType=require('../../enums/offerType')
 const BookingDetailSchema = new mongoose.Schema(
     {
         userId: {
@@ -28,15 +29,13 @@ const BookingDetailSchema = new mongoose.Schema(
         destination: {
             type: String,
         },
-        amount: {
-            type: Number,
-        },
         airlineDetails: {
             AirlineName: {
                 type: String,
             },
             DepTime: {
                 type: String,
+                default:" "
             },
         },
         passengerDetails: [
@@ -80,8 +79,7 @@ const BookingDetailSchema = new mongoose.Schema(
         },
         transactions: {
             type: mongoose.Types.ObjectId,
-            ref: 'transactions',
-            default:''
+            ref: 'userTransactions',
         },
         bookingType: {
             type: String,

@@ -7,6 +7,8 @@ const {
   sendActionFailedResponse,
 } = require("../common/common");
 const { response } = require("express");
+//**************************************COMMON SERVICES***************************************/
+
 
 exports.getSearchAirportData = async (req, res) => {
   try {
@@ -96,15 +98,23 @@ exports.logout = async (req, res) => {
 
 exports.searchOneWay = async (req, res) => {
   try {
-    const data = {
+    let data = {
       ...req.body,
       JourneyType: "1",
     };
 
     const response = await axios.post(`${api.flightSearchURL}`, data);
-
     msg = "Flight Searched Successfully!";
-
+    const dat = response.data.Response.Results[0];
+    // console.log("'date============================='",dat)
+    console.log("================Data: ", response.data.Response.Results[0].length);
+    // for(var i=0; i<=response.data.Response.Results[0].length; i++) {
+    //   const result=await addImageToResults(dat);
+    //   console.log("============FUNCTIONED DATA++++++++++++",result)
+    //   results=result;
+    // }
+    const results=await addImageToResults(dat);
+    // console.log("==========================aaaaaaaaaaaaaaaaaaaaa",results );
     actionCompleteResponse(res, response.data, msg);
   } catch (err) {
     console.log(err);
@@ -766,9 +776,8 @@ exports.combinedApi = async (req, res) => {
         const dateTime = new Date(dateTimeString);
         const hours = dateTime.getHours();
         const minutes = dateTime.getMinutes();
-        currFlightDepartureTime = `${hours}:${
-          minutes < 10 ? "0" : ""
-        }${minutes}`;
+        currFlightDepartureTime = `${hours}:${minutes < 10 ? "0" : ""
+          }${minutes}`;
         price = currObj.Fare.BaseFare;
       }
 
@@ -928,10 +937,10 @@ exports.returnFlightSort = async (req, res) => {
     const sortlist = response.data.Response.Results;
     const combinedResults = sortlist.reduce((acc, result) => {
       if (result[0].Segments[0].length === 1) {
-        console.log(result[0].Segments[0].length,'one')
+        console.log(result[0].Segments[0].length, 'one')
         acc[0].push(result);
       } else if (result[0].Segments[0].length === 2) {
-        console.log(result[0].Segments[0].length,"two")
+        console.log(result[0].Segments[0].length, "two")
         acc[1].push(result);
       }
       return acc;
@@ -941,10 +950,10 @@ exports.returnFlightSort = async (req, res) => {
     const flattenedArray = filteBysegment.flat(1);
     function sortByPublishedFareAscending(data) {
       return data.map(innerArray => {
-          return innerArray.sort((a, b) => a.Fare.PublishedFare - b.Fare.PublishedFare);
+        return innerArray.sort((a, b) => a.Fare.PublishedFare - b.Fare.PublishedFare);
       });
     }
-    
+
     // Call the sorting function
     const sortedDataAscending = sortByPublishedFareAscending(flattenedArray);
 
@@ -954,3 +963,67 @@ exports.returnFlightSort = async (req, res) => {
     sendActionFailedResponse(res, {}, err.message);
   }
 };
+
+
+
+
+
+
+
+
+//**************************************COMMON SERVICES************************************************/
+
+const addImageToResults = (results) => {
+  const imagesPath = '../utilities/FlightImages/';
+console.log("====================>>>>>>>>>>>>>>>>>>>>>>>>>>>>REsults",results);
+  results.forEach(result => {
+    result.Segments.forEach(segment => {
+      segment.forEach(subSegment => {
+        const airlineCode = subSegment.Airline.AirlineCode;
+console.log("-========================22222222222222222",subSegment)
+        // Check if the image for the airline code exists
+        const imagePath = imagesPath + airlineCode + '.png';
+        console.log("imagePath-----------",imagePath)
+console.log("=-==============================>??????",imagesPath.includes(imagePath))
+        // If the image exists, add it to the response
+        if (imagesPath.includes(imagePath)) {
+          console.log("imagePath: "+imagePath);
+          subSegment.Airline.image = imagePath;
+          console.log("subSegment.Airline.image:::::::::::::",subSegment.Airline.image)
+        } else {
+          // If the image doesn't exist, provide a default image path
+          subSegment.Airline.image = '../utilities/FlightImages/0B.png';
+        }
+      });
+    });
+  });
+
+  return results;
+};
+
+// const addImageToResults = (result) => {
+//   // const flightImageMap = 
+//   const images = `../utilities/FlightImages`
+//   console.log("Images: ", images);
+//   const segment = result[0].Segments[0];
+//   console.log("=0=0=====================", segment);
+//   // for (let index of result) {
+//   //   const data1 = addImageToResults(dat);
+//   //           if (data1) {
+//   //               index._doc.image = data1
+//   //               console.log("restaurantData=============",index._doc.image);
+//   //           }
+//   //         }
+//   segment.forEach(subSegment => {
+//     const airLineCode = segment[0].Airline.AirlineCode;
+//     if (images.hasOwnProperty(airLineCode)) {
+//       subSegment[0].Airline.image = images[airLineCode];
+//       console.log("IF============================>>>>>>>>>>>",subSegment[0].Airline.image);
+//     } else {
+//       subSegment[0].Airline.images = "../utilities/FlightImages/0B.png"
+//       console.log("Else============================>>>>>>>>>>>",subSegment[0].Airline.image);
+//     }
+//   })
+// console.log(result);
+//   return result;
+// };

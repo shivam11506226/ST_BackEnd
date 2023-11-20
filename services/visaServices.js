@@ -1,6 +1,6 @@
+const issuedType = require("../enums/issuedType");
 const status = require("../enums/status");
-const visaModel=require("../model/visaModel/visaModel")
-
+const visaModel=require("../model/visaModel/visaModel");
 
 const visaServices = {
 
@@ -24,7 +24,38 @@ const visaServices = {
         return await visaModel.findOneAndUpdate(query, updateObj, { new: true });
     },
     weeklyVisaListPaginate: async (validatedBody) => {
-        let query = { status:status.ACTIVE};
+        let query = { status:status.ACTIVE,issuedType:issuedType.WEEKLY_VISA};
+        const { page, limit} = validatedBody;
+        let options = {
+            page: Number(page) || 1,
+            limit: Number(limit) || 10,
+            sort: { createdAt: -1 ,},
+        };
+        return await visaModel.paginate(query, options);
+    },
+
+    getNoVisaByPaginate:async(query)=>{
+        let {page,limit}=query;
+        let data={status:status.ACTIVE,issuedType:issuedType.NO_VISA};
+        let options = {
+            page: Number(page) || 1,
+            limit: Number(limit) || 10,
+            sort: { createdAt: -1 ,},
+        };
+        return await visaModel.paginate(data, options);
+    },
+    montholyVisaListPaginate: async (validatedBody) => {
+        let query = { status:status.ACTIVE,issuedType:issuedType.MONTHLY_VISA};
+        const { page, limit} = validatedBody;
+        let options = {
+            page: Number(page) || 1,
+            limit: Number(limit) || 10,
+            sort: { createdAt: -1 ,},
+        };
+        return await visaModel.paginate(query, options);
+    },
+    onarrivalVisaListPaginate: async (validatedBody) => {
+        let query = { status:status.ACTIVE,issuedType:issuedType.VISA_ON_ARRIVAL};
         const { page, limit} = validatedBody;
         let options = {
             page: Number(page) || 1,

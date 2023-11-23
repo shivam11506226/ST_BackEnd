@@ -718,6 +718,7 @@ exports.getAllAgentBusBookingList = async (req, res, next) => {
     const options = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 10,
+      sort: { createdAt: -1 },
     };
     const result = await busBookingModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {

@@ -17,8 +17,10 @@ exports.addFlightBookingData = async (req, res) => {
     const data = {
       ...req.body,
     };
+    // console.log(req.body)
     const response = await flightBookingData.create(data);
-    const msg = "flight booking details add1ed successfully";
+    const msg = "flight booking details added successfully";
+    // console.log(response.paymentStatus)
     if (response.paymentStatus === "success") {
       const pdfDoc = await PDFDocument.create();
       const page = pdfDoc.addPage([600, 400]);
@@ -52,7 +54,7 @@ exports.addFlightBookingData = async (req, res) => {
 
       // Clean up the temporary PDF file
       fs.unlinkSync(pdfFilePath);
-      await sendSMS.sendSMSForFlightBooking(response);
+      // await sendSMS.sendSMSForFlightBooking(response);
     }
     actionCompleteResponse(res, response, msg);
   } catch (error) {

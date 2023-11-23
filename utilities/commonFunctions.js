@@ -320,6 +320,7 @@ module.exports = {
   //==========================================================
 
   FlightBookingConfirmationMail: async (to, pdfFilePath) => {
+    const name=`${to?.passengerDetails[0]?.firstName} ${to?.passengerDetails[0]?.lastName}`
     let html = `<!DOCTYPE html>S
         <html lang="en">
         
@@ -338,7 +339,7 @@ module.exports = {
         
                         <div style="width: 90%;margin: auto; text-align: left;">
                             <br><br>
-                            <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear ${to.name},
+                            <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear ${name},
                                 Your Flight Booking successfully from skyTrails.
                         </div>
                     </div>

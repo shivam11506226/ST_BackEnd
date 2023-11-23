@@ -10,9 +10,11 @@ const flightBookingData = new mongoose.Schema(
         required: [true, "user ID is required"],
         ref: "userb2bs",
       },
+
       oneWay:{
         type:Boolean,
         required: [true, "journey type is required"]
+
       },
       bookingId: {
         type:String,

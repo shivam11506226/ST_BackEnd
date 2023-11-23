@@ -10,9 +10,11 @@ const flightBookingData = new mongoose.Schema(
         required: [true, "user ID is required"],
         ref: "userb2bs",
       },
-      oneWay : {
+
+      oneWay:{
         type:Boolean,
-        required: [true, "journey type is required"],
+        required: [true, "journey type is required"]
+
       },
       bookingId: {
         type:String,
@@ -90,15 +92,15 @@ const flightBookingData = new mongoose.Schema(
         enum: ["success", "failure", "pending"],
         default: "pending",
       },
-      bookingType:{
-        type: String,
-        enum: ['busBookingData', 'flightbookingdatas', 'hotelBookingDetail']
-      },
-      status: {
-        type: String,
-        enums:[status.ACTIVES, status.BLOCK, status.ACTIVE],
-        default: status.ACTIVE,
-    },
+      // bookingType:{
+      //   type: String,
+      //   enum: ['busBookingData', 'flightbookingdatas', 'hotelBookingDetail']
+      // },
+    //   status: {
+    //     type: String,
+    //     enums:[status.ACTIVES, status.BLOCK, status.ACTIVE],
+    //     default: status.ACTIVE,
+    // },
     },
     { timestamps: true }
   )

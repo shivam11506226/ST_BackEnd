@@ -75,7 +75,7 @@ const schemas = {
     email: joi.string().email().required(),
     address: joi.string().required(),
     destination: joi.string().required(),
-    BookingId: joi.string().required(),
+    bookingId: joi.string().required(),
     CheckInDate: joi.string().required(),
     hotelName: joi.string().required(),
     hotelId: joi.number().required(),

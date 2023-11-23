@@ -54,7 +54,7 @@ exports.addFlightBookingData = async (req, res) => {
 
       // Clean up the temporary PDF file
       fs.unlinkSync(pdfFilePath);
-      // await sendSMS.sendSMSForFlightBooking(response);
+      await sendSMS.sendSMSForFlightBooking(response);
     }
     actionCompleteResponse(res, response, msg);
   } catch (error) {

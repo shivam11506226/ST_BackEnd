@@ -225,14 +225,17 @@ module.exports = {
       throw error;
     }
   },
-  sendSMSForFlightBooking:async(data)=>{
-    const details=`Hello ${data.firstName} ${data.lastName},Thank you for booking your hotel stay with The Skytrails. Your reservation is confirmed! Please click on url to see details:${baseURL}?details=${message}`;
+  sendSMSForFlightBooking: async (data) => {
+    const userName=`${data?.passengerDetails[0]?.firstName} ${data?.passengerDetails[0]?.lastName}`
+    const url1='google';
+    const phone=data?.passengerDetails[0]?.ContactNo;
+    const details = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details: https://theskytrails.com/${url1}`;
     const url = `http://sms.txly.in/vb/apikey.php?`;
     const params = {
       apikey: key,
       senderid: senderid,
       templateid: templateid,
-      number: data.phone,
+      number: phone,
       message: details,
     };
     try {

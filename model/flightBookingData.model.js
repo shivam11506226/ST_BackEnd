@@ -24,6 +24,10 @@ const flightBookingData = new mongoose.Schema(
         type: String,
         required: [true, "pnr is required"],
       },
+      dateOfJourney :{
+        type: String,
+        required :[true, "Date of journey is required"]
+      },
       origin: {
         type: String,
         required : [true, "origin is required"],

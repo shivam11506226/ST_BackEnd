@@ -1,5 +1,3 @@
-const { PDFDocument, rgb } = require("pdf-lib");
-const fs = require("fs");
 const flightBookingData = require("../model/flightBookingData.model");
 const User = require("../model/user.model");
 const Notification = require("../model/notification.model");
@@ -12,6 +10,8 @@ const commonFunction = require("../utilities/commonFunctions");
 const sendSMS = require("../utilities/sendSms");
 const PushNotification = require("../utilities/commonFunForPushNotification");
 
+const {cancelBookingServices}=require("../services/cancelServices");
+const {createcancelBooking,updatecancelBooking,aggregatePaginatecancelBookingList,countTotalcancelBooking}=cancelBookingServices;
 exports.addFlightBookingData = async (req, res) => {
   try {
     const data = {
@@ -22,38 +22,7 @@ exports.addFlightBookingData = async (req, res) => {
     const msg = "flight booking details added successfully";
     // console.log(response.paymentStatus)
     if (response.paymentStatus === "success") {
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([600, 400]);
-
-      const content = `
-    First Name: ${response.passengerDetails[0].firstName}
-    Last Name: ${response.passengerDetails[0].lastName}
-    Gender: ${response.passengerDetails[0].gender}
-    Phone: ${response.passengerDetails[0].ContactNo}
-    Date of Birth: ${response.passengerDetails[0].DateOfBirth}
-    Email: ${response.passengerDetails[0].email}
-    Address: ${response.passengerDetails[0].addressLine1}
-    City: ${response.passengerDetails[0].city}
-    PNR: ${response.pnr}
-`;
-      page.drawText(content, {
-        x: 50,
-        y: 350,
-        size: 12,
-        color: rgb(0, 0, 0),
-      });
-
-      // Serialize the PDF to bytes  
-      const pdfBytes = await pdfDoc.save();
-
-      // Write the PDF to a temporary file
-      const pdfFilePath = "temp_api_data.pdf";
-      fs.writeFileSync(pdfFilePath, pdfBytes);
-
-      await commonFunction.FlightBookingConfirmationMail(data, pdfFilePath);
-
-      // Clean up the temporary PDF file
-      fs.unlinkSync(pdfFilePath);
+      await commonFunction.FlightBookingConfirmationMail(data);
       await sendSMS.sendSMSForFlightBooking(response);
     }
     actionCompleteResponse(res, response, msg);

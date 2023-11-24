@@ -1,42 +1,42 @@
-const changeRequestModel = require('../model/changeFlightRequest');
+const changeBusRequestModel = require('../model/changeBusBookings');
 const status = require("../enums/status");
 const bookingStatus=require("../enums/bookingStatus");
 const mongoose =require('mongoose');
-const changeRequestServices = {
-    createchangeRequest: async (insertObj) => {
-        return await changeRequestModel.create(insertObj);
+const changeBusRequestServices = {
+    createchangeBusRequest: async (insertObj) => {
+        return await changeBusRequestModel.create(insertObj);
     },
 
-    findchangeRequest: async (query) => {
-        return await changeRequestModel.findOne(query).select('-createdAt -updatedAt');
+    findchangeBusRequest: async (query) => {
+        return await changeBusRequestModel.findOne(query).select('-createdAt -updatedAt');
     },
 
-    getchangeRequest: async (query) => {
-        return await changeRequestModel.findOne(query).select('-createdAt -updatedAt');
+    getchangeBusRequest: async (query) => {
+        return await changeBusRequestModel.findOne(query).select('-createdAt -updatedAt');
     },
 
-    findchangeRequestData: async (query) => {
-        return await changeRequestModel.findOne(query).select('-createdAt -updatedAt ');
+    findchangeBusRequestData: async (query) => {
+        return await changeBusRequestModel.findOne(query).select('-createdAt -updatedAt ');
     },
 
-    deletechangeRequest: async (query) => {
-        return await changeRequestModel.deleteOne(query);
+    deletechangeBusRequest: async (query) => {
+        return await changeBusRequestModel.deleteOne(query);
     },
 
-    changeRequestList: async (query) => {
-        return await changeRequestModel.find(query).populate('userId').select('-createdAt -updatedAt');
+    changeBusRequestList: async (query) => {
+        return await changeBusRequestModel.find(query).populate('userId').select('-createdAt -updatedAt');
     },
-    updatechangeRequest: async (query, updateObj) => {
-        return await changeRequestModel.findOneAndUpdate(query, updateObj, { new: true }).select('-createdAt -updatedAt');
+    updatechangeBusRequest: async (query, updateObj) => {
+        return await changeBusRequestModel.findOneAndUpdate(query, updateObj, { new: true }).select('-createdAt -updatedAt');
     },
 
-    paginatechangeRequestSearch: async (body) => {
-        // changeRequestType: { $ne: [changeRequestType.ADMIN,changeRequestType.SUBADMIN] }
+    paginatechangeBusRequestSearch: async (body) => {
+        // changeBusRequestType: { $ne: [changeBusRequestType.ADMIN,changeBusRequestType.SUBADMIN] }
         let query = {}
         const { page, limit, search } = body;
         if (search) {
             query.$or = [
-                { hotelName: { $regex: search, $options: 'i' } },
+                { BusName: { $regex: search, $options: 'i' } },
                 { email: { $regex: search, $options: 'i' } },
             ]
         }
@@ -46,10 +46,10 @@ const changeRequestServices = {
             limit: Number(limit) || 8,
             sort: { createdAt: -1 },
         };
-        return await changeRequestModel.paginate(query, options);
+        return await changeBusRequestModel.paginate(query, options);
     },
 
-    aggregatePaginatechangeRequestList: async (body) => {
+    aggregatePaginatechangeBusRequestList: async (body) => {
         const { page, limit, search, fromDate, toDate } = body;
         if (search) {
             var filter = search;
@@ -73,7 +73,7 @@ const changeRequestServices = {
             {
                 $match: {
                     $or: [
-                        { "hotelName": { $regex: data, $options: "i" }, },
+                        { "BusName": { $regex: data, $options: "i" }, },
                         { "userDetails.username": { $regex: data, $options: "i" } },
                         { "userDetails.email": { $regex: data, $options: "i" } },
                         { "paymentStatus": { $regex: data, $options: "i" } },
@@ -97,19 +97,19 @@ const changeRequestServices = {
                 { CheckOutDate: { $eq: toDate } },
             ]
         }
-        let aggregate = changeRequestModel.aggregate(pipeline)
+        let aggregate = changeBusRequestModel.aggregate(pipeline)
         let options = {
             page: parseInt(page) || 1,
             limit: parseInt(limit) || 5,
             sort: { createdAt: -1 },
         };
-        return await changeRequestModel.aggregatePaginate(aggregate, options)
+        return await changeBusRequestModel.aggregatePaginate(aggregate, options)
 
     },
 
-    countTotalchangeRequest:async()=>{
-        return await changeRequestModel.countDocuments({bookingStatus:bookingStatus.BOOKED})
+    countTotalchangeBusRequest:async()=>{
+        return await changeBusRequestModel.countDocuments({bookingStatus:bookingStatus.BOOKED})
     },
 }
 
-module.exports = { changeRequestServices }
+module.exports = { changeBusRequestServices }

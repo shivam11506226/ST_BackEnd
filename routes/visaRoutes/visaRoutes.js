@@ -18,6 +18,6 @@ module.exports = function (app) {
   app.put("/skyTrails/api/visa/updateVisa", controller.updateVisa);
   app.delete("/skyTrails/api/visa/deleteVisa", controller.deleteVisa);
   app.get("/skyTrails/api/visa/getNoVisaList", controller.getNoVisaList);
-  app.get("/skyTrails/api/visa/getMontholyList", controller.getMontholyList);
+  app.get("/skyTrails/api/visa/getMonthlyList", controller.getMonthlyList);
   app.get("/skyTrails/api/visa/getonArrivalList", controller.getonArrivalList);
 };

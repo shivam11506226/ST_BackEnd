@@ -7,6 +7,7 @@ const {
 } = require("../common/common");
 const crypto = require("crypto");
 const commonFunction = require("../utilities/commonFunctions");
+const {sendWhatsAppMessage}= require('../utilities/whatsApi');
 const sendSMS = require("../utilities/sendSms");
 const PushNotification = require("../utilities/commonFunForPushNotification");
 
@@ -38,6 +39,7 @@ exports.addFlightBookingData = async (req, res) => {
     const msg = "flight booking details added successfully";
     // console.log(response.paymentStatus)
     if (response.paymentStatus === "success") {
+      await sendWhatsAppMessage();
       await commonFunction.FlightBookingConfirmationMail(data);
       await sendSMS.sendSMSForFlightBooking(response);
     }

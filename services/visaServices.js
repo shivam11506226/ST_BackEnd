@@ -31,7 +31,8 @@ const visaServices = {
             limit: Number(limit) || 10,
             sort: { createdAt: -1 ,},
         };
-        return await visaModel.paginate(query, options);
+        const result= await visaModel.paginate(query, options);
+        return result;
     },
 
     getNoVisaByPaginate:async(query)=>{

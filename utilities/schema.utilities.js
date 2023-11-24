@@ -100,6 +100,7 @@ const schemas = {
     platFormFees: joi.number().optional(),
     issuedType:joi.string().valid(...Object.values(issuedType)).required(),
     continent:joi.string().required(),
+    daysToProcess:joi.number().required(),
   }),
   //static content validation via joi
   staticContentSchema: joi.object().keys({

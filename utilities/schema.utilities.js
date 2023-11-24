@@ -1,5 +1,6 @@
 const joi = require('joi');
 joi.objectId = require('joi-objectid')(joi);
+const issuedType=require('../enums/issuedType')
 const schemas = {
   flightBookingSchema: joi.object().keys({
     userId: joi.string().required(),
@@ -91,14 +92,15 @@ const schemas = {
 
   weeklyVisaSchema: joi.object().keys({
     countryName: joi.string().required(),
-    govermentFees: joi.number().required(),
-    validityPeriod: joi.string().required(),
-    lengthOfStay: joi.string().required(),
+    governmentFees: joi.number().optional(),
+    validityPeriod: joi.string().optional(),
+    lengthOfStay: joi.string().optional(),
     gallery: joi.array().items(joi.string()).optional(),
-    visaType: joi.string().required(),
-    platFormFees: joi.number().required(),
+    visaType: joi.string().optional(),
+    platFormFees: joi.number().optional(),
+    issuedType:joi.string().valid(...Object.values(issuedType)).required(),
+    continent:joi.string().required(),
   }),
-
   //static content validation via joi
   staticContentSchema: joi.object().keys({
     title: joi.string().required(),

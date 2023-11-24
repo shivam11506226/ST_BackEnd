@@ -22,12 +22,16 @@ const { brbuserServices } = require('../services/btobagentServices');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
 const { hotelBookingServicess } = require("../services/hotelBookingServices");
-const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking, aggregatePaginateHotelBookingList1 } = hotelBookingServicess;
+const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking, aggregatePaginateHotelBookingList1,aggregatePaginateHotelBookings } = hotelBookingServicess;
 const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser, deletebrbuser, brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
 const { visaServices } = require('../services/visaServices');
 const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
 const { changeRequestServices } = require('../services/changeRequest');
 const { createchangeRequest, findchangeRequest, findchangeRequestData, deletechangeRequest, changeRequestList, updatechangeRequest, paginatechangeRequestSearch, aggregatePaginatechangeRequestList, countTotalchangeRequest } = changeRequestServices;
+const { changeHotelRequestServices } = require('../services/changeHotelRequestServices');
+const { createchangeHotelRequest, findchangeHotelRequest, getchangeHotelRequest, deletechangeHotelRequest, changeHotelRequestList, updatechangeHotelRequest, paginatechangeHotelRequestSearch, aggregatePaginatechangeHotelRequestList, countTotalchangeHotelRequest } = changeHotelRequestServices;
+const { changeBusRequestServices } = require('../services/changeBusRequest');
+const { createchangeBusRequest, findchangeBusRequest, getchangeBusRequest, deletechangeBusRequest, changeBusRequestList, updatechangeBusRequest, paginatechangeBusRequestSearch, aggregatePaginatechangeBusRequestList, countTotalchangeBusRequest } = changeBusRequestServices;
 //**********Necessary models***********/
 const flightModel = require('../model/flightBookingData.model')
 const hotelBookingModel = require('../model/hotelBooking.model')
@@ -537,6 +541,7 @@ exports.agentQues = async (req, res, next) => {
     const options1 = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 10,
+      sort: { createdAt: -1 },
     };
     const busBookData = await busBookingModel.aggregatePaginate(aggregate1, options1);
     const combinedData = [hotelData, flightData, busBookData];
@@ -587,7 +592,7 @@ exports.getAllAgentHotelBookingList = async (req, res, next) => {
     if (!isAgent) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
-    const result = await aggregatePaginateHotelBookingList1(req.query);
+    const result = await aggregatePaginateHotelBookings(req.query);
     if (result.docs.length == 0) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
     }
@@ -647,6 +652,7 @@ exports.getAllAgentFlightBookingList = async (req, res, next) => {
     const options = {
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 10,
+      sort: { createdAt: -1 },
     };
     const result = await flightModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {
@@ -718,6 +724,7 @@ exports.getAllAgentBusBookingList = async (req, res, next) => {
     const options = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 10,
+      sort: { createdAt: -1 },
     };
     const result = await busBookingModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {
@@ -749,7 +756,6 @@ exports.changeHotelDetailsRequest = async (req, res, next) => {
   try {
     const { reason, changerequest, bookingId, id, agentId, contactNumber,amount } = req.body;
     const isAgentExists = await findbrbuser({ _id: agentId });
-    console.log("==============", isAgentExists);
     if (!isAgentExists) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
     }
@@ -766,7 +772,7 @@ exports.changeHotelDetailsRequest = async (req, res, next) => {
       contactNumber: contactNumber,
       amount:amount
     }
-    const result = await createchangeRequest(object);
+    const result = await createchangeHotelRequest(object);
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
   } catch (error) {
     console.log("error", error);
@@ -779,14 +785,11 @@ exports.changeHotelDetailsRequest = async (req, res, next) => {
 exports.changeFlightDetailsRequest = async (req, res, next) => {
   try {
     const { reason, changerequest, bookingId, id, agentId, contactNumber ,amount} = req.body;
-    console.log("=bacvdfd", req.body)
     const isAgentExists = await findbrbuser({ _id: agentId });
-    console.log("==============", isAgentExists);
     if (!isAgentExists) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
     }
     const isBookingExist = await flightModel.findOne({ userId: isAgentExists._id, bookingId: bookingId, status: status.ACTIVE });
-    console.log("================>>>>>>>>>>", isBookingExist);
     if (!isBookingExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
     }
@@ -828,10 +831,13 @@ exports.changeBusBookingDetailsRequest = async (req, res, next) => {
       contactNumber: contactNumber,
       amount:amount
     }
-    const result = await createchangeRequest(object);
+    const result = await createchangeBusRequest(object);
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
   } catch (error) {
     console.log("error", error);
     return next(error);
   }
 }
+
+//cancel request if already booking Exit******************************
+// exports.cancelRequest = function

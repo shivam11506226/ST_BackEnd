@@ -1,7 +1,8 @@
 const hotelBookingModel = require('../model/hotelBooking.model');
+const userHotelBookingModel = require('../model/btocModel/hotelBookingModel')
 const status = require("../enums/status");
-const bookingStatus=require("../enums/bookingStatus");
-const mongoose =require('mongoose');
+const bookingStatus = require("../enums/bookingStatus");
+const mongoose = require('mongoose');
 const hotelBookingServicess = {
     createhotelBooking: async (insertObj) => {
         return await hotelBookingModel.create(insertObj);
@@ -107,11 +108,63 @@ const hotelBookingServicess = {
 
     },
 
-    countTotalBooking:async()=>{
-        return await hotelBookingModel.countDocuments({bookingStatus:bookingStatus.BOOKED})
+    countTotalBooking: async () => {
+        return await hotelBookingModel.countDocuments({ bookingStatus: bookingStatus.BOOKED })
     },
     aggregatePaginateHotelBookingList1: async (body) => {
-        const { page, limit, search, fromDate, toDate,userId } = body;
+        const { page, limit, search, fromDate, userId } = body;
+        if (search) {
+            var filter = search;
+        }
+        let data = filter || ""
+        let pipeline = [
+            {
+                $lookup: {
+                    from: "users",
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: "userDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$userDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { "hotelName": { $regex: data, $options: "i" }, },
+                        { "userDetails.username": { $regex: data, $options: "i" } },
+                        { "userDetails.email": { $regex: data, $options: "i" } },
+                        { "paymentStatus": { $regex: data, $options: "i" } },
+                        { "destination": { $regex: data, $options: "i" } },
+                        { "night": parseInt(data) },
+                        { "room": parseInt(data) },
+                        { "bookingStatus": { $regex: data, $options: "i" } }
+                    ],
+
+                }
+            },
+
+        ]
+        if (fromDate ) {
+            pipeline.CheckInDate = { $eq: fromDate };
+        }
+        let aggregate = userHotelBookingModel.aggregate(pipeline)
+        let options = {
+            page: parseInt(page) || 1,
+            limit: parseInt(limit) || 5,
+            sort: { createdAt: -1 },
+        };
+        const result= await userHotelBookingModel.aggregatePaginate(aggregate, options);
+        console.log("result===========",result);
+        return result;
+
+    },
+    aggregatePaginateHotelBookings: async (body) => {
+        const { page, limit, search, fromDate, userId } = body;
         if (search) {
             var filter = search;
         }
@@ -119,7 +172,7 @@ const hotelBookingServicess = {
         let pipeline = [
             {
                 $match: {
-                    userId: mongoose.Types.ObjectId(userId) 
+                    userId: mongoose.Types.ObjectId(userId)
                 }
             },
             {
@@ -148,90 +201,26 @@ const hotelBookingServicess = {
                         { "room": parseInt(data) },
                         { "bookingStatus": { $regex: data, $options: "i" } }
                     ],
-                    
+
                 }
             },
 
         ]
-        if (fromDate && !toDate) {
+        if (fromDate ) {
             pipeline.CheckInDate = { $eq: fromDate };
         }
-        if (!fromDate && toDate) {
-            pipeline.CheckOutDate = { $eq: toDate };
-        }
-        if (fromDate && toDate) {
-            pipeline.$and = [
-                { CheckInDate: { $eq: fromDate } },
-                { CheckOutDate: { $eq: toDate } },
-            ]
-        }
-        let aggregate = hotelBookingModel.aggregate(pipeline)
+        let aggregate = userHotelBookingModel.aggregate(pipeline)
         let options = {
             page: parseInt(page) || 1,
             limit: parseInt(limit) || 5,
             sort: { createdAt: -1 },
         };
-        return await hotelBookingModel.aggregatePaginate(aggregate, options)
+        const result= await userHotelBookingModel.aggregatePaginate(aggregate, options);
+        console.log("result===========",result);
+        return result;
 
     },
-
-    aggregatePaginateHotelBookingList1: async (body) => {
-        const { page, limit, search, fromDate, toDate } = body;
-        if (search) {
-            var filter = search;
-        }
-        let data = filter || ""
-        let pipeline = [
-            {
-                $lookup: {
-                    from: "userb2bs",
-                    localField: 'userId',
-                    foreignField: '_id',
-                    as: "userDetails",
-                }
-            },
-            {
-                $unwind: {
-                    path: "$userDetails",
-                    preserveNullAndEmptyArrays: true
-                }
-            },
-            {
-                $match: {
-                    $or: [
-                        { "hotelName": { $regex: data, $options: "i" }, },
-                        { "userDetails.username": { $regex: data, $options: "i" } },
-                        { "userDetails.email": { $regex: data, $options: "i" } },
-                        { "paymentStatus": { $regex: data, $options: "i" } },
-                        { "destination": { $regex: data, $options: "i" } },
-                        { "night": parseInt(data) },
-                        { "room": parseInt(data) },
-                        { "bookingStatus": { $regex: data, $options: "i" } }
-                    ],
-                }
-            },
-        ]
-        if (fromDate && !toDate) {
-            pipeline.CheckInDate = { $eq: fromDate };
-        }
-        if (!fromDate && toDate) {
-            pipeline.CheckOutDate = { $eq: toDate };
-        }
-        if (fromDate && toDate) {
-            pipeline.$and = [
-                { CheckInDate: { $eq: fromDate } },
-                { CheckOutDate: { $eq: toDate } },
-            ]
-        }
-        let aggregate = hotelBookingModel.aggregate(pipeline)
-        let options = {
-            page: parseInt(page) || 1,
-            limit: parseInt(limit) || 5,
-            sort: { createdAt: -1 },
-        };
-        return await hotelBookingModel.aggregatePaginate(aggregate, options)
-
-    },
+   
 }
 
 module.exports = { hotelBookingServicess }

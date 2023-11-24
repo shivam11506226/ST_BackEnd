@@ -46,11 +46,11 @@ const visaServices = {
     },
     montholyVisaListPaginate: async (validatedBody) => {
         let query = { status:status.ACTIVE,issuedType:issuedType.MONTHLY_VISA};
-        const { page, limit} = validatedBody;
+        const { page, limit,search} = validatedBody;
         let options = {
             page: Number(page) || 1,
             limit: Number(limit) || 10,
-            sort: { createdAt: -1 ,},
+            sort: { createdAt: -1 },
         };
         return await visaModel.paginate(query, options);
     },

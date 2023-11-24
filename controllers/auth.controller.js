@@ -10,27 +10,27 @@ const approvestatus = require('../enums/approveStatus')
 //require responsemessage and statusCode
 const statusCode = require('../utilities/responceCode');
 const responseMessage = require('../utilities/responses');
-//***********************************SERVICES********************************************** */
+//************SERVICES*************** */
 
 const { userServices } = require('../services/userServices');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
 const { hotelBookingServicess } = require("../services/hotelBookingServices");
-const { aggregatePaginateHotelBookingList,aggregatePaginateHotelBookingList1, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking } = hotelBookingServicess;
+const { aggregatePaginateHotelBookingList, aggregatePaginateHotelBookingList1, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking } = hotelBookingServicess;
 const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
 const { visaServices } = require('../services/visaServices');
 const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
 const { brbuserServices } = require('../services/btobagentServices');
 const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser, deletebrbuser, brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
-const {userflightBookingServices}=require('../services/btocServices/flightBookingServices')
-const{aggregatePaginateGetBooking1}=userflightBookingServices;
-//***************************Necessary models**********************************/
+const { userflightBookingServices } = require('../services/btocServices/flightBookingServices')
+const { aggregatePaginateGetBooking1 } = userflightBookingServices;
+//**********Necessary models***********/
 const flightModel = require('../model/flightBookingData.model')
 const hotelBookingModel = require('../model/hotelBooking.model')
 const busBookingModel = require("../model/busBookingData.model");
-const userFlightBookingModel=require("../model/btocModel/flightBookingModel");
-const userhotelBookingModel=require("../model/btocModel/flightBookingModel");
-const userbusBookingModel=require("../model/btocModel/flightBookingModel")
+const userFlightBookingModel = require("../model/btocModel/flightBookingModel");
+const userhotelBookingModel = require("../model/btocModel/hotelBookingModel");
+const userbusBookingModel = require("../model/btocModel/busBookingModel")
 const bookingStatus = require("../enums/bookingStatus");
 exports.signup = (req, res) => {
   const user = new User({
@@ -148,7 +148,7 @@ exports.signout = async (req, res) => {
   }
 };
 
-//****************************************************SOCIAL LOGIN************************************************** */
+//*****************SOCIAL LOGIN***************** */
 exports.socialLogin = async (req, res, next) => {
   try {
     const { socialId, socialType, deviceType, deviceToken, username, email, mobileNumber, password, userId } = req.body;
@@ -208,7 +208,7 @@ exports.socialLogin = async (req, res, next) => {
   }
 }
 
-//approve regect user request to become an agent**************************************************************************
+//approve regect user request to become an agent**************************
 
 exports.approveAgent = async (req, res, next) => {
   try {
@@ -233,7 +233,7 @@ exports.approveAgent = async (req, res, next) => {
   }
 }
 
-//active blockuser ****************************************************************
+//active blockuser **********************
 
 exports.activeBlockUser = async (req, res, next) => {
   try {
@@ -257,7 +257,7 @@ exports.activeBlockUser = async (req, res, next) => {
     return next(error)
   }
 }
-//active block agents ****************************************************************
+//active block agents **********************
 
 exports.activeBlockUser = async (req, res, next) => {
   try {
@@ -281,7 +281,7 @@ exports.activeBlockUser = async (req, res, next) => {
     return next(error)
   }
 }
-//adminLogin**********************************************************************************
+//adminLogin****************************
 exports.adminLogin = async (req, res, next) => {
   try {
     const { email, mobileNumber, password } = req.body;
@@ -308,7 +308,7 @@ exports.adminLogin = async (req, res, next) => {
   }
 }
 
-//**************************Edit profile******************************************/
+//*********Edit profile***************/
 exports.editProfile = async (req, res, next) => {
   try {
     const { username, email, mobile_number, profilePic, } = req.body;
@@ -332,7 +332,7 @@ exports.editProfile = async (req, res, next) => {
     return next(error);
   }
 }
-//**************************Get all userList Admin*****************************************/
+//*********Get all userList Admin**************/
 
 exports.getAgents = async (req, res, next) => {
   console.log("-000000000000000000");
@@ -356,11 +356,11 @@ exports.getAgents = async (req, res, next) => {
   }
 }
 
-//***********************************GET ALL HOTEL BOOKING LIST ****************************************/
+//************GET ALL HOTEL BOOKING LIST ***************/
 
 exports.getAllHotelBookingList = async (req, res, next) => {
   try {
-    const { page, limit, search, fromDate, toDate } = req.query;
+    const { page, limit, search, fromDate } = req.query;
     // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
     // if (!isAdmin) {
     //   return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
@@ -376,7 +376,7 @@ exports.getAllHotelBookingList = async (req, res, next) => {
   }
 }
 
-//***************************************GET ALL FLIGHT BOOKING LIST**************************************/
+//**************GET ALL FLIGHT BOOKING LIST*************/
 
 exports.getAllFlightBookingList = async (req, res, next) => {
   try {
@@ -433,7 +433,7 @@ exports.getAllFlightBookingList = async (req, res, next) => {
   }
 }
 
-//*******************************************DashBoard****************************************/
+//**************DashBoard*************/
 
 exports.adminDashBoard = async (req, res, next) => {
   try {
@@ -456,7 +456,7 @@ exports.adminDashBoard = async (req, res, next) => {
   }
 }
 
-//*********************************GETALL BUSBOKING DETAILS*********************************************/
+//************GETALL BUSBOKING DETAILS****************/
 
 exports.getAllBusBookingList = async (req, res, next) => {
   try {
@@ -506,6 +506,7 @@ exports.getAllBusBookingList = async (req, res, next) => {
     const options = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 10,
+      sort: { createdAt: -1 }
     };
     const result = await userbusBookingModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {
@@ -513,13 +514,13 @@ exports.getAllBusBookingList = async (req, res, next) => {
     }
     return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
   } catch (error) {
-    console.log("error=======>>>>>>", error);
+    console.log("Error in getAllBusBookingList:", error);
     return next(error);
   }
 }
 
 
-//****************************GET SPECIFIC BOOKING DETAILS**********************************************/
+//*********GET SPECIFIC BOOKING DETAILS***************/
 
 exports.getDataById = async (req, res, next) => {
   const { model, id } = req.query;
@@ -563,7 +564,7 @@ exports.getDataById = async (req, res, next) => {
   }
 }
 
-//***************************************************CANCEL TICKET****************************************************/
+//******************CANCEL TICKET*****************/
 
 exports.cancelTickets = async (req, res, next) => {
   try {
@@ -608,7 +609,7 @@ exports.cancelTickets = async (req, res, next) => {
   }
 }
 
-//**************************************upload profile picture*********************************************************/
+//*************upload profile picture********************/
 
 exports.uploadProfilePicture = async (req, res, next) => {
   try {
@@ -628,7 +629,7 @@ exports.uploadProfilePicture = async (req, res, next) => {
   }
 }
 
-//****************************CANCEL HOTEL BOOKING AS PER USER REQUEST*************************************************/
+//*********CANCEL HOTEL BOOKING AS PER USER REQUEST****************/
 
 exports.cancelHotel = async (req, res, next) => {
   try {
@@ -651,7 +652,7 @@ exports.cancelHotel = async (req, res, next) => {
 }
 
 
-//***********************************GET ALL AGENT HOTEL BOOKING LIST ****************************************/
+//************GET ALL AGENT HOTEL BOOKING LIST ***************/
 
 exports.getAllHotelBookingListAgent = async (req, res, next) => {
   try {
@@ -671,7 +672,7 @@ exports.getAllHotelBookingListAgent = async (req, res, next) => {
   }
 }
 
-//***************************************GET ALL AGENT FLIGHT BOOKING LIST**************************************/
+//**************GET ALL AGENT FLIGHT BOOKING LIST*************/
 
 exports.getAllFlightBookingListAgent = async (req, res, next) => {
   try {
@@ -707,6 +708,7 @@ exports.getAllFlightBookingListAgent = async (req, res, next) => {
             { "Userb2bDetails.email": { $regex: data, $options: "i" } },
             { "paymentStatus": { $regex: data, $options: "i" } },
             { "pnr": parseInt(data) },
+            { "amount": parseInt(data) }
           ],
         }
       },
@@ -715,6 +717,7 @@ exports.getAllFlightBookingListAgent = async (req, res, next) => {
     const options = {
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 5,
+      sort: { createdAt: -1 },
     };
     const result = await flightModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {
@@ -728,7 +731,7 @@ exports.getAllFlightBookingListAgent = async (req, res, next) => {
   }
 }
 
-//*********************************GET ALL AGENT BUSBOKING DETAILS*********************************************/
+//************GET ALL AGENT BUSBOKING DETAILS****************/
 
 exports.getAllBusBookingListAgent = async (req, res, next) => {
   try {
@@ -778,6 +781,7 @@ exports.getAllBusBookingListAgent = async (req, res, next) => {
     const options = {
       page: parseInt(page, 10) || 1,
       limit: parseInt(limit, 10) || 10,
+      sort: { createdAt: -1 },
     };
     const result = await busBookingModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {

@@ -146,9 +146,9 @@ exports.getNoVisaList=async(req,res,next)=>{
 }
 
 
-exports.getMontholyList=async(req,res,next)=>{
+exports.getMonthlyList=async(req,res,next)=>{
     try {
-        const { page, limit } = req.query;
+        const { page, limit,search } = req.query;
         const result= await montholyVisaListPaginate(req.query);
         if(!result){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.NOT_FOUND,result:result})

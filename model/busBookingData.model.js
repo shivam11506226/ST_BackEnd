@@ -4,6 +4,7 @@ const status = require('../enums/status');
 const bookingStatus = require("../enums/bookingStatus");
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');
+
 const busBookingDataSchema =
   new mongoose.Schema(
     {

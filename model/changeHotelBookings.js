@@ -17,14 +17,6 @@ const changeBookingDataSchema =
         bookingId: {
             type: String
         },
-        flightBookingId: {
-            type: Schema.Types.ObjectId,
-            ref: "flightbookingdatas"
-        },
-        busBookingId: {
-            type: Schema.Types.ObjectId,
-            ref: "busBookingData"
-        },
         hotelBookingId: {
             type: Schema.Types.ObjectId,
             ref: "hotelBookingDetail"
@@ -53,5 +45,5 @@ changeBookingDataSchema.plugin(mongoosePaginate);
 
 changeBookingDataSchema.plugin(aggregatePaginate);
 
-const changeBookingData = mongoose.model("changeRequestData", changeBookingDataSchema);
+const changeBookingData = mongoose.model("changeHotelRequestData", changeBookingDataSchema);
 module.exports = changeBookingData;

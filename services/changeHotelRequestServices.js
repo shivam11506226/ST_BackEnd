@@ -1,37 +1,37 @@
-const changeRequestModel = require('../model/changeFlightRequest');
+const changeHotelRequestModel = require('../model/changeHotelBookings');
 const status = require("../enums/status");
 const bookingStatus=require("../enums/bookingStatus");
 const mongoose =require('mongoose');
-const changeRequestServices = {
-    createchangeRequest: async (insertObj) => {
-        return await changeRequestModel.create(insertObj);
+const changeHotelRequestServices = {
+    createchangeHotelRequest: async (insertObj) => {
+        return await changeHotelRequestModel.create(insertObj);
     },
 
-    findchangeRequest: async (query) => {
-        return await changeRequestModel.findOne(query).select('-createdAt -updatedAt');
+    findchangeHotelRequest: async (query) => {
+        return await changeHotelRequestModel.findOne(query).select('-createdAt -updatedAt');
     },
 
-    getchangeRequest: async (query) => {
-        return await changeRequestModel.findOne(query).select('-createdAt -updatedAt');
+    getchangeHotelRequest: async (query) => {
+        return await changeHotelRequestModel.findOne(query).select('-createdAt -updatedAt');
     },
 
-    findchangeRequestData: async (query) => {
-        return await changeRequestModel.findOne(query).select('-createdAt -updatedAt ');
+    findchangeHotelRequestData: async (query) => {
+        return await changeHotelRequestModel.findOne(query).select('-createdAt -updatedAt ');
     },
 
-    deletechangeRequest: async (query) => {
-        return await changeRequestModel.deleteOne(query);
+    deletechangeHotelRequest: async (query) => {
+        return await changeHotelRequestModel.deleteOne(query);
     },
 
-    changeRequestList: async (query) => {
-        return await changeRequestModel.find(query).populate('userId').select('-createdAt -updatedAt');
+    changeHotelRequestList: async (query) => {
+        return await changeHotelRequestModel.find(query).populate('userId').select('-createdAt -updatedAt');
     },
-    updatechangeRequest: async (query, updateObj) => {
-        return await changeRequestModel.findOneAndUpdate(query, updateObj, { new: true }).select('-createdAt -updatedAt');
+    updatechangeHotelRequest: async (query, updateObj) => {
+        return await changeHotelRequestModel.findOneAndUpdate(query, updateObj, { new: true }).select('-createdAt -updatedAt');
     },
 
-    paginatechangeRequestSearch: async (body) => {
-        // changeRequestType: { $ne: [changeRequestType.ADMIN,changeRequestType.SUBADMIN] }
+    paginatechangeHotelRequestSearch: async (body) => {
+        // changeHotelRequestType: { $ne: [changeHotelRequestType.ADMIN,changeHotelRequestType.SUBADMIN] }
         let query = {}
         const { page, limit, search } = body;
         if (search) {
@@ -46,10 +46,10 @@ const changeRequestServices = {
             limit: Number(limit) || 8,
             sort: { createdAt: -1 },
         };
-        return await changeRequestModel.paginate(query, options);
+        return await changeHotelRequestModel.paginate(query, options);
     },
 
-    aggregatePaginatechangeRequestList: async (body) => {
+    aggregatePaginatechangeHotelRequestList: async (body) => {
         const { page, limit, search, fromDate, toDate } = body;
         if (search) {
             var filter = search;
@@ -97,19 +97,19 @@ const changeRequestServices = {
                 { CheckOutDate: { $eq: toDate } },
             ]
         }
-        let aggregate = changeRequestModel.aggregate(pipeline)
+        let aggregate = changeHotelRequestModel.aggregate(pipeline)
         let options = {
             page: parseInt(page) || 1,
             limit: parseInt(limit) || 5,
             sort: { createdAt: -1 },
         };
-        return await changeRequestModel.aggregatePaginate(aggregate, options)
+        return await changeHotelRequestModel.aggregatePaginate(aggregate, options)
 
     },
 
-    countTotalchangeRequest:async()=>{
-        return await changeRequestModel.countDocuments({bookingStatus:bookingStatus.BOOKED})
+    countTotalchangeHotelRequest:async()=>{
+        return await changeHotelRequestModel.countDocuments({bookingStatus:bookingStatus.BOOKED})
     },
 }
 
-module.exports = { changeRequestServices }
+module.exports = { changeHotelRequestServices }

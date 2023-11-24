@@ -1,5 +1,5 @@
 const nodemailerConfig = require("../config/nodeConfig");
-const { PDFDocument } = require('pdf-lib');
+const { PDFDocument, rgb } = require('pdf-lib');
 const fs = require('fs');
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");

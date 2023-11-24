@@ -1,6 +1,6 @@
 const nodemailerConfig = require("../config/nodeConfig");
 const { PDFDocument, rgb } = require('pdf-lib');
-const { PdfDocument } =require('@ironsoftware/ironpdf');
+const puppeteer = require('puppeteer');
 const fs = require('fs');
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
@@ -377,7 +377,7 @@ module.exports = {
           </head>
           <body>
               <div>
-                  <h1>Main Title</h1>
+                  <h1 style="color:blue;text-align:center;">Main Title</h1>
                   <p>${to.passengerDetails[0].firstName} ${to.passengerDetails[0].lastName}.</p>
                   <div>
                       <p>Nested div content</p>
@@ -393,14 +393,17 @@ module.exports = {
       `;
 
       // Create a new PDF document
-      const pdf = new PdfDocument();
-
-      // Create a PDF from HTML content
-      await pdf.addHTML(htmlContent);
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
 
       // Save the PDF to a temporary file
+      await page.setContent(htmlContent);
+  
       const pdfFilePath = 'temp_api_data.pdf';
-      const pdfBytes= await pdf.saveAs(pdfFilePath);
+      
+     const pdfBytes= await page.pdf({ path: pdfFilePath, format: 'A4' });
+      await browser.close();
+      // const pdfBytes= await pdf.saveAs(pdfFilePath);
 
       console.log("PDF generation complete.");
         

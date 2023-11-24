@@ -4,11 +4,10 @@ const issuedType=require('../enums/issuedType')
 const schemas = {
   flightBookingSchema: joi.object().keys({
     userId: joi.string().required(),
-
     oneWay:joi.boolean().required(),
-
     bookingId: joi.string().required(),
     pnr: joi.string().required(),
+    dateOfJourney: joi.string().required(),
     origin: joi.string().required(),
     destination: joi.string().required(),
     amount: joi.number().required(),

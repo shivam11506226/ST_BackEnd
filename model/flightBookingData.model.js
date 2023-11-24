@@ -56,37 +56,34 @@ const flightBookingData = new mongoose.Schema(
           {
             firstName: {
               type: String,
-              required: [true, "first name is required"],
+              required: true,
             },
             lastName: {
               type: String,
-              required: [true, "last name is required"],
+              required: true,
             },
             gender: {
               type: String,
-              enum: ["male", "female", "transgender"],
-              required: [true, "gender is required"],
             },
             ContactNo: {
-                type: String,
-                required: [true, "mobile_number is required"],
+              type: String,
             },
             DateOfBirth: {
               type: String,
-              required: [true, "dob is required"],
+              required: true,
             },
             email: {
               type: String,
-              required: [true, "email is required"],
-              match: [/.+\@.+\..+/, "Please enter a valid email"],
+              validate: {
+                validator: (v) => /.+\@.+\..+/.test(v),
+                message: 'Please enter a valid email',
+              },
             },
             addressLine1: {
               type: String,
-              required: [true, "address is required"],
             },
             city: {
               type: String,
-              required: [true, "city is required"],
             },
           },
         ],

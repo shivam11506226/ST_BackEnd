@@ -19,12 +19,12 @@ const schemas = {
       joi.object({
         firstName: joi.string().required(),
         lastName: joi.string().required(),
-        gender: joi.string().required(),
-        ContactNo: joi.string().required(),
+        gender: joi.string().allow(''),
+        ContactNo: joi.string().allow(''),
         DateOfBirth: joi.string().required(),
-        email: joi.string().email().required(),
-        addressLine1: joi.string().required(),
-        city: joi.string().required(),
+        email: joi.string().email().allow(''),
+        addressLine1: joi.string().allow(''),
+        city: joi.string().allow(''),
       })
     ),
     // flightName: joi.string().required(),

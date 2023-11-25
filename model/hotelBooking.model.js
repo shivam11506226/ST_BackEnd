@@ -43,6 +43,10 @@ const hotelBookingDetailSchema = new mongoose.Schema(
       type: Date,
       required: [true, 'Date of check in  required']
     },
+    CheckOutDate: {
+      type: Date,
+      required: [true, 'Date of check in  required']
+    },
     
     hotelName: {
       type: String,
@@ -56,9 +60,7 @@ const hotelBookingDetailSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'hotel Id is required']
     },
-    noOfPeople: {
-      type: Number, required: [true, 'Number of People is required']
-    },
+    
     country: {
       type: String, required: [true, 'Country is required']
     },

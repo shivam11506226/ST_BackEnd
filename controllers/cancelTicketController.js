@@ -120,6 +120,7 @@ exports.getCancelHotelBooking = async (req, res, next) => {
     try {
         const { page, limit, search, fromDate } = req.query;
         const result =await getHotelCancelRequesrByAggregate(req.query);
+        console.log("result========",result);
         if (!result) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
         }

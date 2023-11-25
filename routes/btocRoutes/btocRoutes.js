@@ -11,7 +11,7 @@ module.exports = function (app) {
     });
     // SchemaValidator(schemas.userbusBookingSchema),   SchemaValidator(schemas.userflightBookingSchema),  ,SchemaValidator(schemas.userhotelBookingSchema) 
     app.post('/skyTrails/api/user/busBooking',[authJwt.verifcationToken], busBookingController.busBooking);
-    app.post('/skyTrails/api/user/flighBooking',[authJwt.verifcationToken],flightBookingController.flighBooking)
+    app.post('/skyTrails/api/user/flightBooking',[authJwt.verifcationToken],flightBookingController.flighBooking)
     app.post('/skyTrails/api/user/hotelBooking',[authJwt.verifcationToken], hotelBookingController.hotelBooking);
     // app.put('/skyTrails/api/user/', controller.updatePost);
     // app.delete('/skyTrails/api/user/', controller.deletePost);

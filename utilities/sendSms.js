@@ -226,9 +226,9 @@ module.exports = {
     }
   },
   sendSMSForFlightBooking: async (data) => {
-    const userName=`${data?.passengerDetails[0]?.firstName} ${data?.passengerDetails[0]?.lastName}`
+    const userName=`${data.Passengers[0].firstName} ${data.Passengers[0].lastName}`
     const url1='google';
-    const phone=data?.passengerDetails[0]?.ContactNo;
+    const phone=data.Passengers[0].ContactNo;
     const details = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details: https://theskytrails.com/${url1}`;
     const url = `http://sms.txly.in/vb/apikey.php?`;
     const params = {

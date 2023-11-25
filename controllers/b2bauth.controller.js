@@ -22,7 +22,7 @@ const { brbuserServices } = require('../services/btobagentServices');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
 const { hotelBookingServicess } = require("../services/hotelBookingServices");
-const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking, aggregatePaginateHotelBookingList1,aggregatePaginateHotelBookings } = hotelBookingServicess;
+const { aggregatePaginateHotelBookingList, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking, aggregatePaginateHotelBookingList1, aggregatePaginateHotelBookings } = hotelBookingServicess;
 const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser, deletebrbuser, brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
 const { visaServices } = require('../services/visaServices');
 const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, updateWeeklyVisa, weeklyVisaListPaginate } = visaServices;
@@ -643,7 +643,8 @@ exports.getAllAgentFlightBookingList = async (req, res, next) => {
             { "userDetails.username": { $regex: data, $options: "i" } },
             { "userDetails.email": { $regex: data, $options: "i" } },
             { "paymentStatus": { $regex: data, $options: "i" } },
-            { "pnr": parseInt(data) },
+            { "pnr": { $regex: data, $options: "i" } },
+            { "bookingId": parseInt(data) }
           ],
         }
       },
@@ -754,7 +755,7 @@ exports.cancelBookingByAgent = async (req, res, next) => {
 
 exports.changeHotelDetailsRequest = async (req, res, next) => {
   try {
-    const { reason, changerequest, bookingId, id, agentId, contactNumber,amount } = req.body;
+    const { reason, changerequest, bookingId, id, agentId, contactNumber, amount } = req.body;
     const isAgentExists = await findbrbuser({ _id: agentId });
     if (!isAgentExists) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
@@ -770,7 +771,7 @@ exports.changeHotelDetailsRequest = async (req, res, next) => {
       hotelBookingId: id,
       agentId: agentId,
       contactNumber: contactNumber,
-      amount:amount
+      amount: amount
     }
     const result = await createchangeHotelRequest(object);
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
@@ -784,7 +785,7 @@ exports.changeHotelDetailsRequest = async (req, res, next) => {
 
 exports.changeFlightDetailsRequest = async (req, res, next) => {
   try {
-    const { reason, changerequest, bookingId, id, agentId, contactNumber ,amount} = req.body;
+    const { reason, changerequest, bookingId, id, agentId, contactNumber, amount } = req.body;
     const isAgentExists = await findbrbuser({ _id: agentId });
     if (!isAgentExists) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
@@ -800,7 +801,7 @@ exports.changeFlightDetailsRequest = async (req, res, next) => {
       flightBookingId: id,
       agentId: agentId,
       contactNumber: contactNumber,
-      amount:amount
+      amount: amount
     }
     const result = await createchangeRequest(object);
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
@@ -813,7 +814,7 @@ exports.changeFlightDetailsRequest = async (req, res, next) => {
 //change bus booking details request by agent **********************
 exports.changeBusBookingDetailsRequest = async (req, res, next) => {
   try {
-    const { reason, changerequest, busId,id, agentId, contactNumber,amount } = req.body;
+    const { reason, changerequest, busId, id, agentId, contactNumber, amount } = req.body;
     const isUSerExists = await findbrbuser({ _id: agentId });
     if (!isUSerExists) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
@@ -829,7 +830,7 @@ exports.changeBusBookingDetailsRequest = async (req, res, next) => {
       busBookingId: id,
       agentId: agentId,
       contactNumber: contactNumber,
-      amount:amount
+      amount: amount
     }
     const result = await createchangeBusRequest(object);
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });

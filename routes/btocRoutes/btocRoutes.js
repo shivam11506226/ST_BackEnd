@@ -16,4 +16,5 @@ module.exports = function (app) {
     // app.put('/skyTrails/api/user/', controller.updatePost);
     // app.delete('/skyTrails/api/user/', controller.deletePost);
     app.get('/skytrails/api/user/getUserflightBooking',[authJwt.verifcationToken],flightBookingController.getUserflightBooking);
+    app.get('/skyTrails/api/user/getUserFlightData',[authJwt.verifcationToken],flightBookingController.getUserFlightData)
 }

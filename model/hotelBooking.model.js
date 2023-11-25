@@ -52,7 +52,7 @@ const hotelBookingDetailSchema = new mongoose.Schema(
       type: String,
       required: [true, 'city name is required']
     },
-    hotelId: {
+    bookingId: {
       type: Number,
       required: [true, 'hotel Id is required']
     },

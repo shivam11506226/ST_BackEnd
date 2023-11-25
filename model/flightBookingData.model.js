@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');
-const status =require("../enums/status")
+const status =require("../enums/status");
+const { string } = require("joi");
 const flightBookingData = new mongoose.Schema(
     {
       userId: {
@@ -17,7 +18,7 @@ const flightBookingData = new mongoose.Schema(
 
       },
       bookingId: {
-        type:String,
+        type:Number,
         required: [true, "Booking id is required"],
       },
       pnr: {

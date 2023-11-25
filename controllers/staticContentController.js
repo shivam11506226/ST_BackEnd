@@ -82,6 +82,10 @@ exports.deleteStaticContent = async (req, res, next) => {
         // if(!isAdmin){
         //     sendActionFailedResponse(res,{},'Unauthorised user')
         // }
+        const isDataExist = await findstaticContent({_id:staticContentId,status:status.ACTIVE});
+        if(!isDataExist){
+            actionCompleteResponse(res, result, 'Static content not exist.')
+        }
         const result = await updatestaticContentStatic({ _id: isDataExist._id }, { status: status.DELETE });
         actionCompleteResponse(res, result, 'Static content deleted successfully.')
     } catch (error) {

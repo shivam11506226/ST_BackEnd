@@ -18,7 +18,12 @@ const cancelBookingDataSchema = new mongoose.Schema(
             type: Schema.Types.ObjectId,
             ref: "userHotelBookingDetail"
         },
-
+        bookingId: {
+            type: Number,
+        },
+        pnr: {
+            type: String,
+        },
         status: {
             type: String,
             default: "ACTIVE"

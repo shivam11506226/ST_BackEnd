@@ -250,6 +250,13 @@ const schemas = {
     bookingId: joi.number().required(),
     pnr: joi.string().required(),
     agentId: joi.string().required(),
+  }),
+  cancelHotelBookingSchema:joi.object().keys({
+    reason:joi.string().required(),
+    hotelBookingId:joi.string().required(),
+    bookingId: joi.number().required(),
+    pnr: joi.string().optional(),
+    agentId: joi.string().required(),
   })
 
 };

@@ -51,7 +51,7 @@ const BookingDetailSchema = new mongoose.Schema(
                 },
                 gender: {
                     type: String,
-                    enum: [gender.FEMALE, gender.MALE, gender.OTHER],
+                    
                 },
                 ContactNo: {
                     type: String,

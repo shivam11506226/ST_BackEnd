@@ -93,7 +93,7 @@ const cancelBookingServices = {
         return await cancelHotelModel.findOneAndUpdate(query, updateObj, { new: true })
     },
     getHotelCancelRequesrByAggregate: async (info) => {
-        const { page, limit, search, fromDate, toDate } = body;
+        const { page, limit, search, fromDate, toDate } = info;
         if (search) {
             var filter = search;
         }
@@ -130,15 +130,15 @@ const cancelBookingServices = {
         if (fromDate) {
             pipeline.CheckInDate = { $eq: fromDate };
         }
-
-
         let aggregate = cancelHotelModel.aggregate(pipeline)
         let options = {
             page: parseInt(page) || 1,
             limit: parseInt(limit) || 10,
             sort: { createdAt: -1 },
         };
-        return await cancelHotelModel.aggregatePaginate(aggregate, options)
+        console.log("aggregate========",aggregate)
+        const result= await cancelHotelModel.aggregatePaginate(aggregate, options);
+        return result;
     },
     countTotalHotelCancelled: async () => {
         return await cancelHotelModel.countDocuments({ bookingStatus: bookingStatus.CANCEL })

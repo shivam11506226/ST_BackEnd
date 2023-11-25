@@ -95,7 +95,7 @@ exports.cancelHotelBooking = async (req, res, next) => {
         const isBookingExist = await findhotelBooking({
             userId: isAgentExists._id,
             bookingId: bookingId,
-            dateOfJourney: { $gt: currentDate }
+            CheckInDate: { $gt: currentDate }
         });
         console.log("bookingDate=====", isBookingExist)
         if (!isBookingExist) {
@@ -116,10 +116,11 @@ exports.cancelHotelBooking = async (req, res, next) => {
     }
 }
 
-exports.getCancelFlightBooking = async (req, res, next) => {
+exports.getCancelHotelBooking = async (req, res, next) => {
     try {
         const { page, limit, search, fromDate } = req.query;
-        const result =await aggregatePaginatecancelFlightBookingsList(req.query);
+        const result =await getHotelCancelRequesrByAggregate(req.query);
+        console.log("result========",result);
         if (!result) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
         }

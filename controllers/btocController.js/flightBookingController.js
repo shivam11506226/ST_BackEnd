@@ -20,32 +20,48 @@ const { createUserflightBooking, findUserflightBooking, getUserflightBooking, fi
 
 exports.flighBooking = async (req, res, next) => {
   try {
-    const data = { ...req.body};
+    const data = { ...req.body };
+    console.log("data=========", data);
+
     const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
+
     if (!isUserExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
+
     const passengers = data.Passengers || [];
-    const object = {
-      data,
-      userId: isUserExist._id,
-      passengerDetails: passengers,
+    const resultdata = [];
+
+    for (let i = 0; i < passengers.length; i++) {
+      const passenger = passengers[i];
+      if (passenger.gender === 1) {
+        passenger.gender = 'MALE';
+      } else if (passenger.gender === 2) {
+        passenger.gender = 'FEMALE';
+      } else {
+        passenger.gender = 'OTHER';
+      }
+
+      const object = {
+        data,
+        userId: isUserExist._id,
+        passengerDetails: [passenger],
+      };
+
+      const result = await createUserflightBooking(object);
+      resultdata.push(result);
     }
-    // let msg="Flight booked successfully"
-    const result = await createUserflightBooking(object);
-    // await commonFunction.FlightBookingConfirmationMail(data)
-  
-    const send= await sendSMSUtils.sendSMSForFlightBooking(data);
-    console.log("send========",send)
-    if (result) {
-      return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.FLIGHT_BOOKED ,result:result});
-    }
-  
+    // Uncomment the following lines if you have the necessary functions implemented
+    // await commonFunction.FlightBookingConfirmationMail(data);
+    const send = await sendSMSUtils.sendSMSForFlightBooking(data);
+
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.FLIGHT_BOOKED, result: resultdata });
   } catch (error) {
     console.log("error: ", error);
     return next(error);
   }
-}
+};
+
 
 exports.getUserflightBooking = async (req, res, next) => {
   try {
@@ -76,15 +92,15 @@ exports.getUserflightBooking = async (req, res, next) => {
   }
 }
 
-exports.getUserFlightData=async(req,res,next)=>{
+exports.getUserFlightData = async (req, res, next) => {
   try {
-     const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
+    const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
     console.log("isUSerExist", isUserExist);
     if (!isUserExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
 
-    const result =await findUserflightBookingData({status:status.ACTIVE});
+    const result = await findUserflightBookingData({ status: status.ACTIVE });
     if (result) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
     }
@@ -93,7 +109,7 @@ exports.getUserFlightData=async(req,res,next)=>{
     console.log("error: ", error);
     return next(error);
   }
- 
+
 }
 
 

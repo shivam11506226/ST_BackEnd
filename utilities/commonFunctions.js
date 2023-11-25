@@ -1,5 +1,6 @@
 const nodemailerConfig = require("../config/nodeConfig");
 const { PDFDocument, rgb } = require('pdf-lib');
+const puppeteer = require('puppeteer');
 const fs = require('fs');
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
@@ -350,36 +351,70 @@ module.exports = {
   //========== Send Email Flight Booking Confirmation Mail with pdf=======
   //==========================================================
 
+
   FlightBookingConfirmationMail: async (to) => {
     
-    const name=`${to?.passengerDetails[0]?.firstName} ${to?.passengerDetails[0]?.lastName}`
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([600, 400]);
-    const content = `
-      First Name: ${to.passengerDetails[0].firstName}
-      Last Name: ${to.passengerDetails[0].lastName}
-      Gender: ${to.passengerDetails[0].gender}
-      Phone: ${to.passengerDetails[0].ContactNo}
-      Date of Birth: ${to.passengerDetails[0].DateOfBirth}
-      Email: ${to.passengerDetails[0].email}
-      Address: ${to.passengerDetails[0].addressLine1}
-      City: ${to.passengerDetails[0].city}
-      PNR: ${to.pnr}
-    `;
+     // const content = `
+    //   First Name: ${to.passengerDetails[0].firstName}
+    //   Last Name: 
+    //   Gender: ${to.passengerDetails[0].gender}
+    //   Phone: ${to.passengerDetails[0].ContactNo}
+    //   Date of Birth: ${to.passengerDetails[0].DateOfBirth}
+    //   Email: 
+    //   Address: ${to.passengerDetails[0].addressLine1}
+    //   City: ${to.passengerDetails[0].city}
+    //   PNR: ${to.pnr}
+    // `;
   
-    page.drawText(content, {
-      x: 50,
-      y: 350,
-      size: 12,
-      color: rgb(0, 0, 0),
-    });
+      const name = `${to?.passengerDetails[0]?.firstName} ${to?.passengerDetails[0]?.lastName}`;
+
+      // Define your HTML content with nested elements
+      const htmlContent = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>HTML to PDF</title>
+          </head>
+          <body>
+              <div>
+                  <h1 style="color:blue;text-align:center;">Main Title</h1>
+                  <p>${to.passengerDetails[0].firstName} ${to.passengerDetails[0].lastName}.</p>
+                  <div>
+                      <p>Nested div content</p>
+                      <img src="https://travvolt.s3.amazonaws.com/ST-Main-Logo.png" alt="logo" />
+                  </div>
+                  <div>
+                      <h2>Another Section</h2>
+                      <p>${to.passengerDetails[0].email}</p>
+                  </div>
+              </div>
+          </body>
+          </html>
+      `;
+
+      // Create a new PDF document
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+
+      // Save the PDF to a temporary file
+      await page.setContent(htmlContent);
   
-    // Serialize the PDF to bytes
-    const pdfBytes = await pdfDoc.save();
-  
-    // Write the PDF to a temporary file
-    const pdfFilePath = 'temp_api_data.pdf';
+      const pdfFilePath = 'temp_api_data.pdf';
+      
+     const pdfBytes= await page.pdf({ path: pdfFilePath, format: 'A4' });
+      await browser.close();
+      // const pdfBytes= await pdf.saveAs(pdfFilePath);
+
+      console.log("PDF generation complete.");
+        
     fs.writeFileSync(pdfFilePath, pdfBytes);
+
+      // Use pdfFilePath in the email sending part of your code
+      // ...
+
+    
+ 
+
   
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -418,70 +453,141 @@ module.exports = {
       throw error;
     }
   
-    // let html = `<!DOCTYPE html>
-    //     <html lang="en">
-        
-    //     <head>
-    //         <title>FlightApplyConfirmationMail</title>
-    //     </head>
-    //     <body>
-    //         <div class="card" style=" box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    //             transition: 0.3s;
-    //             width: 100%; margin: auto; min-height:15em;margin-top: 25px;">
-    //             <div class="main" style="background-image: url('');">
-    //                 <div class="main-container" style="text-align: center;">
-    //                     <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
-    //                     <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
-    //                         style="width: 30%;" alt="logo">
-        
-    //                     <div style="width: 90%;margin: auto; text-align: left;">
-    //                         <br><br>
-    //                         <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear ${name},
-    //                             Your Flight Booking successfully from skyTrails.
-    //                     </div>
-    //                 </div>
-        
-    //             </div>
-    //         </div>
-        
-    //     </body>
-    //     </html>`;
-    // var transporter = nodemailer.createTransport({
-    //   host: "smtp.gmail.com",
-    //   port: 587,
-    //   secure: false,
-    //   auth: {
-    //     user: nodemailerConfig.options.auth.user,
-    //     pass: nodemailerConfig.options.auth.pass,
-    //   },
-    // });
-    // const passengerEmail = to.passengerDetails[0].email;
-    // var mailOptions = {
-    //   from: nodemailerConfig.options.auth.user,
-    //   to: passengerEmail,
-    //   subject: "Flight Booking Confirmation Mail",
-    //   html: html,
-    //   attachments: [{ filename: "api_data.pdf", path: pdfFilePath }],
-    // };
-    // try {
-    //   // Verify the connection
-    //   transporter.verify(function (error, success) {
-    //     if (error) {
-    //       console.log("SMTP Connection Error: " + error);
-    //     } else {
-    //       console.log("SMTP Connection Success: " + success);
-    //     }
-    //   });
-
-    //   // Send the email
-    //   const info = await transporter.sendMail(mailOptions);
-    //   console.log("Email sent: " + info.response);
-    //   return info;
-    // } catch (error) {
-    //   console.error("Email sending failed:", error);
-    //   throw error;
-    // }
+    
   },
+
+  // FlightBookingConfirmationMail: async (to) => {
+    
+  //   const name=`${to?.passengerDetails[0]?.firstName} ${to?.passengerDetails[0]?.lastName}`
+  //   const pdfDoc = await PDFDocument.create();
+  //   const page = pdfDoc.addPage([600, 400]);
+  //   const content = `
+  //     First Name: ${to.passengerDetails[0].firstName}
+  //     Last Name: ${to.passengerDetails[0].lastName}
+  //     Gender: ${to.passengerDetails[0].gender}
+  //     Phone: ${to.passengerDetails[0].ContactNo}
+  //     Date of Birth: ${to.passengerDetails[0].DateOfBirth}
+  //     Email: ${to.passengerDetails[0].email}
+  //     Address: ${to.passengerDetails[0].addressLine1}
+  //     City: ${to.passengerDetails[0].city}
+  //     PNR: ${to.pnr}
+  //   `;
+  
+  //   page.drawText(content, {
+  //     x: 50,
+  //     y: 350,
+  //     size: 12,
+  //     color: rgb(0, 0, 0),
+  //   });
+  
+  //   // Serialize the PDF to bytes
+  //   const pdfBytes = await pdfDoc.save();
+  
+  //   // Write the PDF to a temporary file
+  //   const pdfFilePath = 'temp_api_data.pdf';
+  //   fs.writeFileSync(pdfFilePath, pdfBytes);
+  
+  //   const transporter = nodemailer.createTransport({
+  //     host: 'smtp.gmail.com',
+  //     port: 587,
+  //     secure: false,
+  //     auth: {
+  //       user: nodemailerConfig.options.auth.user,
+  //       pass: nodemailerConfig.options.auth.pass,
+  //     },
+  //   });
+  
+  //   const passengerEmail = to.passengerDetails[0].email;
+  
+  //   const mailOptions = {
+  //     from: nodemailerConfig.options.auth.user,
+  //     to: passengerEmail,
+  //     subject: 'Flight Booking Confirmation Mail',
+  //     html: getHtmlContent(name),
+  //     attachments: [{ filename: 'api_data.pdf', path: pdfFilePath }],
+  //   };
+  
+  //   try {
+  //     // Verify the connection
+  //     await transporter.verify();
+  
+  //     // Send the email
+  //     const info = await transporter.sendMail(mailOptions);
+  //     console.log('Email sent: ' + info.response);
+  
+  //     // Clean up the temporary PDF file
+  //     fs.unlinkSync(pdfFilePath);
+  
+  //     return info;
+  //   } catch (error) {
+  //     console.error('Email sending failed:', error);
+  //     throw error;
+  //   }
+  
+  //   // let html = `<!DOCTYPE html>
+  //   //     <html lang="en">
+        
+  //   //     <head>
+  //   //         <title>FlightApplyConfirmationMail</title>
+  //   //     </head>
+  //   //     <body>
+  //   //         <div class="card" style=" box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  //   //             transition: 0.3s;
+  //   //             width: 100%; margin: auto; min-height:15em;margin-top: 25px;">
+  //   //             <div class="main" style="background-image: url('');">
+  //   //                 <div class="main-container" style="text-align: center;">
+  //   //                     <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
+  //   //                     <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
+  //   //                         style="width: 30%;" alt="logo">
+        
+  //   //                     <div style="width: 90%;margin: auto; text-align: left;">
+  //   //                         <br><br>
+  //   //                         <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear ${name},
+  //   //                             Your Flight Booking successfully from skyTrails.
+  //   //                     </div>
+  //   //                 </div>
+        
+  //   //             </div>
+  //   //         </div>
+        
+  //   //     </body>
+  //   //     </html>`;
+  //   // var transporter = nodemailer.createTransport({
+  //   //   host: "smtp.gmail.com",
+  //   //   port: 587,
+  //   //   secure: false,
+  //   //   auth: {
+  //   //     user: nodemailerConfig.options.auth.user,
+  //   //     pass: nodemailerConfig.options.auth.pass,
+  //   //   },
+  //   // });
+  //   // const passengerEmail = to.passengerDetails[0].email;
+  //   // var mailOptions = {
+  //   //   from: nodemailerConfig.options.auth.user,
+  //   //   to: passengerEmail,
+  //   //   subject: "Flight Booking Confirmation Mail",
+  //   //   html: html,
+  //   //   attachments: [{ filename: "api_data.pdf", path: pdfFilePath }],
+  //   // };
+  //   // try {
+  //   //   // Verify the connection
+  //   //   transporter.verify(function (error, success) {
+  //   //     if (error) {
+  //   //       console.log("SMTP Connection Error: " + error);
+  //   //     } else {
+  //   //       console.log("SMTP Connection Success: " + success);
+  //   //     }
+  //   //   });
+
+  //   //   // Send the email
+  //   //   const info = await transporter.sendMail(mailOptions);
+  //   //   console.log("Email sent: " + info.response);
+  //   //   return info;
+  //   // } catch (error) {
+  //   //   console.error("Email sending failed:", error);
+  //   //   throw error;
+  //   // }
+  // },
 
    //==========================================================
   //========== Send Email Bus Booking Confirmation Mail with pdf=======

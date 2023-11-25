@@ -4,11 +4,10 @@ const issuedType=require('../enums/issuedType')
 const schemas = {
   flightBookingSchema: joi.object().keys({
     userId: joi.string().required(),
-
     oneWay:joi.boolean().required(),
-
     bookingId: joi.string().required(),
     pnr: joi.string().required(),
+    dateOfJourney: joi.string().required(),
     origin: joi.string().required(),
     destination: joi.string().required(),
     amount: joi.number().required(),
@@ -20,12 +19,12 @@ const schemas = {
       joi.object({
         firstName: joi.string().required(),
         lastName: joi.string().required(),
-        gender: joi.string().required(),
-        ContactNo: joi.string().required(),
+        gender: joi.string().allow(''),
+        ContactNo: joi.string().allow(''),
         DateOfBirth: joi.string().required(),
-        email: joi.string().email().required(),
-        addressLine1: joi.string().required(),
-        city: joi.string().required(),
+        email: joi.string().email().allow(''),
+        addressLine1: joi.string().allow(''),
+        city: joi.string().allow(''),
       })
     ),
     // flightName: joi.string().required(),
@@ -78,9 +77,9 @@ const schemas = {
     destination: joi.string().required(),
     bookingId: joi.string().required(),
     CheckInDate: joi.string().required(),
+    CheckOutDate: joi.string().required(),
     hotelName: joi.string().required(),
     hotelId: joi.number().required(),
-    noOfPeople: joi.number().required(),
     cityName: joi.string().required(),
     room: joi.number().required(),
     noOfNight: joi.number().required(),

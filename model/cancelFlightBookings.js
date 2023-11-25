@@ -22,6 +22,12 @@ const cancelBookingDataSchema =
             type: String,
             default: "ACTIVE"
         },
+        bookingId:{
+            type: Number,
+        },
+        pnr: {
+            type: String,
+        },
         bookingStatus: {
             type: String,
             enums: [bookingStatus.BOOKED, bookingStatus.CANCEL, bookingStatus.PENDING],

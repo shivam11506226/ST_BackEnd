@@ -31,8 +31,13 @@ exports.addHotelBookingData = async (req, res) => {
       CheckInDate: req.body.CheckInDate,
       CheckOutDate : req.body.CheckOutDate,
       hotelName: req.body.hotelName,
+
+      
+      noOfPeople: req.body.noOfPeople,
+
       hotelId: req.body.hotelId,
      
+
       cityName: req.body.cityName,
       country: req.body.country,
       room: req.body.room,

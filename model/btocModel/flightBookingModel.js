@@ -18,7 +18,7 @@ const BookingDetailSchema = new mongoose.Schema(
             type: Number,
         },
         bookingId: {
-            type: String,
+            type: Number,
         },
         pnr: {
             type: String,
@@ -40,6 +40,9 @@ const BookingDetailSchema = new mongoose.Schema(
         },
         passengerDetails: [
             {
+                title:{
+                    type:String,
+                },
                 firstName: {
                     type: String,
                 },
@@ -51,6 +54,9 @@ const BookingDetailSchema = new mongoose.Schema(
                     enum: [gender.FEMALE, gender.MALE, gender.OTHER],
                 },
                 ContactNo: {
+                    type: String,
+                },
+                CountryCode:{
                     type: String,
                 },
                 DateOfBirth: {
@@ -65,6 +71,9 @@ const BookingDetailSchema = new mongoose.Schema(
                 city: {
                     type: String,
                 },
+                PassportNo:{
+                    type: String,
+                }
             }
         ]
         ,

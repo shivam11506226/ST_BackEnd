@@ -242,6 +242,14 @@ const schemas = {
     contactNumber: joi.string().required(),
     id: joi.string().required(),
     amount:joi.number().required()
+  }),
+
+  cancelFlightBookingSchema:joi.object().keys({
+    reason:joi.string().required(),
+    flightBookingId:joi.string().required(),
+    bookingId: joi.number().required(),
+    pnr: joi.string().required(),
+    agentId: joi.string().required(),
   })
 
 };

@@ -1,4 +1,5 @@
 const controller = require("../controllers/b2bauth.controller");
+const cancelController = require("../controllers/cancelTicketController")
 const multer = require("multer");
 const SchemaValidator = require("../utilities/validations.utilities");
 const schemas = require('../utilities/schema.utilities');
@@ -42,5 +43,8 @@ module.exports = function (app) {
   app.post("/skytrails/user/changeHotelDetailsRequest",SchemaValidator(schemas.changeRequest), controller.changeHotelDetailsRequest);
   app.post("/skytrails/user/changeFlightDetailsRequest",SchemaValidator(schemas.changeRequest), controller.changeFlightDetailsRequest);
   app.post("/skytrails/user/changeBusBookingDetailsRequest",SchemaValidator(schemas.changeBusRequest), controller.changeBusBookingDetailsRequest);
-
+  app.post("/skytrails/api/agent/cancelFlightBooking",SchemaValidator(schemas.cancelFlightBookingSchema),cancelController.cancelFlightBooking);
+  app.get("/skytrails/api/agent/getcancelFlightBooking",cancelController.getCancelFlightBooking);
+  app.post("/skytrails/api/agent/cancelFlightBooking",SchemaValidator(schemas.cancelFlightBookingSchema),cancelController.cancelFlightBooking);
+  app.get("/skytrails/api/agent/getcancelFlightBooking",cancelController.getCancelFlightBooking);
 };

@@ -18,7 +18,12 @@ const cancelBookingDataSchema =
             type: Schema.Types.ObjectId,
             ref: "hotelBookingDetail"
         },
-        
+        bookingId:{
+            type: Number,
+        },
+        pnr: {
+            type: String,
+        },
         status: {
             type: String,
             default: "ACTIVE"

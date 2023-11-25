@@ -18,6 +18,13 @@ const cancelBookingDataSchema =
             type: Schema.Types.ObjectId,
             ref: "busBookingData"
         },
+        
+        busId:{
+            type: Number,
+        },
+        pnr: {
+            type: String,
+        },
         status: {
             type: String,
             default: "ACTIVE"

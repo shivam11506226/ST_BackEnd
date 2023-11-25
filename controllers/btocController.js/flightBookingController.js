@@ -21,9 +21,7 @@ const { createUserflightBooking, findUserflightBooking, getUserflightBooking, fi
 exports.flighBooking = async (req, res, next) => {
   try {
     const data = { ...req.body};
-    console.log("Room===========", req.body);
     const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
-    console.log("=================ISUSER", isUserExist)
     if (!isUserExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
@@ -35,11 +33,14 @@ exports.flighBooking = async (req, res, next) => {
     }
     // let msg="Flight booked successfully"
     const result = await createUserflightBooking(object);
-    await commonFunction.FlightBookingConfirmationMail(data)
-    // await sendSMSUtils.sendSMSForFlightBooking(req.body.mobileNumber);
+    // await commonFunction.FlightBookingConfirmationMail(data)
+  
+    const send= await sendSMSUtils.sendSMSForFlightBooking(data);
+    console.log("send========",send)
     if (result) {
-      return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.FLIGHT_BOOKED });
+      return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.FLIGHT_BOOKED ,result:result});
     }
+  
   } catch (error) {
     console.log("error: ", error);
     return next(error);
@@ -73,6 +74,26 @@ exports.getUserflightBooking = async (req, res, next) => {
     console.log("error: ", error);
     return next(error);
   }
+}
+
+exports.getUserFlightData=async(req,res,next)=>{
+  try {
+     const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
+    console.log("isUSerExist", isUserExist);
+    if (!isUserExist) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+    }
+
+    const result =await findUserflightBookingData({status:status.ACTIVE});
+    if (result) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error: ", error);
+    return next(error);
+  }
+ 
 }
 
 

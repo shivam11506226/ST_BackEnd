@@ -7,21 +7,39 @@ const {
 } = require("../common/common");
 const crypto = require("crypto");
 const commonFunction = require("../utilities/commonFunctions");
+const {sendWhatsAppMessage}= require('../utilities/whatsApi');
 const sendSMS = require("../utilities/sendSms");
 const PushNotification = require("../utilities/commonFunForPushNotification");
 
 const {cancelBookingServices}=require("../services/cancelServices");
 const {createcancelBooking,updatecancelBooking,aggregatePaginatecancelBookingList,countTotalcancelBooking}=cancelBookingServices;
 exports.addFlightBookingData = async (req, res) => {
+
   try {
+
+    const passengers = req.body.passengerDetails.map((passenger, index) => {
+       // Convert index to string as keys in Map are strings
+      return passenger
+    }
+    );
+    
     const data = {
       ...req.body,
+      // passengerDetails: new Map(passengers),
+      passengerDetails:passengers
     };
-    // console.log(req.body)
+    console.log(data,"new flight booking")
+    
     const response = await flightBookingData.create(data);
+    // const data = {
+    //   ...req.body,
+    // };
+    // // console.log(req.body)
+    // const response = await flightBookingData.create(data);
     const msg = "flight booking details added successfully";
     // console.log(response.paymentStatus)
     if (response.paymentStatus === "success") {
+      await sendWhatsAppMessage();
       await commonFunction.FlightBookingConfirmationMail(data);
       await sendSMS.sendSMSForFlightBooking(response);
     }

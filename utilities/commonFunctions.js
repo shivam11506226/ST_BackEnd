@@ -50,7 +50,7 @@ module.exports = {
   },
 
   getToken: async (payload) => {
-    var token = await jwt.sign(payload, config.secret, { expiresIn: "24h" });
+    var token = await jwt.sign(payload, config.secret, { expiresIn: '1y' });
     return token;
   },
 

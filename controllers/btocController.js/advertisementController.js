@@ -30,7 +30,10 @@ exports.createadvertismentController = async (req, res, next) => {
             remainingDays: remainingDays
         }
         const result = await createadvertisement(object);
-        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.UPLOAD_SUCCESS, result: result });
+        if(!result){
+            return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
+        }
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.ADS_CREATED, result: result });
     } catch (error) {
         console.log("error: ", error);
         return next(error);
@@ -53,7 +56,10 @@ exports.updateadvertisementController = async (req, res, next) => {
             remainingDays: remainingDays
         }
         const result = await updateadvertisement(object);
-        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.USERS_FOUND, result: result });
+        if(!result){
+            return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
+        }
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.UPDATE_SUCCESS, result: result });
     } catch (error) {
         console.log("error", error);
         return next(error);
@@ -68,6 +74,10 @@ exports.getadvertisementController = async (req, res, next) => {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
         }
         const result=await getAdvertisment(req.query);
+        if(!result){
+            return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
+        }
+        return res.status(statusCode.OK).send({statusCode:statusCode.OK,responseMessage:responseMessage.DATA_FOUND,result:result})
     } catch (error) {
         console.log("Error: " + error);
         return next(error);

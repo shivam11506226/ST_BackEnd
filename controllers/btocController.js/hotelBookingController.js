@@ -46,7 +46,7 @@ exports.hotelBooking= async (req, res, next)=> {
       }
       const result = await createUserhotelBookingModel(object);
       await commonFunction.HotelBookingConfirmationMail(data)
-    //await sendSMS.sendSMSForHotelBooking(req.body.phoneNumber.mobile_number);
+    // await sendSMS.sendSMSForHotelBooking(isUserExist)
       if(result){
         return res.status(statusCode.OK).send({statusCode:statusCode.OK, message: responseMessage.BOOKING_SUCCESS,result:result });
       }

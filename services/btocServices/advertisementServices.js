@@ -27,7 +27,12 @@ const advertisementServices={
     },
     getAdvertisment:async(query)=>{
         const {page,limit}=query;
-
+        let options = {
+            page: Number(page) || 1,
+            limit: Number(limit) || 8,
+            sort: { createdAt: -1 },
+        };
+        return await advertisementModel.paginate(query, options);
     }
 }
 module.exports ={advertisementServices}

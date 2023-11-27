@@ -1,6 +1,7 @@
 const busBookingController = require('../../controllers/btocController.js/busBookingController');
 const flightBookingController=require('../../controllers/btocController.js/flightBookingController');
 const hotelBookingController=require('../../controllers/btocController.js/hotelBookingController');
+const advertisementController=require('../../controllers/btocController.js/advertisementController')
 const schemas = require('../../utilities/schema.utilities');
 const SchemaValidator = require('../../utilities/validations.utilities');
 const { authJwt } = require("../../middleware");
@@ -16,5 +17,7 @@ module.exports = function (app) {
     // app.put('/skyTrails/api/user/', controller.updatePost);
     // app.delete('/skyTrails/api/user/', controller.deletePost);
     app.get('/skytrails/api/user/getUserflightBooking',[authJwt.verifcationToken],flightBookingController.getUserflightBooking);
-    app.get('/skyTrails/api/user/getUserFlightData',[authJwt.verifcationToken],flightBookingController.getUserFlightData)
+    app.get('/skyTrails/api/user/getUserFlightData',[authJwt.verifcationToken],flightBookingController.getUserFlightData);
+    app.post('/skyTrails/api/createadvertismentController',[authJwt.verifcationToken], advertisementController.createadvertismentController);
+    // app.get('/skyTrails/api/getadvertisementController', advertisementController.updatePost);
 }

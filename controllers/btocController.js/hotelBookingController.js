@@ -39,8 +39,7 @@ exports.hotelBooking= async (req, res, next)=> {
         hotelId:req.body.hotelId,
         noOfPeople:req.body.noOfPeople,
         country:req.body.country,
-        room:req.body.room,
-        noOfNight:req.body.noOfNight,
+        CheckInDate:req.body.CheckInDate,
         amount:req.body.amount,
         phoneNumber:req.body.phoneNumber.mobile_number,
       }

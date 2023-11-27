@@ -9,7 +9,6 @@ const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSea
 const userType = require("../../enums/userType");
 const sendSMS = require("../../utilities/sendSms");
 const commonFunction = require('../../utilities/commonFunctions');
-const sendSMSUtils = require('../../utilities/sendSms')
 const { userBusBookingServices } = require('../../services/btocServices/busBookingServices');
 const bookingStatus = require('../../enums/bookingStatus');
 const { createUserBusBooking, findUserBusBooking, getUserBusBooking, findUserBusBookingData, deleteUserBusBooking, userBusBookingList, updateUserBusBooking, paginateUserBusBookingSearch } = userBusBookingServices
@@ -22,8 +21,9 @@ exports.busBooking = async (req, res, next) => {
     console.log("Room", req.body);
     const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
     if (!isUserExist) {
-      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.USERS_NOT_FOUND });
     }
+    console.log("==========================",isUserExist);
     const object = {
       userId: isUserExist._id,
       name: req.body.name,
@@ -41,9 +41,9 @@ exports.busBooking = async (req, res, next) => {
     }
     const result = await createUserBusBooking(object);
     await commonFunction.BusBookingConfirmationMail(data)
-    // await sendSMSUtils.sendSMSBusBooking(req.body.phone.mobileNumber);
+    // await sendSMS.sendSMSBusBooking(isUserExist);
     if (result) {
-      return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.BUS_BOOKING_CREATED, result: result });
+      return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.BUS_BOOKING_CREATED, result: result });
     }
   } catch (error) {
     console.log("error: ", error);

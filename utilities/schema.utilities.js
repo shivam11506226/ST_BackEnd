@@ -257,6 +257,15 @@ const schemas = {
     bookingId: joi.number().required(),
     pnr: joi.string().optional(),
     agentId: joi.string().required(),
+  }),
+
+  advertisementSchema:joi.object().keys({
+    image:joi.string().required(),
+    title:joi.string().required(),
+    content:joi.string().required(),
+    startDate:joi.string().required(),
+    endDate:joi.string().required(),
+    remainingDays:joi.number().required(),
   })
 
 };

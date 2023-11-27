@@ -1,6 +1,7 @@
 const advertisementModel = require('../../model/btocModel/advertisementModel');
 const userType = require("../../enums/userType");
 const status = require("../../enums/status");
+const approvalStatus=require("../../enums/approveStatus")
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const advertisementServices={
     createadvertisement: async (insertObj) => {
@@ -25,8 +26,10 @@ const advertisementServices={
     countTotaladvertisement: async (body) => {
         return await advertisementModel.countDocuments(body)
     },
-    getAdvertisment:async(query)=>{
-        const {page,limit}=query;
+    getAdvertisment:async(body)=>{
+        const {page,limit}=body;
+        const currentDate = new Date().toISOString();
+        let query={approvalStatus:{$nin:[approvalStatus.PENDING,approvalStatus.REJECT]},status:status.ACTIVE,endDate: { $gt: currentDate }}
         let options = {
             page: Number(page) || 1,
             limit: Number(limit) || 8,

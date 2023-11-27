@@ -21,14 +21,10 @@ const { createUserflightBooking, findUserflightBooking, getUserflightBooking, fi
 exports.flighBooking = async (req, res, next) => {
   try {
     const data = { ...req.body };
-    console.log("data=========", data);
-
     const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
-
     if (!isUserExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
-
     const passengers = data.Passengers || [];
     const modifiedPassengers = [];
     for (let i = 0; i < passengers.length; i++) {

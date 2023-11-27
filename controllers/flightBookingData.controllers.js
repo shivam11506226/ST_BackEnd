@@ -38,11 +38,11 @@ exports.addFlightBookingData = async (req, res) => {
     // const response = await flightBookingData.create(data);
     const msg = "flight booking details added successfully";
     // console.log(response.paymentStatus)
-    if (response.paymentStatus === "success") {
+   
       // await sendWhatsAppMessage();
       await commonFunction.FlightBookingConfirmationMail(data);
-      await sendSMS.sendSMSForFlightBooking(response);
-    }
+      //const send=await sendSMS.sendSMSForFlightBookingAgent(response);
+     console.log("+========",send)
     actionCompleteResponse(res, response, msg);
   } catch (error) {
     sendActionFailedResponse(res, {}, error.message);

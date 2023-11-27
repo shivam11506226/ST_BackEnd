@@ -589,10 +589,54 @@ exports.getAllAgentHotelBookingList = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate, toDate, userId } = req.query;
     const isAgent = await findbrbuser({ _id: userId });
+    // console.log(isAgent,"agent found");
     if (!isAgent) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
-    const result = await aggregatePaginateHotelBookings(req.query);
+    if (search) {
+      var filter = search;
+    }
+    let data = filter || ""
+    const aggregateQuery = [
+      {
+        $match: {
+          userId: mongoose.Types.ObjectId(userId)
+        }
+      },
+      {
+        $lookup: {
+          from: "userb2bs",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "userDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { "hotelName": { $regex: data, $options: "i" } },
+            { "userDetails.username": { $regex: data, $options: "i" } },
+            { "userDetails.email": { $regex: data, $options: "i" } },
+            { "paymentStatus": { $regex: data, $options: "i" } },
+            { "pnr": { $regex: data, $options: "i" } },
+            { "bookingId": parseInt(data) }
+          ],
+        }
+      },
+    ]
+    let aggregate = hotelBookingModel.aggregate(aggregateQuery);
+    const options = {
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 10,
+      sort: { createdAt: -1 },
+    };
+    const result = await hotelBookingModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
     }

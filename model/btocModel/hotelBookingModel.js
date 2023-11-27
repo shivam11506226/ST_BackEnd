@@ -33,9 +33,6 @@ const hotelBookingDetailSchema = new mongoose.Schema(
         address: {
             type: String,
         },
-        destination: {
-            type: String,
-        },
         bookingId: {
             type: String,
         },
@@ -57,7 +54,7 @@ const hotelBookingDetailSchema = new mongoose.Schema(
         country: {
             type: String,
         },
-        CheckInDate: {
+        CheckOutDate: {
             type: String,
         },
         amount: {

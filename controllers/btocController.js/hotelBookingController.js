@@ -31,7 +31,6 @@ exports.hotelBooking= async (req, res, next)=> {
         name:req.body.name,
         email:req.body.email,
         address:req.body.address,
-        destination:req.body.destination,
         BookingId:req.body.BookingId,
         CheckInDate:req.body.CheckInDate,
         hotelName:req.body.hotelName,
@@ -39,7 +38,7 @@ exports.hotelBooking= async (req, res, next)=> {
         hotelId:req.body.hotelId,
         noOfPeople:req.body.noOfPeople,
         country:req.body.country,
-        CheckInDate:req.body.CheckInDate,
+        CheckOutDate:req.body.CheckOutDate,
         amount:req.body.amount,
         phoneNumber:req.body.phoneNumber.mobile_number,
       }

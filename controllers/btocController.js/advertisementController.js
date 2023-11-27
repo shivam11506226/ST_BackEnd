@@ -69,10 +69,7 @@ exports.updateadvertisementController = async (req, res, next) => {
 exports.getadvertisementController = async (req, res, next) => {
     try {
         const { page, limit } = req.query;
-        const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE, userType: userType.USER });
-        if (!isUserExist) {
-            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
-        }
+       
         const result=await getAdvertisment(req.query);
         if(!result){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})

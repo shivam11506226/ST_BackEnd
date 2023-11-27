@@ -16,8 +16,9 @@ module.exports = function (app) {
     app.post('/skyTrails/api/user/hotelBooking',[authJwt.verifcationToken], hotelBookingController.hotelBooking);
     // app.put('/skyTrails/api/user/', controller.updatePost);
     // app.delete('/skyTrails/api/user/', controller.deletePost);
-    app.get('/skytrails/api/user/getUserflightBooking',[authJwt.verifcationToken],flightBookingController.getUserflightBooking);
+    app.get('/skyTrails/api/user/getUserflightBooking',[authJwt.verifcationToken],flightBookingController.getUserflightBooking);
     app.get('/skyTrails/api/user/getUserFlightData',[authJwt.verifcationToken],flightBookingController.getUserFlightData);
     app.post('/skyTrails/api/createadvertismentController',[authJwt.verifcationToken], advertisementController.createadvertismentController);
     // app.get('/skyTrails/api/getadvertisementController', advertisementController.updatePost);
+    app.get('/skyTrails/api/getadvertisementController',advertisementController.getadvertisementController)
 }

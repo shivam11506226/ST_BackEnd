@@ -30,8 +30,7 @@ exports.flighBooking = async (req, res, next) => {
     }
 
     const passengers = data.Passengers || [];
-    const resultdata = [];
-
+    const modifiedPassengers = [];
     for (let i = 0; i < passengers.length; i++) {
       const passenger = passengers[i];
       if (passenger.gender === 1) {
@@ -41,21 +40,22 @@ exports.flighBooking = async (req, res, next) => {
       } else {
         passenger.gender = 'OTHER';
       }
-
-      const object = {
-        data,
-        userId: isUserExist._id,
-        passengerDetails: [passenger],
-      };
-
-      const result = await createUserflightBooking(object);
-      resultdata.push(result);
+      modifiedPassengers.push(passenger);
     }
+    const object = {
+      data,
+      userId: isUserExist._id,
+      passengerDetails: modifiedPassengers,
+    };
+
+    const result = await createUserflightBooking(object);
+
     // Uncomment the following lines if you have the necessary functions implemented
     // await commonFunction.FlightBookingConfirmationMail(data);
     // const send = await sendSMSUtils.sendSMSForFlightBooking(data);
 
-    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.FLIGHT_BOOKED, result: resultdata });
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.FLIGHT_BOOKED, result });
+
   } catch (error) {
     console.log("error: ", error);
     return next(error);

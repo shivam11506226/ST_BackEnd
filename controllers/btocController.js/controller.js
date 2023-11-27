@@ -70,7 +70,7 @@ exports.login = async (req, res, next) => {
             return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.LOGIN_SUCCESS, result: result });
         }
         let result1 = await updateUser({ 'phone.mobile_number': mobileNumber, status: status.ACTIVE }, obj);
-        // await commonFunction.sendSMS(mobileNumber,otp)
+        await sendSMS.sendSMSForOtp(mobileNumber,otp)
         if (!result1) {
             return res.status(statusCode.InternalError).json({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
         }

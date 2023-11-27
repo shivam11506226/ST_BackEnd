@@ -136,7 +136,6 @@ const cancelBookingServices = {
             limit: parseInt(limit) || 10,
             sort: { createdAt: -1 },
         };
-        console.log("aggregate========",aggregate)
         const result= await cancelHotelModel.aggregatePaginate(aggregate, options);
         return result;
     },

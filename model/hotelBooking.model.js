@@ -40,6 +40,7 @@ const hotelBookingDetailSchema = new mongoose.Schema(
     },
     noOfPeople : {
       type : Number,
+      required: [true, 'no of people is required']
     },
     CheckInDate: {
       type: Date,

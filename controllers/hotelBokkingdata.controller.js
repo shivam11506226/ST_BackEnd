@@ -35,50 +35,20 @@ exports.addHotelBookingData = async (req, res) => {
       hotelId: req.body.hotelId,
       cityName: req.body.cityName,
       country: req.body.country,
-      room: req.body.room,
-      
+      room: req.body.room,      
       amount:req.body.amount,
       bookingStatus: bookingStatus.BOOKED,
     };
+    // console.log(data,"hotel data");
     const response = await hotelBookingModel.create(data);
+    
     // console.log("response==========", response);
     const msg = "Hotel booking  successfully";
     if (response.bookingStatus === "BOOKED") {
       // await commonFunction.sendHotelBookingConfirmation(data);
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([600, 400]);
-      const content=`      
-      name:${response.name},
-      phone:${response.phone},
-      email:${response.email},
-      address:${response.address},
-      destination":${response.destination},
-      hotelName:${response.hotelName},
-      CheckInDate:${response.CheckInDate},
-      BookingId:${response.BookingId},
-      
-      noOfPeople:${response.noOfPeople},
-      cityName:${response.cityName},
-      country:${response.country},
-      amount:${response.amount},
-      bookingStatus:${response.bookingStatus}
-      `;
+     
 
-      page.drawText(content, {
-        x: 50,
-        y: 350,
-        size: 12,
-        color: rgb(0, 0, 0),
-      });
-
-      // Serialize the PDF to bytes  
-      const pdfBytes = await pdfDoc.save();
-
-      // Write the PDF to a temporary file
-      const pdfFilePath = "hotel_booking.pdf";
-      fs.writeFileSync(pdfFilePath, pdfBytes);
-
-      await commonFunction.HotelBookingConfirmationMail(data, pdfFilePath);  
+      await commonFunction.HotelBookingConfirmationMail(data);  
       
       // await sendSMS.sendSMSForHotelBooking(response);
     }

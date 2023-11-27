@@ -82,7 +82,7 @@ const schemas = {
     hotelId: joi.number().required(),
     cityName: joi.string().required(),
     room: joi.number().required(),
-    noOfNight: joi.number().required(),
+    noOfPeople: joi.number().required(),
     country: joi.string().required(),
     amount: joi.number().required()
   }),

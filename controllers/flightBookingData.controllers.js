@@ -39,7 +39,7 @@ exports.addFlightBookingData = async (req, res) => {
     const msg = "flight booking details added successfully";
     // console.log(response.paymentStatus)
     if (response.paymentStatus === "success") {
-      await sendWhatsAppMessage();
+      // await sendWhatsAppMessage();
       await commonFunction.FlightBookingConfirmationMail(data);
       await sendSMS.sendSMSForFlightBooking(response);
     }

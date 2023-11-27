@@ -31,17 +31,12 @@ exports.addHotelBookingData = async (req, res) => {
       CheckInDate: req.body.CheckInDate,
       CheckOutDate : req.body.CheckOutDate,
       hotelName: req.body.hotelName,
-
-      
       noOfPeople: req.body.noOfPeople,
-
       hotelId: req.body.hotelId,
-     
-
       cityName: req.body.cityName,
       country: req.body.country,
       room: req.body.room,
-      noOfNight: req.body.noOfNight,
+      
       amount:req.body.amount,
       bookingStatus: bookingStatus.BOOKED,
     };
@@ -61,7 +56,7 @@ exports.addHotelBookingData = async (req, res) => {
       hotelName:${response.hotelName},
       CheckInDate:${response.CheckInDate},
       BookingId:${response.BookingId},
-      noOfNight:${response.noOfNight},
+      
       noOfPeople:${response.noOfPeople},
       cityName:${response.cityName},
       country:${response.country},

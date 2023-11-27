@@ -18,7 +18,7 @@ const flightBookingData = new mongoose.Schema(
 
       },
       bookingId: {
-        type:Number,
+        type:String,
         required: [true, "Booking id is required"],
       },
       pnr: {

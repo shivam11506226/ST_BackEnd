@@ -19,7 +19,7 @@ function getHtmlContent(name) {
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <title>FlightApplyConfirmationMail</title>
+        <title>Booking Mail</title>
     </head>
     <body>
         <div class="card" style=" box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -32,7 +32,7 @@ function getHtmlContent(name) {
                     <div style="width: 90%;margin: auto; text-align: left;">
                         <br><br>
                         <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear ${name},
-                            Your Flight Booking successfully from skyTrails.
+                            Your Booking successfully from skyTrails.
                         </p>
                     </div>
                 </div>
@@ -953,7 +953,7 @@ module.exports = {
       // Save the PDF to a temporary file
       await page.setContent(htmlContent);
   
-      const pdfFilePath = 'temp_api_data.pdf';
+      const pdfFilePath = 'flightbooking.pdf';
       
      const pdfBytes= await page.pdf({ path: pdfFilePath, format: 'A4' });
       await browser.close();
@@ -987,7 +987,7 @@ module.exports = {
       to: passengerEmail,
       subject: 'Flight Booking Confirmation Mail',
       html: getHtmlContent(name),
-      attachments: [{ filename: 'api_data.pdf', path: pdfFilePath }],
+      attachments: [{ filename: 'flightBooking.pdf', path: pdfFilePath }],
     };
   
     try {
@@ -1220,7 +1220,7 @@ module.exports = {
 
 
  HotelBookingConfirmationMail: async (to) => {
-    let html = `<!DOCTYPE html>
+    let htmlContent = `<!DOCTYPE html>
     <html lang="en">
       <head>
         <meta charset="UTF-8" />
@@ -1544,7 +1544,7 @@ module.exports = {
               <img style="width: 247px; height: 117px; background: linear-gradient(0deg, #D9D9D9 0%, #D9D9D9 100%); border-radius: 8px" src="https://via.placeholder.com/247x117" />
             </div>
             <div style="align-self: stretch; padding-left: 28px; padding-right: 28px; justify-content: flex-start; align-items: center; gap: 10px; display: inline-flex">
-              <div style="flex: 1 1 0; color: #BBBBBB; font-size: 12px; font-family: Montserrat; font-weight: 700; letter-spacing: 0.48px; word-wrap: break-word">${to.CheckInDate} - ${to.CheckOutDate} | ${to.room} Room | ${to.noOfPeople} Adults (${to.name} +${noOfPeople-1})</div>
+              <div style="flex: 1 1 0; color: #BBBBBB; font-size: 12px; font-family: Montserrat; font-weight: 700; letter-spacing: 0.48px; word-wrap: break-word">${to.CheckInDate} - ${to.CheckOutDate} | ${to.room} Room | ${to.noOfPeople} Adults (${to.name} + ${to.noOfPeople-1})</div>
             </div>
           </div>
     
@@ -1841,7 +1841,7 @@ module.exports = {
       from: nodemailerConfig.options.auth.user,
       to: email,
       subject: "Hotel Booking Confirmation Mail",
-      html: html,
+      html: getHtmlContent(to.name),
       attachments: [{ filename: "hotel_booking.pdf", path: pdfFilePath }],
     };
     try {

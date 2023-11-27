@@ -130,3 +130,53 @@ exports.getCancelHotelBooking = async (req, res, next) => {
         return next(error);
     }
 }
+
+exports.cancelBusBooking=async(req,res,next)=>{
+    try {
+        const { reason, busBookingId, busId, pnr, agentId } = req.body;
+        const isAgentExists = await findbrbuser({ _id: agentId });
+        // console.log("isAgentExists", isAgentExists);
+        if (!isAgentExists) {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
+        }
+        const currentDate = new Date().toISOString();
+        console.log("currentDate:", currentDate);
+        const isBookingExist=await findUserBusBooking({
+            userId: isAgentExists._id,
+            busId:busId,
+            dateOfJourney:{ $gt: currentDate }
+        });
+        if (!isBookingExist) {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+        }
+        const object={
+            userId:isAgentExists._id,
+            reason: reason,
+            busBookingId:busBookingId,
+            busId:busId,
+            pnr: pnr,
+        }
+        const result=await createBusCancelRequest(object);
+        if(!result){
+            return res.status(statusCode.InternalError).send({statusCode: statusCode.InternalError,responseMessage:responseMessage.INTERNAL_ERROR})
+        } 
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.CANCEL_REQUEST_SEND, result: result });
+    } catch (error) {
+        console.log("error",error);
+        return next(error);
+    }
+}
+
+exports.getCancelBusBooking=async(req,res,next)=>{
+    try {
+        const { page, limit, search, fromDate } = req.query;
+        const result=await paginateUserBusBookingSearch(req.query);
+        if (!result) {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
+        }
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: result });
+    } catch (error) {
+        console.log("error",error);
+        return next(error);
+    }
+}

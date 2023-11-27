@@ -29,7 +29,7 @@ const advertisementServices={
     getAdvertisment:async(body)=>{
         const {page,limit}=body;
         const currentDate = new Date().toISOString();
-        let query={approvalStatus:{$nin:[approvalStatus.PENDING,approvalStatus.REJECT]},status:status.ACTIVE,endDate: { $gt: currentDate }}
+        let query={status:status.ACTIVE,endDate: { $gt: currentDate }}
         let options = {
             page: Number(page) || 1,
             limit: Number(limit) || 8,

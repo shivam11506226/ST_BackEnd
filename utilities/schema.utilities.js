@@ -265,7 +265,15 @@ const schemas = {
     content:joi.string().required(),
     startDate:joi.string().required(),
     endDate:joi.string().required(),
-    remainingDays:joi.number().required(),
+    remainingDays:joi.number().optional(),
+  }),
+
+  cancelBusBookingSchema:joi.object().keys({
+    reason:joi.string().required(),
+    busBookingId:joi.string().required(),
+    busId: joi.number().required(),
+    pnr: joi.string().optional(),
+    agentId: joi.string().required(),
   })
 
 };

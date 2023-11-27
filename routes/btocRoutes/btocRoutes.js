@@ -20,5 +20,6 @@ module.exports = function (app) {
     app.get('/skyTrails/api/user/getUserFlightData',[authJwt.verifcationToken],flightBookingController.getUserFlightData);
     app.post('/skyTrails/api/createadvertismentController',[authJwt.verifcationToken],SchemaValidator(schemas.advertisementSchema), advertisementController.createadvertismentController);
     // app.get('/skyTrails/api/getadvertisementController', advertisementController.updatePost);
-    app.get('/skyTrails/api/getadvertisementController',advertisementController.getadvertisementController)
+    app.get('/skyTrails/api/getadvertisementController',advertisementController.getadvertisementController);
+    
 }

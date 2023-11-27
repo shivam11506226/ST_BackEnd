@@ -47,4 +47,7 @@ module.exports = function (app) {
   app.get("/skytrails/api/agent/getcancelFlightBooking",cancelController.getCancelFlightBooking);
   app.post("/skytrails/api/agent/cancelHotelBooking",SchemaValidator(schemas.cancelHotelBookingSchema),cancelController.cancelHotelBooking);
   app.get("/skytrails/api/agent/getCancelHotelBooking",cancelController.getCancelHotelBooking);
+  app.post("/skytrails/api/agent/cancelBusBooking",SchemaValidator(schemas.cancelBusBookingSchema),cancelController.cancelBusBooking);
+  app.get("/skytrails/api/agent/getCancelBusBooking",cancelController.getCancelBusBooking);
+
 };

@@ -12,6 +12,9 @@ const key = "lbwUbocDLNFjenpa"; // Or use multiple numbers like: "XXXXXXXXXX,XXX
 const senderid = "SKTRAL";
 const route = 1;
 const templateid = "1007338024565017323";
+const templateid1="1007929145692124903";
+const templateid2="1007809387575121367";
+const templateid3="1007413294765585646";
 const baseURL = 'https://localhost:8000';
 
 // module.exports = {
@@ -211,7 +214,7 @@ module.exports = {
     const params = {
       apikey: key,
       senderid: senderid,
-      templateid: templateid,
+      templateid: templateid2,
       number: data.phone,
       message: details,
     };
@@ -229,12 +232,13 @@ module.exports = {
     const userName=`${data.Passengers[0].firstName} ${data.Passengers[0].lastName}`
     const url1='google';
     const phone=data.Passengers[0].ContactNo;
-    const details = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details: https://theskytrails.com/${url1}`;
+    console.log("Phone: " , phone);
+    const details = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details:https://theskytrails.com/${url1}`;
     const url = `http://sms.txly.in/vb/apikey.php?`;
     const params = {
       apikey: key,
       senderid: senderid,
-      templateid: templateid,
+      templateid: templateid1,
       number: phone,
       message: details,
     };
@@ -254,7 +258,7 @@ module.exports = {
     const params = {
       apikey: key,
       senderid: senderid,
-      templateid: templateid,
+      templateid: templateid3,
       number: data.phone,
       message: details,
     };

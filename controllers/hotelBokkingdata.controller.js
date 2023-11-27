@@ -40,6 +40,7 @@ exports.addHotelBookingData = async (req, res) => {
       bookingStatus: bookingStatus.BOOKED,
     };
     // console.log(data,"hotel data");
+   
     const response = await hotelBookingModel.create(data);
     
     // console.log("response==========", response);

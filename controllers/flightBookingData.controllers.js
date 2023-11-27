@@ -42,7 +42,7 @@ exports.addFlightBookingData = async (req, res) => {
       // await sendWhatsAppMessage();
       await commonFunction.FlightBookingConfirmationMail(data);
       //const send=await sendSMS.sendSMSForFlightBookingAgent(response);
-     console.log("+========",send)
+    //  console.log("+========",send)
     actionCompleteResponse(res, response, msg);
   } catch (error) {
     sendActionFailedResponse(res, {}, error.message);

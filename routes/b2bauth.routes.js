@@ -58,5 +58,6 @@ module.exports = function (app) {
 
 
   app.post("/skyTrails/fixDeparturedata", controller.fixDeparturedata);
+  app.get("/skyTrails/fixDeparturefilter",controller.fixDeparturefilter)
 
 };

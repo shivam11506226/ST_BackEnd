@@ -47,8 +47,8 @@ exports.flighBooking = async (req, res, next) => {
     const result = await createUserflightBooking(object);
 
     // Uncomment the following lines if you have the necessary functions implemented
-    // await commonFunction.FlightBookingConfirmationMail(data);
-    // const send = await sendSMSUtils.sendSMSForFlightBooking(data);
+    await commonFunction.FlightBookingConfirmationMail(data);
+    const send = await sendSMSUtils.sendSMSForFlightBooking(isUserExist);
 
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.FLIGHT_BOOKED, result });
 

@@ -284,8 +284,28 @@ const schemas = {
     busId: joi.number().required(),
     pnr: joi.string().optional(),
     agentId: joi.string().required(),
-  })
+  }),
 
+  cancelUserFlightBookingSchema:joi.object().keys({
+    reason:joi.string().required(),
+    flightBookingId:joi.string().required(),
+    bookingId: joi.number().required(),
+    pnr: joi.string().optional(),
+  }),
+
+  cancelUserHotelBookingSchema:joi.object().keys({
+    reason:joi.string().required(),
+    hotelBookingId:joi.string().required(),
+    bookingId: joi.number().required(),
+    pnr: joi.string().optional(),
+  }) ,
+
+  cancelUserBusBookingSchema:joi.object().keys({
+    reason:joi.string().required(),
+    busBookingId:joi.string().required(),
+    busId: joi.number().required(),
+    pnr: joi.string().optional(),
+  })
 };
 
 module.exports = schemas;

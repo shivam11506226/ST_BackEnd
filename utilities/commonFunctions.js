@@ -355,8 +355,7 @@ module.exports = {
   FlightBookingConfirmationMail: async (to) => {
     
   console.log("to================>>>>>>>",to)
-      const name = `${to?.Passengers[0]?.firstName} ${to?.Passengers[0]?.lastName}`;
-console.log("name=============",name)
+      const name = `${to?.passengerDetails[0]?.firstName} ${to?.passengerDetails[0]?.lastName}`;
       // Define your HTML content with nested elements
       const htmlContent = `<!DOCTYPE html>
       <html lang="en">
@@ -980,7 +979,7 @@ console.log("name=============",name)
       },
     });
   
-    const passengerEmail = to.Passengers[0].email;
+    const passengerEmail = to.passengerDetails[0].email;
   console.log("=================",passengerEmail)
     const mailOptions = {
       from: nodemailerConfig.options.auth.user,

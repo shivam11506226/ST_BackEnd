@@ -5,6 +5,8 @@ var bcrypt = require("bcryptjs");
 const wallet = require('../model/wallet.model');
 const User = require('../model/user.model');
 const Role = require('../model/role.model');
+const sectors=require('../model/addSectorModal');
+const fixdepartures=require('../model/addFixDepartureData');
 const Razorpay = require("razorpay");
 const config = require("../config/auth.config");
 var jwt = require("jsonwebtoken");
@@ -883,6 +885,55 @@ exports.changeBusBookingDetailsRequest = async (req, res, next) => {
     return next(error);
   }
 }
+
+
+exports.addSector= async (req, res) =>{
+   try {
+    const {Sector}=req.body;
+    console.log(Sector);
+    const  oldSector= await sectors.findOne({ Sector: Sector });
+    if (oldSector) {
+      res.send({ status: "failed", message: "Sector already exits" });
+    }else{
+      const newSector=new sectors({
+        Sector:Sector
+      })
+      let result=await newSector.save();
+      res.status(201).send({status: "success", data: result});
+    }
+    
+   } catch (error) {
+    console.log(error);    
+   }
+   
+}
+
+// get Sector
+
+exports.getSector = async (req, res) => {
+  try {
+    const sectorData = await sectors.find({}); 
+    res.status(200).send({ "Data Search Successfully": sectorData });
+  } catch (error) {
+    res.status(500).send({ "Error": error.message });
+  }
+}
+
+exports.fixDeparturedata =async(req, res) =>{
+  try {
+    const data={...req.body};
+    console.log(data,"body data")
+
+      
+     let result=await fixdepartures.create(data);
+     res.status(201).send({status: "success", data: result});
+      
+  } catch (error) {
+   console.log(error);    
+  }
+  
+}
+
 
 //cancel request if already booking Exit******************************
 // exports.cancelRequest = function

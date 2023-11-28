@@ -50,4 +50,13 @@ module.exports = function (app) {
   app.post("/skytrails/api/agent/cancelBusBooking",SchemaValidator(schemas.cancelBusBookingSchema),cancelController.cancelBusBooking);
   app.get("/skytrails/api/agent/getCancelBusBooking",cancelController.getCancelBusBooking);
 
+
+  //add sector
+
+  app.post("/skyTrails/addSector", controller.addSector);
+  app.get("/skyTrails/getSector",controller.getSector);
+
+
+  app.post("/skyTrails/fixDeparturedata", controller.fixDeparturedata);
+
 };

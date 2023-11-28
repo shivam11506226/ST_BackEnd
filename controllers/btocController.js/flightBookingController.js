@@ -25,31 +25,45 @@ exports.flighBooking = async (req, res, next) => {
     if (!isUserExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }
-    const passengers = data.Passengers || [];
+    const passengerDetails = data.passengerDetails || [];
     const modifiedPassengers = [];
-    for (let i = 0; i < passengers.length; i++) {
-      const passenger = passengers[i];
-      if (passenger.gender === 1) {
+    for (let i = 0; i < passengerDetails.length; i++) {
+      const passenger = passengerDetails[i];
+      if (passenger.gender.toLowerCase() === 'male') {
         passenger.gender = 'MALE';
-      } else if (passenger.gender === 2) {
+      } else if (passenger.gender.toLowerCase() === 'female') {
         passenger.gender = 'FEMALE';
       } else {
         passenger.gender = 'OTHER';
       }
       modifiedPassengers.push(passenger);
+      console.log("Passenger updated",modifiedPassengers)
     }
+    
     console.log("modifiedPassengers=============",modifiedPassengers)
+    console.log("data=====================",data.airlineDetails)
     const object = {
-      data,
+      bookingId: data.bookingId,
+      oneWay: data.oneWay,
+      pnr: data.pnr,
+      origin: data.origin,
+      destination: data.destination,
+      paymentStatus: data.paymentStatus,
+      dateOfJourney: data.dateOfJourney,
+      amount: data.amount,
       userId: isUserExist._id,
+      airlineDetails:{
+        AirlineName:data.airlineDetails.AirlineName,
+        DepTime:data.airlineDetails.DepTime
+      },
       passengerDetails: modifiedPassengers,
     };
-
+console.log("object==========",object);
     const result = await createUserflightBooking(object);
-
+console.log("result==========>>>>",result)
     // Uncomment the following lines if you have the necessary functions implemented
     await commonFunction.FlightBookingConfirmationMail(data);
-    // const send = await sendSMSUtils.sendSMSForFlightBooking(isUserExist);
+    const send = await sendSMSUtils.sendSMSForFlightBooking(data);
 
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.FLIGHT_BOOKED, result });
 

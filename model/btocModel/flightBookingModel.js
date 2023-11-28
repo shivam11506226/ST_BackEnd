@@ -35,7 +35,6 @@ const BookingDetailSchema = new mongoose.Schema(
             },
             DepTime: {
                 type: String,
-                default:" "
             },
         },
         passengerDetails: [

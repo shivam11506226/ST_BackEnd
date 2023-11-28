@@ -893,7 +893,7 @@ exports.addSector= async (req, res) =>{
     console.log(Sector);
     const  oldSector= await sectors.findOne({ Sector: Sector });
     if (oldSector) {
-      res.status(400).send({ status: "failed", message: "Sector already exits" });
+      res.status(400).send({ status: "failed", error: "Sector already exits" });
     }else{
       const newSector=new sectors({
         Sector:Sector

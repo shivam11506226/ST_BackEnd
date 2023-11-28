@@ -36,11 +36,16 @@ const advertisementSchema = new mongoose.Schema({
         type: String,
         enum:[approvalStatus.APPROVED, approvalStatus.PENDING,approvalStatus.REJECT],
         default:approvalStatus.APPROVED,
+    },
+    addType:{
+        type: String,
+        enum:[offerType.FLIGHTS,offerType.BUS,offerType.HOTELS,offerType.HOLIDAYS],
+        default:offerType.HOTELS
     }
 })
 advertisementSchema.plugin(mongoosePaginate);
 
 advertisementSchema.plugin(aggregatePaginate);
-const Advertisement = mongoose.model('Advertisement', advertisementSchema);
+const Advertisement = mongoose.model('hotelAdvertisement', advertisementSchema);
 
 module.exports = Advertisement;

@@ -67,5 +67,6 @@ module.exports = {
 	VISA_CREATED: "Visa Created successfull.",
 	CANCEL_REQUEST_SEND: "Your cancel request was send successfully.",
 	CANCEL_REQUEST_SEND_TIME_OUT: "Your cancel request is not allowed.",
-ADS_CREATED:"Advertisement added successfull, waiting for approval."
+ADS_CREATED:"Advertisement added successfull, waiting for approval.",
+POST_CREATED:'You are posted query successfully.'
 };

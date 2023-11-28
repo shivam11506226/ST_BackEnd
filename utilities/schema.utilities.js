@@ -120,7 +120,7 @@ const schemas = {
   //forumSchema***********
   forumQueSchema: joi.object().keys({
     content: joi.string().required(),
-    userId: joi.string().required(),
+    image:joi.string().required(),
 
   }),
   //getData*************

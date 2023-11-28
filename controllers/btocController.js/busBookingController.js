@@ -40,8 +40,8 @@ exports.busBooking = async (req, res, next) => {
       amount: req.body.amount,
     }
     const result = await createUserBusBooking(object);
-    // await commonFunction.BusBookingConfirmationMail(data)
-    // await sendSMS.sendSMSBusBooking(isUserExist);
+    await commonFunction.BusBookingConfirmationMail(data)
+    await sendSMS.sendSMSBusBooking(isUserExist);
     if (result) {
       return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.BUS_BOOKING_CREATED, result: result });
     }

@@ -29,11 +29,11 @@ exports.flighBooking = async (req, res, next) => {
     const modifiedPassengers = [];
     for (let i = 0; i < passengerDetails.length; i++) {
       const passenger = passengerDetails[i];
-      if (passenger.gender.toLowerCase() === 'male') {
+      if (passenger.gender === 1) {
         passenger.gender = 'MALE';
-      } else if (passenger.gender.toLowerCase() === 'female') {
+      } else if (passenger.gender === 2) {
         passenger.gender = 'FEMALE';
-      } else {
+      } else if (passenger.gender === 3) {
         passenger.gender = 'OTHER';
       }
       modifiedPassengers.push(passenger);

@@ -67,21 +67,50 @@ const cancelBookingServices = {
         }
         ]
         if (fromDate) {
-            pipeline.dateOfJourney = { $eq: fromDate };
-        }
-        if (toDate) {
-            pipeline.createdAt = { $eq: toDate }
-        }
-        let aggregate = cancelFlightBookingsModel.aggregate(pipeline)
-        let options = {
+            pipeline.push({ $match: { "flightDetails.dateOfJourney": { $eq: fromDate } } });
+          }
+        
+          if (toDate) {
+            pipeline.push({ $match: { "flightDetails.createdAt": { $eq: toDate } } });
+          }
+        
+          pipeline.push({
+            $sort: { createdAt: -1 },
+          });
+        
+          let aggregate = cancelFlightBookingsModel.aggregate(pipeline);
+          let options = {
             page: parseInt(page) || 1,
             limit: parseInt(limit) || 10,
-            sort: { createdAt: -1 },
-        };
-        const result= await cancelFlightBookingsModel.aggregatePaginate(aggregate, options)
-        return result;
+          };
+        
+          const result = await cancelFlightBookingsModel.aggregatePaginate(aggregate, options);
+          return result;
     },
+    
+    // aggregatePaginatecancelFlightBookingsList: async (body) => {
+    //     // userType: { $ne: [userType.ADMIN,userType.SUBADMIN] }
+    //     let query = { status: status.ACTIVE}
+    //     const { page, limit, usersType1, search } = body;
+    //     if (search) {
+    //         query.$or = [
+    //             // { username: { $regex: search, $options: 'i' } },
+    //             // { email: { $regex: search, $options: 'i' } },
+    //             { _id: { $regex: search, $options: 'i' } },
+    //             { status: { $regex: search, $options: 'i' } }
+    //         ]
+    //     }
+    //     if (usersType1) {
+    //         query.userType = usersType1
+    //     }
 
+    //     let options = {
+    //         page: Number(page) || 1,
+    //         limit: Number(limit) || 8,
+    //         sort: { createdAt: -1 },
+    //     };
+    //     return await cancelBusModel.paginate(query, options);
+    // },
     countTotalcancelFlightBookings: async () => {
         return await cancelFlightBookingsModel.countDocuments({ bookingStatus: bookingStatus.CANCEL })
     },
@@ -92,6 +121,11 @@ const cancelBookingServices = {
     updateHotelCancelRequest: async (query, updateObj) => {
         return await cancelHotelModel.findOneAndUpdate(query, updateObj, { new: true })
     },
+
+    getHotelRequest:async(data)=>{
+return await cancelHotelModel.findOneAndUpdate(data)
+    },
+
     getHotelCancelRequesrByAggregate: async (info) => {
         const { page, limit, search, fromDate, toDate } = info;
         if (search) {
@@ -113,6 +147,21 @@ const cancelBookingServices = {
                     preserveNullAndEmptyArrays: true
                 }
             },
+            
+            {
+                $lookup: {
+                    from: "userHotelBookingDetail",
+                    localField: 'hotelBookingId',
+                    foreignField: '_id',
+                    as: "HotelDetails",
+                  }
+              },
+              {
+                $unwind: {
+                  path: "$HotelDetails",
+                  preserveNullAndEmptyArrays: true
+                }
+              },
             {
                 $match: {
                     $or: [
@@ -128,17 +177,28 @@ const cancelBookingServices = {
             },
         ]
         if (fromDate) {
-            pipeline.CheckInDate = { $eq: fromDate };
-        }
-        let aggregate = cancelHotelModel.aggregate(pipeline)
-        let options = {
+            pipeline.push({ $match: { "HotelDetails.CheckInDate": { $eq: fromDate } } });
+          }
+        
+          if (toDate) {
+            pipeline.push({ $match: { "HotelDetails.CheckOutDate": { $eq: toDate } } });
+          }
+        
+          pipeline.push({
+            $sort: { createdAt: -1 },
+          });
+        
+          let aggregate = cancelFlightBookingsModel.aggregate(pipeline);
+          let options = {
             page: parseInt(page) || 1,
             limit: parseInt(limit) || 10,
-            sort: { createdAt: -1 },
-        };
-        const result= await cancelHotelModel.aggregatePaginate(aggregate, options);
-        return result;
+          };
+        
+          const result = await cancelFlightBookingsModel.aggregatePaginate(aggregate, options);
+          return result;
     },
+
+  
     countTotalHotelCancelled: async () => {
         return await cancelHotelModel.countDocuments({ bookingStatus: bookingStatus.CANCEL })
     },
@@ -150,7 +210,7 @@ const cancelBookingServices = {
         return await cancelBusModel.findOneAndUpdate(query, updateObj, { new: true })
     },
     getBusCancelRequestByAggregate: async (info) => {
-        const { page, limit, search, fromDate, toDate } = body;
+        const { page, limit, search, fromDate, toDate } = info;
         if (search) {
             var filter = search;
         }
@@ -189,19 +249,32 @@ const cancelBookingServices = {
             },
         ]
         if (fromDate) {
-            pipeline.dateOfJourney = { $eq: fromDate };
-        }
-        let aggregate = cancelBusModel.aggregate(pipeline)
-        let options = {
+            pipeline.push({ $match: { "flightDetails.dateOfJourney": { $eq: fromDate } } });
+          }
+        
+          if (toDate) {
+            pipeline.push({ $match: { "flightDetails.createdAt": { $eq: toDate } } });
+          }
+        
+          pipeline.push({
+            $sort: { createdAt: -1 },
+          });
+        
+          let aggregate = cancelFlightBookingsModel.aggregate(pipeline);
+          let options = {
             page: parseInt(page) || 1,
             limit: parseInt(limit) || 10,
-            sort: { createdAt: -1 },
-        };
-        return await cancelBusModel.aggregatePaginate(aggregate, options)
+          };
+        
+          const result = await cancelFlightBookingsModel.aggregatePaginate(aggregate, options);
+          return result;
     },
+   
     countTotalBusCancelled: async () => {
         return await cancelBusModel.countDocuments({ bookingStatus: bookingStatus.CANCEL })
     },
+
+   
 }
 
 module.exports = { cancelBookingServices }

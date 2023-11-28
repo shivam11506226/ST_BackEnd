@@ -12,7 +12,7 @@ const sendSMS = require('../utilities/sendSms');
 const bookingStatus = require('../enums/bookingStatus');
 /**********************************SERVICES********************************** */
 const { cancelBookingServices } = require("../services/cancelServices");
-const { createcancelFlightBookings, findAnd,updatecancelFlightBookings, aggregatePaginatecancelFlightBookingsList, countTotalcancelFlightBookings, createHotelCancelRequest, updateHotelCancelRequest, getHotelCancelRequesrByAggregate, countTotalHotelCancelled, createBusCancelRequest, updateBusCancelRequest, getBusCancelRequestByAggregate, countTotalBusCancelled } = cancelBookingServices;
+const { createcancelFlightBookings, findAnd,updatecancelFlightBookings, aggregatePaginatecancelFlightBookingsList, countTotalcancelFlightBookings, createHotelCancelRequest, updateHotelCancelRequest, getHotelCancelRequesrByAggregate, countTotalHotelCancelled, createBusCancelRequest, updateBusCancelRequest, getBusCancelRequestByAggregate, countTotalBusCancelled,getHotelRequest } = cancelBookingServices;
 const { brbuserServices } = require('../services/btobagentServices');
 const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser, deletebrbuser, brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
 const { userServices } = require('../services/userServices');
@@ -119,7 +119,7 @@ exports.cancelHotelBooking = async (req, res, next) => {
 exports.getCancelHotelBooking = async (req, res, next) => {
     try {
         const { page, limit, search, fromDate } = req.query;
-        const result =await getHotelCancelRequesrByAggregate(req.query);
+        const result =await getHotelRequest(req.query);
         console.log("result========",result);
         if (!result) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
@@ -170,7 +170,7 @@ exports.cancelBusBooking=async(req,res,next)=>{
 exports.getCancelBusBooking=async(req,res,next)=>{
     try {
         const { page, limit, search, fromDate } = req.query;
-        const result=await paginateUserBusBookingSearch(req.query);
+        const result=await getBusCancelRequestByAggregate(req.query);
         if (!result) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
         }

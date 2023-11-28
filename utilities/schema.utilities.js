@@ -268,6 +268,16 @@ const schemas = {
     remainingDays:joi.number().optional(),
   }),
 
+  updateadvertisementSchema:joi.object().keys({
+    image:joi.string().required(),
+    title:joi.string().required(),
+    content:joi.string().required(),
+    startDate:joi.string().required(),
+    endDate:joi.string().required(),
+    remainingDays:joi.number().optional(),
+    packageId:joi.string().required(),
+  }),
+
   cancelBusBookingSchema:joi.object().keys({
     reason:joi.string().required(),
     busBookingId:joi.string().required(),

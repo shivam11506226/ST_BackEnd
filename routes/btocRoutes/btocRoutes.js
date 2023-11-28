@@ -37,4 +37,8 @@ module.exports = function (app) {
     // app.get('/skyTrails/api/getCancelUserFlightBooking',advertisementController.getCancelUserFlightBooking);
     // app.get('/skyTrails/api/getCancelUserHotelBooking',advertisementController.getCancelUserHotelBooking);
     // app.get('/skyTrails/api/getCancelUserBusBooking',advertisementController.getCancelUserBusBooking);
+    app.post('/skyTrails/api/user/createFlightCancelRequest',userCancelController.cancelUserFlightBooking);
+    app.post('/skyTrails/api/user/createHotelCancelRequest',userCancelController.cancelUserHotelBooking);
+    app.post('/skyTrails/api/user/createBusCancelRequest',userCancelController.cancelUserBusBooking);
+
 }

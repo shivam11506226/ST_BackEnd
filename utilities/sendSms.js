@@ -230,7 +230,7 @@ module.exports = {
     }
   },
   sendSMSForFlightBooking: async (data) => {
-    const userName=`${data.Passengers[0].firstName} ${data.Passengers[0].lastName}`
+    // const userName=`${data.Passengers[0].firstName} ${data.Passengers[0].lastName}`
     const url1='google';
     const phone=data.phone.mobile_number;
     console.log("Phone: " , phone);

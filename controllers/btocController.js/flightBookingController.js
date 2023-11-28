@@ -38,6 +38,7 @@ exports.flighBooking = async (req, res, next) => {
       }
       modifiedPassengers.push(passenger);
     }
+    console.log("modifiedPassengers=============",modifiedPassengers)
     const object = {
       data,
       userId: isUserExist._id,
@@ -48,7 +49,7 @@ exports.flighBooking = async (req, res, next) => {
 
     // Uncomment the following lines if you have the necessary functions implemented
     await commonFunction.FlightBookingConfirmationMail(data);
-    const send = await sendSMSUtils.sendSMSForFlightBooking(isUserExist);
+    // const send = await sendSMSUtils.sendSMSForFlightBooking(isUserExist);
 
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.FLIGHT_BOOKED, result });
 

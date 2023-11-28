@@ -1,6 +1,8 @@
 const status = require("../../enums/status");
 const schemas = require('../../utilities/schema.utilities');
-
+const commonFuction = require("../../utilities/commonFunctions")
+const responseMessage = require('../../utilities/responses');
+const statusCode = require('../../utilities/responceCode')
 //************************************SERVICES**********************************************************/
 
 const { forumQueServices } = require('../../services/forumQueServices');
@@ -18,17 +20,22 @@ const { createbookmark, findbookmark, deletebookmark, bookmarkList, updatebookma
 
 exports.createPost = async (req, res, next) => {
     try {
-        const { userId, content } = req.body;
-        const isUser = await findUser({ _id: userId });
+        const {  content, image } = req.body;
+        const isUser = await findUser({ _id: req.userId, status: status.ACTIVE });
         if (!isUser) {
-            return sendActionFailedResponse(res, {}, 'User not found')
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.USERS_NOT_FOUND });
+        }
+        if (image) {
+           const secureurl = await commonFuction.getSecureUrl(image);
+           req.body.image=secureurl;
         }
         const obj = {
             userId: isUser._id,
-            content: content
+            content: content,
+            image:req.body.image
         }
         const result = await createforumQue(obj);
-        return actionCompleteResponse(res, result, 'You are posted query successfully.');
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.POST_CREATED, result: result });
     } catch (error) {
         console.log("error========>>>>>>", error);
         // sendActionFailedResponse(res, {}, error.message);
@@ -51,9 +58,9 @@ exports.getPost = async (req, res, next) => {
         }
 
         if (result.unanswered || result.answered) {
-            return actionCompleteResponse(res, result, 'All posts successfully.');
+            return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: result });
         } else {
-            return sendActionFailedResponse(res, [], 'No posts found.');
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
         }
     } catch (error) {
         console.log("error========>>>>>>", error);

@@ -40,6 +40,9 @@ const forumQueSchema = new mongoose.Schema({
             type: String, // MIME type (e.g., 'image/jpeg', 'video/mp4')
         },
     ],
+    image:{
+        type:String, 
+    },
     isLike: {
         type: Boolean,
         default: false,

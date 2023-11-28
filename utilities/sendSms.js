@@ -240,7 +240,7 @@ module.exports = {
       apikey: key,
       senderid: senderid,
       templateid: templateid1,
-      number: phone,
+      number: 8802737860,
       message: details,
     };
     try {

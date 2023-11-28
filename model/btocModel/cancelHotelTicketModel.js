@@ -38,5 +38,5 @@ cancelBookingDataSchema.plugin(mongoosePaginate);
 
 cancelBookingDataSchema.plugin(aggregatePaginate);
 
-const cancelBookingData = mongoose.model("userCancelFlightTickects", cancelBookingDataSchema);
+const cancelBookingData = mongoose.model("userCancelHotelTickects", cancelBookingDataSchema);
 module.exports = cancelBookingData;

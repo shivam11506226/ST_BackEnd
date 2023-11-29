@@ -935,5 +935,22 @@ exports.fixDeparturedata =async(req, res) =>{
 }
 
 
+exports.fixDeparturefilter=async (req, res) =>{
+  try {
+    const Sector = req.query.Sector;
+    
+  if (!Sector) {
+    return res.status(400).json({ error: 'Sector parameter is missing.' });
+}
+    console.log("data",Sector);
+    
+    const filteredFlights = await fixdepartures.find({ Sector: Sector});
+    console.log("Filtered Flights:", filteredFlights);
+    res.status(200).send({ status: "success", data: filteredFlights });
+  } catch (error) {
+    res.status(500).send({"error":error})
+  }
+}
+
 //cancel request if already booking Exit******************************
 // exports.cancelRequest = function

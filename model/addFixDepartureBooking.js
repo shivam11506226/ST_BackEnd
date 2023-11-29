@@ -42,7 +42,7 @@ const FixDepartureBookingModal=new mongoose.Schema({
             passport: {
                 type: String,
               },
-              passportExpire: {
+              passportExpiry: {
                 type: String,
               },
           },

@@ -49,7 +49,7 @@ const userflightBookingServices = {
 
         let options = {
             page: Number(page) || 1,
-            limit: Number(limit) || 8,
+            limit: Number(limit) || 10,
             sort: { createdAt: -1 },
         };
         return await flightBookingModel.paginate(query, options);
@@ -109,7 +109,7 @@ const userflightBookingServices = {
         console.log("aggregate========>>>>>>>", aggregate)
         const options = {
             page: Number(page) || 1,
-            limit: Number(limit) || 8,
+            limit: Number(limit) || 10,
             sort: { createdAt: -1 },
         };
         const result = await flightBookingModel.aggregatePaginate(aggregate, options);
@@ -162,7 +162,7 @@ const userflightBookingServices = {
         console.log("aggregate========>>>>>>>", aggregate)
         const options = {
             page: Number(page) || 1,
-            limit: Number(limit) || 8,
+            limit: Number(limit) || 10,
             sort: { createdAt: -1 },
         };
         const result = await flightBookingModel.aggregatePaginate(aggregate, options);

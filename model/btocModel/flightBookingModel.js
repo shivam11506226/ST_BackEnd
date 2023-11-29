@@ -93,7 +93,7 @@ const BookingDetailSchema = new mongoose.Schema(
             type: String,
             enum: [offerType.FLIGHTS, offerType.HOTELS, offerType.BUS],
             default: offerType.FLIGHTS
-        }
+        },dateOfJourney:{type:String}
     },
     { timestamps: true }
 )

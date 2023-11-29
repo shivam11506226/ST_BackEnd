@@ -7,6 +7,7 @@ const offerType = require("../../enums/offerType");
 mongoose.pluralize(null);
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');
+const { NumberContext } = require("twilio/lib/rest/pricing/v2/number");
 const hotelBookingDetailSchema = new mongoose.Schema(
     {
         userId: {
@@ -34,7 +35,7 @@ const hotelBookingDetailSchema = new mongoose.Schema(
             type: String,
         },
         bookingId: {
-            type: String,
+            type: Number,
         },
         CheckInDate: {
             type: String,
@@ -54,6 +55,11 @@ const hotelBookingDetailSchema = new mongoose.Schema(
         country: {
             type: String,
         },
+        
+        hotelName: {
+            type: String,
+        },
+        
         CheckOutDate: {
             type: String,
         },

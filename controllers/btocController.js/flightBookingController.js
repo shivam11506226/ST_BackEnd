@@ -37,11 +37,7 @@ exports.flighBooking = async (req, res, next) => {
         passenger.gender = 'OTHER';
       }
       modifiedPassengers.push(passenger);
-      console.log("Passenger updated",modifiedPassengers)
     }
-    
-    console.log("modifiedPassengers=============",modifiedPassengers)
-    console.log("data=====================",data.airlineDetails)
     const object = {
       bookingId: data.bookingId,
       oneWay: data.oneWay,
@@ -77,9 +73,7 @@ console.log("result==========>>>>",result)
 exports.getUserflightBooking = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate, toDate } = req.query;
-    console.log(req.query);
     const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
-    console.log("isUSerExist", isUserExist);
     if (!isUserExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
     }

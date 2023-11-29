@@ -210,13 +210,13 @@ module.exports = {
   },
   sendSMSForHotelBooking:async(data)=>{
     const urldata="https://www.google.com/"
-    const details=`Hello ${data.username} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:${urldata}. Or You Can login theskytrails.com/login`;
+    const details=`Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:${urldata}. Or You Can login theskytrails.com/login`;
     const url = `http://sms.txly.in/vb/apikey.php?`;
     const params = {
       apikey: key,
       senderid: senderid,
       templateid: templateid2,
-      number: data.phone.mobile_number,
+      number: data.phoneNumber.mobile_number,
       message: details,
     };
     try {

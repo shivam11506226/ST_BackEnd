@@ -20,7 +20,7 @@ const { createUserBusBooking, findUserBusBooking, getUserBusBooking, findUserBus
 const { userhotelBookingModelServices } = require('../../services/btocServices/hotelBookingServices');
 const { createUserhotelBookingModel, findUserhotelBookingModel, getUserhotelBookingModel, deleteUserhotelBookingModel, userhotelBookingModelList, updateUserhotelBookingModel, paginateUserhotelBookingModelSearch,countTotalhotelBooking,aggregatePaginateHotelBookingList } = userhotelBookingModelServices
 const { cancelUserBookingServices } = require("../../services/btocServices/cancelBookingServices");
-const { createcancelFlightBookings, findAnd,updatecancelFlightBookings, aggregatePaginatecancelFlightBookingsList, countTotalcancelFlightBookings, createHotelCancelRequest, updateHotelCancelRequest, getHotelCancelRequesrByAggregate, countTotalHotelCancelled, createBusCancelRequest, updateBusCancelRequest, getBusCancelRequestByAggregate, countTotalBusCancelled } = cancelUserBookingServices;
+const {getBusData, createcancelFlightBookings, findAnd,updatecancelFlightBookings, aggregatePaginatecancelFlightBookingsList, countTotalcancelFlightBookings, createHotelCancelRequest, updateHotelCancelRequest, getHotelCancelRequesrByAggregate, countTotalHotelCancelled, createBusCancelRequest, updateBusCancelRequest, getBusCancelRequestByAggregate, countTotalBusCancelled } = cancelUserBookingServices;
 
 
 //**********************************************************API********************************************** */
@@ -87,7 +87,7 @@ exports.cancelUserHotelBooking = async (req, res, next) => {
     if (!isUserExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.USERS_NOT_FOUND });
     }
-        const currentDate = new Date().toISOString();
+        const currentDate = new Date().toISOString().split('T')[0];
         console.log("currentDate:", currentDate);
         const isBookingExist = await findUserhotelBookingModel({
             userId: isUserExist._id,
@@ -132,6 +132,7 @@ exports.cancelUserBusBooking=async(req,res,next)=>{
     try {
         const { reason, busBookingId, busId, pnr } = req.body;
         const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
+        console.log("isUserExist",isUserExist)
         if (!isUserExist) {
           return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.USERS_NOT_FOUND });
         }
@@ -165,7 +166,7 @@ exports.cancelUserBusBooking=async(req,res,next)=>{
 
 exports.getCancelUserBusBooking=async(req,res,next)=>{
     try {
-        const { page, limit, search, fromDate } = req.query;
+        const { page, limit, search, fromDate, toDate } =  req.query;
         const result=await getBusCancelRequestByAggregate(req.query);
         if (!result) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });

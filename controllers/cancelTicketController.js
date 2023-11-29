@@ -12,15 +12,15 @@ const sendSMS = require('../utilities/sendSms');
 const bookingStatus = require('../enums/bookingStatus');
 /**********************************SERVICES********************************** */
 const { cancelBookingServices } = require("../services/cancelServices");
-const { createcancelFlightBookings, findAnd,updatecancelFlightBookings, aggregatePaginatecancelFlightBookingsList, countTotalcancelFlightBookings, createHotelCancelRequest, updateHotelCancelRequest, getHotelCancelRequesrByAggregate, countTotalHotelCancelled, createBusCancelRequest, updateBusCancelRequest, getBusCancelRequestByAggregate, countTotalBusCancelled,getHotelRequest } = cancelBookingServices;
+const { createcancelFlightBookings, findAnd,updatecancelFlightBookings, aggregatePaginatecancelFlightBookingsList, countTotalcancelFlightBookings, createHotelCancelRequest, updateHotelCancelRequest, getHotelCancelRequesrByAggregate, countTotalHotelCancelled, createBusCancelRequest, updateBusCancelRequest, getBusCancelRequestByAggregate, countTotalBusCancelled,getBusCancellation } = cancelBookingServices;
 const { brbuserServices } = require('../services/btobagentServices');
 const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser, deletebrbuser, brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
 const { userServices } = require('../services/userServices');
 const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
 const { hotelBookingServicess } = require("../services/hotelBookingServices");
 const { aggregatePaginateHotelBookingList, aggregatePaginateHotelBookingList1, findhotelBooking, findhotelBookingData, deletehotelBooking, updatehotelBooking, hotelBookingList, countTotalBooking } = hotelBookingServicess;
-const { userBusBookingServices } = require('../services/btocServices/busBookingServices');
-const { createUserBusBooking, findUserBusBooking, getUserBusBooking, findUserBusBookingData, deleteUserBusBooking, userBusBookingList, updateUserBusBooking, paginateUserBusBookingSearch } = userBusBookingServices
+// const { userBusBookingServices } = require('../services/');
+// const { createUserBusBooking, findUserBusBooking, getUserBusBooking, findUserBusBookingData, deleteUserBusBooking, userBusBookingList, updateUserBusBooking, paginateUserBusBookingSearch } = userBusBookingServices
 const { userflightBookingServices } = require('../services/btocServices/flightBookingServices');
 const { createUserflightBooking, findUserflightBooking, getUserflightBooking, findUserflightBookingData, deleteUserflightBooking, userflightBookingList, updateUserflightBooking, paginateUserflightBookingSearch, aggregatePaginateGetBooking } = userflightBookingServices
 
@@ -119,8 +119,7 @@ exports.cancelHotelBooking = async (req, res, next) => {
 exports.getCancelHotelBooking = async (req, res, next) => {
     try {
         const { page, limit, search, fromDate } = req.query;
-        const result =await getHotelRequest(req.query);
-        console.log("result========",result);
+        const result =await getHotelCancelRequesrByAggregate(req.query);
         if (!result) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
         }
@@ -135,17 +134,16 @@ exports.cancelBusBooking=async(req,res,next)=>{
     try {
         const { reason, busBookingId, busId, pnr, agentId } = req.body;
         const isAgentExists = await findbrbuser({ _id: agentId });
-        // console.log("isAgentExists", isAgentExists);
         if (!isAgentExists) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.AGENT_NOT_FOUND });
         }
-        const currentDate = new Date().toISOString();
-        console.log("currentDate:", currentDate);
-        const isBookingExist=await findUserBusBooking({
+        const currentDate = new Date().toISOString().split('T')[0];        
+        const isBookingExist=await busBookingModel.findOne({
             userId: isAgentExists._id,
             busId:busId,
-            dateOfJourney:{ $gt: currentDate }
+            dateOfJourney:{$gt:currentDate},
         });
+        console.log("isBookingExist===========",isBookingExist)
         if (!isBookingExist) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
         }
@@ -169,8 +167,8 @@ exports.cancelBusBooking=async(req,res,next)=>{
 
 exports.getCancelBusBooking=async(req,res,next)=>{
     try {
-        const { page, limit, search, fromDate } = req.query;
-        const result=await getBusCancelRequestByAggregate(req.query);
+        const { page, limit, search, fromDate,toDate } = req.query;
+        const result=await getBusCancellation(req.query);
         if (!result) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
         }

@@ -179,6 +179,20 @@ const cancelUserBookingServices = {
                 }
             },
             {
+                $lookup:{
+                    from: "userHotelBookingDetail",
+                    localField: 'hotelBookingId',
+                    foreignField: '_id',
+                    as: "hotelDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$hotelDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
                 $match: {
                     $or: [
                         { "hotelName": { $regex: data, $options: "i" }, },
@@ -214,7 +228,11 @@ const cancelUserBookingServices = {
     updateBusCancelRequest: async (query, updateObj) => {
         return await cancelBusModel.findOneAndUpdate(query, updateObj, { new: true })
     },
-    getBusCancelRequestByAggregate: async (info) => {
+
+    getBusData:async(data)=>{
+return await cancelBusModel.find(data);
+    },
+    getBusCancelRequestByAggregate: async (body) => {
         const { page, limit, search, fromDate, toDate } = body;
         if (search) {
             var filter = search;
@@ -236,33 +254,55 @@ const cancelUserBookingServices = {
                 }
             },
             {
-                $match: {
-                    $or: [
-                        { "hotelName": { $regex: data, $options: "i" }, },
-                        { "userDetails.username": { $regex: data, $options: "i" } },
-                        { "userDetails.email": { $regex: data, $options: "i" } },
-                        { "paymentStatus": { $regex: data, $options: "i" } },
-                        { "busId": parseInt(data) },
-                        { "noOfSeats": parseInt(data) },
-                        { "bookingStatus": { $regex: data, $options: "i" } },
-                        { "destination": { $regex: data, $options: "i" } },
-                        { "origin": { $regex: data, $options: "i" } },
-                        { "pnr": { $regex: data, $options: "i" } },
-                        { "busType": { $regex: data, $options: "i" } },
-                    ],
+                $lookup: {
+                    from: "userbusBookingDetail",
+                    localField: 'busBookingId',
+                    foreignField: '_id',
+                    as: "busDetails",
                 }
             },
+            {
+                $unwind: {
+                    path: "$busDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { "busDetails.AirlineName": { $regex: data, $options: "i" } },
+                        { "userDetails.username": { $regex: data, $options: "i" } },
+                        { "userDetails.email": { $regex: data, $options: "i" } },
+                        { "busDetails.paymentStatus": { $regex: data, $options: "i" } },
+                        { "busDetails.destination": { $regex: data, $options: "i" } },
+                        { "busDetails.dateOfJourney": { $regex: data, $options: "i" } },
+                        { "bookingId": { $regex: data, $options: "i" } },
+                        { "busDetails.origin": { $regex: data, $options: "i" } },
+                        { "busDetails.amount": parseInt(data) }
+                    ],
+                }
+            }
         ]
         if (fromDate) {
-            pipeline.dateOfJourney = { $eq: fromDate };
+            pipeline.push({ $match: { "busDetails.dateOfJourney": { $eq: fromDate } } });
         }
-        let aggregate = cancelBusModel.aggregate(pipeline)
+
+        if (toDate) {
+            pipeline.push({ $match: { "busDetails.createdAt": { $eq: toDate } } });
+        }
+
+        pipeline.push({
+            $sort: { createdAt: -1 },
+        });
+
+        let aggregate = cancelBusModel.aggregate(pipeline);
         let options = {
             page: parseInt(page) || 1,
             limit: parseInt(limit) || 10,
-            sort: { createdAt: -1 },
         };
-        return await cancelBusModel.aggregatePaginate(aggregate, options)
+
+        const result = await cancelBusModel.aggregatePaginate(aggregate, options);
+        return result;
     },
     countTotalBusCancelled: async () => {
         return await cancelBusModel.countDocuments({ bookingStatus: bookingStatus.CANCEL })

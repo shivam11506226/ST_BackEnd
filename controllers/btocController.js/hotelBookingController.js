@@ -31,20 +31,21 @@ exports.hotelBooking= async (req, res, next)=> {
         name:req.body.name,
         email:req.body.email,
         address:req.body.address,
-        BookingId:req.body.BookingId,
+        bookingId:req.body.BookingId,
         CheckInDate:req.body.CheckInDate,
-        hotelName:req.body.hotelName,
+        hotelName:req.body.HotelName,
         cityName:req.body.cityName,
         hotelId:req.body.hotelId,
         noOfPeople:req.body.noOfPeople,
         country:req.body.country,
         CheckOutDate:req.body.CheckOutDate,
         amount:req.body.amount,
-        phoneNumber:req.body.phoneNumber.mobile_number,
+        phoneNumber:{mobile_number:req.body.phoneNumber},
+        hotelName:req.body.hotelName
       }
       const result = await createUserhotelBookingModel(object);
       // await commonFunction.HotelBookingConfirmationMail(data);
-    // await sendSMS.sendSMSForHotelBooking(isUserExist)
+    // await sendSMS.sendSMSForHotelBooking(object)
       if(result){
         return res.status(statusCode.OK).send({statusCode:statusCode.OK, message: responseMessage.BOOKING_SUCCESS,result:result });
       }

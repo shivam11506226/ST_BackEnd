@@ -401,12 +401,12 @@ exports.getAllFlightBookingList = async (req, res, next) => {
           from: "users",
           localField: 'userId',
           foreignField: '_id',
-          as: "Userb2bDetails",
+          as: "UserDetails",
         }
       },
       {
         $unwind: {
-          path: "$Userb2bDetails",
+          path: "$UserDetails",
           preserveNullAndEmptyArrays: true
         }
       },
@@ -414,8 +414,8 @@ exports.getAllFlightBookingList = async (req, res, next) => {
         $match: {
           $or: [
             { "flightName": { $regex: data, $options: "i" } },
-            { "Userb2bDetails.username": { $regex: data, $options: "i" } },
-            { "Userb2bDetails.email": { $regex: data, $options: "i" } },
+            { "UserDetails.username": { $regex: data, $options: "i" } },
+            { "UserDetails.email": { $regex: data, $options: "i" } },
             { "paymentStatus": { $regex: data, $options: "i" } },
             { "pnr": parseInt(data) },
           ],
@@ -425,7 +425,8 @@ exports.getAllFlightBookingList = async (req, res, next) => {
     let aggregate = userFlightBookingModel.aggregate(aggregateQuery);
     const options = {
       page: parseInt(page) || 1,
-      limit: parseInt(limit) || 5,
+      limit: parseInt(limit) || 10,
+      sort:{createdAt: -1}
     };
     const result = await userFlightBookingModel.aggregatePaginate(aggregate, options);
     if (result.docs.length == 0) {
@@ -697,7 +698,7 @@ exports.getAllFlightBookingListAgent = async (req, res, next) => {
           from: "userb2bs",
           localField: 'userId',
           foreignField: '_id',
-          as: "Userb2bDetails",
+          as: "UserDetails",
         }
       },
       {
@@ -722,7 +723,7 @@ exports.getAllFlightBookingListAgent = async (req, res, next) => {
     let aggregate = flightModel.aggregate(aggregateQuery);
     const options = {
       page: parseInt(page) || 1,
-      limit: parseInt(limit) || 5,
+      limit: parseInt(limit) || 10,
       sort: { createdAt: -1 },
     };
     const result = await flightModel.aggregatePaginate(aggregate, options);

@@ -58,18 +58,32 @@ exports.cancelUserFlightBooking = async (req, res, next) => {
     }
 }
 
+// exports.getCancelUserFlightBooking = async (req, res, next) => {
+//     try {
+//         const isUserExist = await findUser({ _id: req.userId,status:status.ACTIVE, userType:userType.USER });
+//         console.log("isUserExist", isUserExist);
+//         if (!isUserExist) {
+//             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+//         }
+//         var userId=isUserExist._id;
+//         const { page, limit, search, fromDate} = req.query;
+//         const query={page, limit, search, fromDate, userId};
+//         const result =await aggregatePaginatecancelFlightBookingsList(query);
+//         if (!result) {
+//             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
+//         }
+//         return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: result });
+//     } catch (error) {
+//         console.log("error to get cancel flight", error);
+//         return next(error);
+//     }
+// }
+
 exports.getCancelUserFlightBooking = async (req, res, next) => {
     try {
-        
-        const isUserExist = await findUser({ _id: req.userId,status:status.ACTIVE, userType:userType.USER });
-        // console.log("isAgentExists", isAgentExists);
-        if (!isUserExist) {
-            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
-        }
-        var userId=isUserExist._id;
-        const { page, limit, search, fromDate} = req.query;
-        const query={page, limit, search, fromDate, userId};
-        const result =await aggregatePaginatecancelFlightBookingsList(query);
+        const { page, limit, search, fromDate, toDate } = req.query;
+        const result =await aggregatePaginatecancelFlightBookingsList(req.query);
+        console.log("result========",result);
         if (!result) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
         }

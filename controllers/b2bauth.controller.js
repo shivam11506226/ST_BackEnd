@@ -913,7 +913,7 @@ exports.addSector= async (req, res) =>{
 exports.getSector = async (req, res) => {
   try {
     const sectorData = await sectors.find({}); 
-    res.status(200).send({ "Data Search Successfully": sectorData });
+    res.status(200).send({"data": sectorData });
   } catch (error) {
     res.status(500).send({ "Error": error.message });
   }

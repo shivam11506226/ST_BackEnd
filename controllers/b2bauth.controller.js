@@ -938,15 +938,24 @@ exports.fixDeparturedata =async(req, res) =>{
 exports.fixDeparturefilter=async (req, res) =>{
   try {
     const Sector = req.query.Sector;
-    
+    if(Sector==="All"){
+      console.log(Sector,"ALLLLLLLLLL");
+      const filteredAllFlights = await fixdepartures.find({});
+      res.status(200).send({ status: "success", data: filteredAllFlights });
+    }else{    
   if (!Sector) {
     return res.status(400).json({ error: 'Sector parameter is missing.' });
 }
     console.log("data",Sector);
     
     const filteredFlights = await fixdepartures.find({ Sector: Sector});
-    console.log("Filtered Flights:", filteredFlights);
+    console.log(filteredFlights.length, "array lengh")
+    if(filteredFlights.length!=0){
     res.status(200).send({ status: "success", data: filteredFlights });
+    }else{
+      res.status(404).send({ status: "Error", data: "Data Not Found" });
+    }
+}
   } catch (error) {
     res.status(500).send({"error":error})
   }

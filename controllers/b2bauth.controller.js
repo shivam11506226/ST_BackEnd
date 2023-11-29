@@ -924,9 +924,7 @@ exports.getSector = async (req, res) => {
 exports.fixDeparturedata =async(req, res) =>{
   try {
     const data={...req.body};
-    console.log(data,"body data")
-
-      
+    // console.log(data,"body data")      
      let result=await fixdepartures.create(data);
      res.status(201).send({status: "success", data: result});
       
@@ -941,17 +939,17 @@ exports.fixDeparturefilter=async (req, res) =>{
   try {
     const Sector = req.query.Sector;
     if(Sector==="All"){
-      console.log(Sector,"ALLLLLLLLLL");
+      // console.log(Sector,"ALLLLLLLLLL");
       const filteredAllFlights = await fixdepartures.find({});
       res.status(200).send({ status: "success", data: filteredAllFlights });
     }else{    
   if (!Sector) {
     return res.status(400).json({ error: 'Sector parameter is missing.' });
 }
-    console.log("data",Sector);
+    // console.log("data",Sector);
     
     const filteredFlights = await fixdepartures.find({ Sector: Sector});
-    console.log(filteredFlights.length, "array lengh")
+    // console.log(filteredFlights.length, "array lengh");
     if(filteredFlights.length!=0){
     res.status(200).send({ status: "success", data: filteredFlights });
     }else{
@@ -976,7 +974,7 @@ exports.fixDepartureBooking = async (req, res) => {
     // passengerDetails: new Map(passengers),
     names:names
   };
-  console.log(data,"new flight booking")
+  // console.log(data,"new flight booking")
     
   const response = await fixdeparturebookings.create(data);
   res.status(201).send({status: "success", data: response});

@@ -7,6 +7,7 @@ const User = require('../model/user.model');
 const Role = require('../model/role.model');
 const sectors=require('../model/addSectorModal');
 const fixdepartures=require('../model/addFixDepartureData');
+const fixdeparturebookings=require('../model/addFixDepartureBooking');
 const Razorpay = require("razorpay");
 const config = require("../config/auth.config");
 var jwt = require("jsonwebtoken");
@@ -962,5 +963,28 @@ exports.fixDeparturefilter=async (req, res) =>{
   }
 }
 
+
+//add fixdepartureBooking Details
+exports.fixDepartureBooking = async (req, res) => {
+  try {
+    const names = req.body.names.map((name, index) => {
+      // Convert index to string as keys in Map are strings
+     return name;
+   });
+   const data = {
+    ...req.body,
+    // passengerDetails: new Map(passengers),
+    names:names
+  };
+  console.log(data,"new flight booking")
+    
+  const response = await fixdeparturebookings.create(data);
+  res.status(201).send({status: "success", data: response});
+  } catch (error) {
+    res.status(500).send({"error":error});    
+  }
+
+
+}
 //cancel request if already booking Exit******************************
 // exports.cancelRequest = function

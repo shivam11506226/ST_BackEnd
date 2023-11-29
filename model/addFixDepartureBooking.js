@@ -6,6 +6,10 @@ const FixDepartureBookingModal=new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "userb2bs",
     },
+    flightId:{
+        type:Schema.Types.ObjectId,
+        ref:"fixdepartures",
+    },
     loginName :{
         type: String,
     },

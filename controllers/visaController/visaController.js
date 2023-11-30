@@ -37,7 +37,6 @@ exports.createVisa = async (req, res, next) => {
             }
             req.body.gallery = galleryData;
         }
-        console.log("req.body", req.body)
         if (issuedType == "NO_VISA") {
             return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.VISA_CREATED, result: result })
         } else if (issuedType === "VISA_ON_ARRIVAL") {
@@ -45,6 +44,13 @@ exports.createVisa = async (req, res, next) => {
             return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.VISA_CREATED, result: result })
         }
         else {
+            if (!governmentFees && !platFormFees) {
+                return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: "governmentFees and  platFormFees or required" })
+            } else if (!platFormFees) {
+                return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: " platFormFees or required" })
+            } else if (!governmentFees) {
+                return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: " platFormFees or required" })
+            }
             req.body.price = governmentFees + platFormFees
             const result = await createWeeklyVisa(req.body);
             return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.VISA_CREATED, result: result })
@@ -176,7 +182,7 @@ exports.getonArrivalList = async (req, res, next) => {
 }
 
 
-exports.getWeeklyVisa=async (req,res,next)=>{
+exports.getWeeklyVisa = async (req, res, next) => {
     try {
         const { page, limit } = req.query;
         const options = { page, limit };
@@ -184,7 +190,7 @@ exports.getWeeklyVisa=async (req,res,next)=>{
         const currentDate = new Date();
         const guaranteedVisaDate = new Date(currentDate);
         guaranteedVisaDate.setDate(guaranteedVisaDate.getDate() + result.docs[0].daysToProcess);
-        console.log("=-----------",guaranteedVisaDate)
+        console.log("=-----------", guaranteedVisaDate)
         const amOrPm = guaranteedVisaDate.getHours() >= 12 ? 'PM' : 'AM';
         const hours = guaranteedVisaDate.getHours() % 12 || 12;
 
@@ -194,7 +200,7 @@ exports.getWeeklyVisa=async (req,res,next)=>{
             doc._doc.pricePerPerson = `${doc.price}/person`;
             doc._doc.getData = `Submit Today For Guaranteed Visa By: ${formattedDate}`;
         });
-        console.log("result",result);
+        console.log("result", result);
         actionCompleteResponse(res, result, 'weeklyVisa get data successfully.');
     } catch (error) {
         console.log("error========>>>>>>", error);

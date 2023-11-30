@@ -35,7 +35,7 @@ const hotelBookingDetailSchema = new mongoose.Schema(
       required: [true, 'destination is required'],
     },
     bookingId: {
-      type: String,
+      type: Number,
       required: [true, 'booking id is required'],
     },
     noOfPeople : {

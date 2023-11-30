@@ -55,6 +55,7 @@ const hotelBookingServicess = {
         if (search) {
             var filter = search;
         }
+        console.log('aggregatePaginateHotelBookingList',body)
         let data = filter || ""
         let pipeline = [
             {
@@ -74,30 +75,38 @@ const hotelBookingServicess = {
             {
                 $match: {
                     $or: [
-                        { "hotelName": { $regex: data, $options: "i" }, },
-                        { "userDetails.username": { $regex: data, $options: "i" } },
-                        { "userDetails.email": { $regex: data, $options: "i" } },
+                        { "hotelName": { $regex: data, $options: "i" } },
+                        { "userDetails.personal_details.email": { $regex: data, $options: "i" } },
+                        { "userDetails.personal_details.first_name": { $regex: data, $options: "i" } },
+                        { "userDetails.personal_details.last_name": { $regex: data, $options: "i" } },
                         { "paymentStatus": { $regex: data, $options: "i" } },
                         { "destination": { $regex: data, $options: "i" } },
                         { "night": parseInt(data) },
                         { "room": parseInt(data) },
-                        { "bookingStatus": { $regex: data, $options: "i" } }
+                        { "bookingStatus": { $regex: data, $options: "i" } },
+                        { "bookingId": parseInt(data) },
+                        { "amount": parseInt(data) },
                     ],
                 }
             },
         ]
         if (fromDate && !toDate) {
-            pipeline.CheckInDate = { $eq: fromDate };
+            pipeline.push({ $match: { CheckInDate: { $eq: new Date(fromDate) } } });
         }
         if (!fromDate && toDate) {
-            pipeline.CheckOutDate = { $eq: toDate };
+            pipeline.push({ $match: { CheckOutDate: { $eq: new Date(toDate) } } });
         }
         if (fromDate && toDate) {
-            pipeline.$and = [
-                { CheckInDate: { $eq: fromDate } },
-                { CheckOutDate: { $eq: toDate } },
-            ]
+            pipeline.push({
+                $match: {
+                    $and: [
+                        { CheckInDate: { $eq: new Date(fromDate) } },
+                        { CheckOutDate: { $eq: new Date(toDate) } },
+                    ]
+                }
+            });
         }
+        
         let aggregate = hotelBookingModel.aggregate(pipeline)
         let options = {
             page: parseInt(page) || 1,

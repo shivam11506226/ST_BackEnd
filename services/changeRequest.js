@@ -59,7 +59,7 @@ const changeRequestServices = {
             {
                 $lookup: {
                     from: "userb2bs",
-                    localField: 'userId',
+                    localField: 'agentId',
                     foreignField: '_id',
                     as: "userDetails",
                 }
@@ -71,6 +71,20 @@ const changeRequestServices = {
                 }
             },
             {
+                $lookup: {
+                    from: "flightbookingdatas",
+                    localField: 'flightBookingId',
+                    foreignField: '_id',
+                    as: "flightDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$flightDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
                 $match: {
                     $or: [
                         { "hotelName": { $regex: data, $options: "i" }, },
@@ -78,9 +92,9 @@ const changeRequestServices = {
                         { "userDetails.email": { $regex: data, $options: "i" } },
                         { "paymentStatus": { $regex: data, $options: "i" } },
                         { "destination": { $regex: data, $options: "i" } },
-                        { "night": parseInt(data) },
+                        { "flightDetails.": parseInt(data) },
                         { "room": parseInt(data) },
-                        { "bookingStatus": { $regex: data, $options: "i" } }
+                        { "flightDetails.bookingId": { $regex: data, $options: "i" } }
                     ],
                 }
             },

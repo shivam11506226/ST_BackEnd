@@ -49,6 +49,7 @@ const changeHotelRequestServices = {
         return await changeHotelRequestModel.paginate(query, options);
     },
 
+   
     aggregatePaginatechangeHotelRequestList: async (body) => {
         const { page, limit, search, fromDate, toDate } = body;
         if (search) {
@@ -59,7 +60,7 @@ const changeHotelRequestServices = {
             {
                 $lookup: {
                     from: "userb2bs",
-                    localField: 'userId',
+                    localField: 'agentId',
                     foreignField: '_id',
                     as: "userDetails",
                 }
@@ -71,41 +72,57 @@ const changeHotelRequestServices = {
                 }
             },
             {
-                $match: {
-                    $or: [
-                        { "hotelName": { $regex: data, $options: "i" }, },
-                        { "userDetails.username": { $regex: data, $options: "i" } },
-                        { "userDetails.email": { $regex: data, $options: "i" } },
-                        { "paymentStatus": { $regex: data, $options: "i" } },
-                        { "destination": { $regex: data, $options: "i" } },
-                        { "night": parseInt(data) },
-                        { "room": parseInt(data) },
-                        { "bookingStatus": { $regex: data, $options: "i" } }
-                    ],
+                $lookup: {
+                    from: "hotelBookingDetail",
+                    localField: 'hotelBookingId',
+                    foreignField: '_id',
+                    as: "hotelDetails",
                 }
             },
+            {
+                $unwind: {
+                    path: "$hotelDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { "userDetails.username": { $regex: data, $options: "i" } },
+                        { "userDetails.email": { $regex: data, $options: "i" } },
+                        { "hotelDetails.paymentStatus": { $regex: data, $options: "i" } },
+                        { "hotelDetails.HotelId": { $regex: data, $options: "i" } },
+                        { "hotelDetails.pnr": { $regex: data, $options: "i" } },
+                        { "hotelDetails.bookingId": { $regex: data, $options: "i" } },
+                        { "hotelDetails.dateOfJourney": { $regex: data, $options: "i" } },
+                        { "hotelDetails.amount": parseInt(data) },
+                        { "hotelDetails.room": parseInt(data)}
+                    ],
+                }
+            }
         ]
-        if (fromDate && !toDate) {
-            pipeline.CheckInDate = { $eq: fromDate };
+        if (fromDate) {
+            pipeline.push({ $match: { "HotelDetails.dateOfJourney": { $eq: fromDate } } });
         }
-        if (!fromDate && toDate) {
-            pipeline.CheckOutDate = { $eq: toDate };
+
+        if (toDate) {
+            pipeline.push({ $match: { "HotelDetails.createdAt": { $eq: toDate } } });
         }
-        if (fromDate && toDate) {
-            pipeline.$and = [
-                { CheckInDate: { $eq: fromDate } },
-                { CheckOutDate: { $eq: toDate } },
-            ]
-        }
-        let aggregate = changeHotelRequestModel.aggregate(pipeline)
+
+        pipeline.push({
+            $sort: { createdAt: -1 },
+        });
+
+        let aggregate = changeHotelRequestModel.aggregate(pipeline);
         let options = {
             page: parseInt(page) || 1,
-            limit: parseInt(limit) || 5,
-            sort: { createdAt: -1 },
+            limit: parseInt(limit) || 10,
         };
-        return await changeHotelRequestModel.aggregatePaginate(aggregate, options)
 
+        const result = await changeHotelRequestModel.aggregatePaginate(aggregate, options);
+        return result;
     },
+
 
     countTotalchangeHotelRequest:async()=>{
         return await changeHotelRequestModel.countDocuments({bookingStatus:bookingStatus.BOOKED})

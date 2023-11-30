@@ -47,7 +47,7 @@ exports.hotelBooking= async (req, res, next)=> {
       const result = await createUserhotelBookingModel(object);
       const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login`
       await sendSMS.sendSMSForHotelBooking(result);
-      await whatsAppMsg.sendWhatsAppMessage(data.phone, message);
+      await whatsApi.sendWhatsAppMessage(result.phoneNumber.mobile_number, message);
       // await commonFunction.HotelBookingConfirmationMail(data);
  
       if(result){

@@ -9,9 +9,9 @@ const qrcode = require("qrcode-terminal");
 const config = require("../config/auth.config.js");
 let cloudinary = require("cloudinary");
 cloudinary.config({
-  cloud_name: "dultedeh8",
-  api_key: "461991833927796",
-  api_secret: "ruuF-4CFhQVh205cif_tQqNBBcA",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 function getHtmlContent(name) {

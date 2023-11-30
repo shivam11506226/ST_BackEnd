@@ -25,12 +25,6 @@ const FixDepartureModal=new mongoose.Schema({
     Price :{
         type :Number,
     },
-    Sold :{
-        type: Number,
-    },
-    UnSold: {
-        type: Number,
-    },
     Hold: {
         type: Number,
     },

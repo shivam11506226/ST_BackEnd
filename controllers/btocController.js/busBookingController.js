@@ -12,6 +12,7 @@ const commonFunction = require('../../utilities/commonFunctions');
 const { userBusBookingServices } = require('../../services/btocServices/busBookingServices');
 const bookingStatus = require('../../enums/bookingStatus');
 const { createUserBusBooking, findUserBusBooking, getUserBusBooking, findUserBusBookingData, deleteUserBusBooking, userBusBookingList, updateUserBusBooking, paginateUserBusBookingSearch } = userBusBookingServices
+const whatsApi=require("../../utilities/whatsApi")
 
 exports.busBooking = async (req, res, next) => {
   try {
@@ -40,8 +41,11 @@ exports.busBooking = async (req, res, next) => {
       amount: req.body.amount,
     }
     const result = await createUserBusBooking(object);
+    const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login,${pdfFilePath}`
+     await sendSMS.sendSMSBusBooking(result);  
+     await whatsApi.sendWhatsAppMessage(result.phone,message)
     await commonFunction.BusBookingConfirmationMail(data)
-    await sendSMS.sendSMSBusBooking(isUserExist);
+   
     if (result) {
       return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.BUS_BOOKING_CREATED, result: result });
     }

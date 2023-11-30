@@ -12,6 +12,7 @@ const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSea
 const userType = require("../../enums/userType");
 const sendSMS = require("../../utilities/sendSms");
 const commonFunction = require('../../utilities/commonFunctions');
+const whatsappAPIUrl=require("../../utilities/whatsApi")
 //******************************************User SignUp api*************************/
 
 exports.signUp = async (req, res, next) => {
@@ -71,6 +72,7 @@ exports.login = async (req, res, next) => {
         }
         let result1 = await updateUser({ 'phone.mobile_number': mobileNumber, status: status.ACTIVE }, obj);
         await sendSMS.sendSMSForOtp(mobileNumber,otp)
+        await whatsappAPIUrl.sendWhatsAppMessage(mobileNumber,otp);
         if (!result1) {
             return res.status(statusCode.InternalError).json({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
         }
@@ -158,7 +160,8 @@ exports.resendOtp = async (req, res, next) => {
         if (!updateData) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
         }
-        // await commonFunction.sendSMS(mobileNumber,otp);
+        await whatsappAPIUrl.sendWhatsAppMessage(mobileNumber,otp)
+        await commonFunction.sendSMS(mobileNumber,otp);
         const token = await commonFunction.getToken({ _id: updateData._id, 'mobile_number': updateData.phone.mobile_number });
         const result = {
             firstTime: updateData.firstTime,

@@ -7,6 +7,7 @@ const {
 } = require("../../common/common");
 const bcrypt = require("bcryptjs");
 const axios = require('axios');
+const whatsApi = require("../../utilities/whatsApi");
 /**********************************SERVICES********************************** */
 const { userServices } = require('../../services/userServices');
 const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
@@ -48,18 +49,22 @@ exports.flighBooking = async (req, res, next) => {
       dateOfJourney: data.dateOfJourney,
       amount: data.amount,
       userId: isUserExist._id,
-      airlineDetails:{
-        AirlineName:data.airlineDetails.AirlineName,
-        DepTime:data.airlineDetails.DepTime
+      airlineDetails: {
+        AirlineName: data.airlineDetails.AirlineName,
+        DepTime: data.airlineDetails.DepTime
       },
       passengerDetails: modifiedPassengers,
     };
-console.log("object==========",object);
     const result = await createUserflightBooking(object);
-console.log("result==========>>>>",result)
-    // Uncomment the following lines if you have the necessary functions implemented
-    await commonFunction.FlightBookingConfirmationMail(data);
+
+    const userName = `${data?.passengerDetails[0]?.firstName} ${data?.passengerDetails[0]?.lastName}`
+    const url1 = 'google';
+    const phone = data?.passengerDetails[0]?.mobile_number;
+    const message = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details:https://theskytrails.com/${url1}`
+    await whatsApi.sendWhatsAppMessage(phone, message)
     const send = await sendSMSUtils.sendSMSForFlightBooking(data);
+    await commonFunction.FlightBookingConfirmationMail(data);
+
 
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.FLIGHT_BOOKED, result });
 

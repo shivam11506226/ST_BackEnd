@@ -14,7 +14,6 @@ const whatsAppMsg = require("../utilities/whatsApi");
 const { cancelBookingServices } = require("../services/cancelServices");
 const { createcancelBooking, updatecancelBooking, aggregatePaginatecancelBookingList, countTotalcancelBooking } = cancelBookingServices;
 exports.addFlightBookingData = async (req, res) => {
-
   try {
 
     const passengers = req.body.passengerDetails.map((passenger, index) => {

@@ -9,7 +9,7 @@ module.exports = function (app) {
     });
   
     app.post('/skyTrails/forumPost/createComment', SchemaValidator(schemas.forumQueAnsComm), controller.createComment);
-    app.get('/skyTrails/forumPost/getPostComment',SchemaValidator(schemas.forumQueAnsgetSchemas), controller.getPostComment);
+    app.get('/skyTrails/forumPost/getPostComment', controller.getPostComment);
     app.put('/skyTrails/forumPost/updatePostComment', controller.updatePostComment);
     app.delete('/skyTrails/forumPost/deletePostComment', controller.deletePostComment);
     app.get('/skyTrails/forumPost/getPostCommentsOfUser',controller.getPostCommentsOfUser);

@@ -6,7 +6,7 @@ const statusCode = require('../../utilities/responceCode')
 //************************************SERVICES**********************************************************/
 
 const { forumQueServices } = require('../../services/forumQueServices');
-const { createforumQue, findforumQue, findforumQueData, deleteforumQue, updateforumQue, forumQueListLookUp } = forumQueServices;
+const { createforumQue, findforumQue, findforumQueData, deleteforumQue, updateforumQue, forumQueListLookUp,forumQueListLookUp1,getTopSTories } = forumQueServices;
 const { userServices } = require('../../services/userServices');
 const { createUser, findUser, getUser, findUserData, updateUser } = userServices;
 const { forumQueAnsCommServices } = require('../../services/forumQueAnsComm');
@@ -47,14 +47,24 @@ exports.getPost = async (req, res, next) => {
     try {
         const result = {}; // Declare as an object
         const { search, page, limit, questionId, userId } = req.query;
+        const post = await forumQueListLookUp1(req.query);
+        if (post) {
+            result.post = post;
+        } else {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
+        }
         const unanswered = await forumQueListLookUp(req.query);
         if (unanswered) {
             result.unanswered = unanswered;
+        } else {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
         }
 
         const answered = await forumListLookUp(req.query);
         if (answered) {
             result.answered = answered;
+        } else {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
         }
 
         if (result.unanswered || result.answered) {

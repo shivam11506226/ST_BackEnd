@@ -23,7 +23,111 @@ const forumQueServices={
     updateforumQue: async (query, updateObj) => {
         return await forumQueModel.findOneAndUpdate(query, updateObj, { new: true });
     },
-
+    forumQueListLookUp1: async (body) => {
+      const { search, page, limit, questionId, userId } = body;
+      if (search) {
+        var filter = search;
+      }
+      let data = filter || ""
+      let searchData = [
+  
+  
+        {
+          $lookup: {
+            from: "users",
+            localField: 'userId',
+            foreignField: '_id',
+            as: "userDetail",
+          }
+        },
+        {
+          $unwind: {
+            path: "$userDetail",
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $match: {
+            content: { $regex: data, $options: "i" }
+          }
+        },
+  
+  
+      ]
+      if (questionId) {
+        searchData.push({
+          $match: { "questionsData.questionId": mongoose.Types.ObjectId(questionId) }
+        })
+      }
+      if (userId) {
+        searchData.push({
+          $match: { "userDetail.userId": mongoose.Types.ObjectId(userId) }
+        })
+      }
+      let aggregate = forumQueModel.aggregate(searchData)
+      let options = {
+        page: parseInt(page, 10) || 1,
+        limit: parseInt(limit, 10) || 10,
+        sort: { createdAt: -1 },
+      };
+      const info = await forumQueModel.aggregatePaginate(aggregate, options);
+      return info;
+    },
+  
+  
+    getTopSTories: async (params) => {
+      const { search, page, limit, questionId, userId } = params;
+   
+      const pipeline = [
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "userDetail",
+          },
+        },
+        {
+          $unwind: {
+            path: "$userDetail",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $match: {
+            $or: [
+              { responseCount: { $gte: 0 } },
+            ],
+          },
+        },
+      ];
+   
+      if (questionId) {
+        pipeline.push({
+          $match: { "questionsData.questionId": mongoose.Types.ObjectId(questionId) },
+        });
+      }
+   
+      if (userId) {
+        pipeline.push({
+          $match: { "userDetail.userId": mongoose.Types.ObjectId(userId) },
+        });
+      }
+   
+      // Sort by createdAt in descending order to get the most recent posts
+      // pipeline.push({ $sort: { createdAt: -1 } });
+   
+      let aggregate = forumQueModel.aggregate(pipeline);
+      let options = {
+        page: parseInt(page, 10) || 1,
+        limit: parseInt(limit, 10) || 10,
+        $sort:{responseCount:1}
+      };
+   
+      const result = await forumQueModel.aggregatePaginate(aggregate, options);
+      return result;
+    },
+  
     forumQueListLookUp: async (body) => {
         const { search, page, limit, questionId,userId} = body;
         if (search) {

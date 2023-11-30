@@ -1053,26 +1053,45 @@ exports.fixDeparturefilter=async (req, res) =>{
 
 
 //add fixdepartureBooking Details
+
 exports.fixDepartureBooking = async (req, res) => {
   try {
     const names = req.body.names.map((name, index) => {
       // Convert index to string as keys in Map are strings
-     return name;
-   });
-   const data = {
-    ...req.body,
-    // passengerDetails: new Map(passengers),
-    names:names
-  };
-  // console.log(data,"new flight booking")
+      return name;
+    });
+    const data = {
+      ...req.body,
+      // passengerDetails: new Map(passengers),
+      names: names
+    };
     
-  const response = await fixdeparturebookings.create(data);
-  res.status(201).send({status: "success", data: response});
-  } catch (error) {
-    res.status(500).send({"error":error});    
-  }
+    // Assuming fixdepartures is the model for your database collection
+    const departure = await fixdepartures.find({ _id: data.flightId });
+    // console.log(departure, "flight data");
 
+    const flightData = {
+      Sector: departure[0].Sector,
+      DepartureDate: departure[0].DepartureDate,
+      ReturnDate: departure[0].ReturnDate,
+      Airlines: departure[0].Airlines,
+      FlightNo: departure[0].FlightNo,
+      OnwardTime: departure[0].OnwardTime,
+      ReturnTime: departure[0].ReturnTime
+    };
+
+    const allData = {
+      ...flightData,
+      ...data      
+    };
+    // console.log(allData,"alldata");
+    const response = await fixdeparturebookings.create(allData);
+    res.status(201).send({ status: "success", data: response });
+  } catch (error) {
+    res.status(500).send({ "error": error });
+  }
 }
+
 
 //**************GET ALL Fix Departure BOOKING *************/
 

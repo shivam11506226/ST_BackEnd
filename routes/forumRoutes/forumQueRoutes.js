@@ -12,4 +12,5 @@ module.exports = function (app) {
     app.get('/skyTrails/forumPost/getPost',SchemaValidator(schemas.forumgetSchemas), controller.getPost);
     app.put('/skyTrails/forumPost/updatePost', controller.updatePost);
     app.delete('/skyTrails/forumPost/deletePost', controller.deletePost);
-}
+    app.get('/skyTrails/forumPost/getTopStories',controller.getTopStories);
+    app.get('/skyTrails/forumPost/getPostByID',controller.getPostByID);}

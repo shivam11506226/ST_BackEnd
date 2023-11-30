@@ -178,3 +178,35 @@ exports.addBookmark = async (req, res, next) => {
         return next(error);
     }
 }
+
+//get top rated stories**************************************************
+exports.getTopStories = async (req, res, next) => {
+    try {
+        const { search, page, limit, questionId, userId } = req.query;
+        const result = await getTopSTories(req.query);
+        if (!result) {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
+        }
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: result });
+    } catch (error) {
+        console.log("error========", error);
+        return next(error);
+    }
+
+}
+
+
+//get post by ID*********************************************************************
+exports.getPostByID = async (req, res, next) => {
+try {
+    const postId=req.query.postId;;
+    const result=await findforumQue({_id:postId,status:status.ACTIVE});
+    if(!result) {
+        return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });  
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: result });
+} catch (error) {
+    console.log("Error to get data from server",error);
+    return next(error);
+}
+}

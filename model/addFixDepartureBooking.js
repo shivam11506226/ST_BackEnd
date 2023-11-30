@@ -12,6 +12,27 @@ const FixDepartureBookingModal=new mongoose.Schema({
         type:Schema.Types.ObjectId,
         ref:"fixdepartures",
     },
+    Sector :{
+      type:String,
+    },
+    DepartureDate :{
+      type:String,
+    },
+    ReturnDate :{
+      type:String
+    },
+    Airlines :{
+      type:String,
+    },
+    FlightNo :{
+      type:Number,
+    },
+    OnwardTime :{
+      type:String,
+    },
+    ReturnTime :{
+      type:String,
+    },
     loginName :{
         type: String,
     },

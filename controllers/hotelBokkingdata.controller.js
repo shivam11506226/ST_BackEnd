@@ -12,7 +12,7 @@ const commonFunction = require("../utilities/commonFunctions");
 const { log } = require("console");
 const sendSMS = require("../utilities/sendSms");
 const PushNotification = require("../utilities/commonFunForPushNotification");
-
+const whatsAppMsg = require("../utilities/whatsApi");
 
 //****************************************SERVICES**************************************/
 const { hotelBookingServicess } = require("../services/hotelBookingServices");
@@ -29,34 +29,34 @@ exports.addHotelBookingData = async (req, res) => {
       destination: req.body.destination,
       bookingId: req.body.bookingId,
       CheckInDate: req.body.CheckInDate,
-      CheckOutDate : req.body.CheckOutDate,
+      CheckOutDate: req.body.CheckOutDate,
       hotelName: req.body.hotelName,
       noOfPeople: req.body.noOfPeople,
       hotelId: req.body.hotelId,
       cityName: req.body.cityName,
       country: req.body.country,
-      room: req.body.room,      
-      amount:req.body.amount,
+      room: req.body.room,
+      amount: req.body.amount,
       bookingStatus: bookingStatus.BOOKED,
     };
     // console.log(data,"hotel data");
-   
+
     const response = await hotelBookingModel.create(data);
-    
+
     // console.log("response==========", response);
     const msg = "Hotel booking  successfully";
     if (response.bookingStatus === "BOOKED") {
       // await commonFunction.sendHotelBookingConfirmation(data);
-     
+      const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login`
+      await sendSMS.sendSMSForHotelBookingAgent(response);
+      await whatsAppMsg.sendWhatsAppMessage(data.phone, message);
+      await commonFunction.HotelBookingConfirmationMail(data);
 
-      await commonFunction.HotelBookingConfirmationMail(data);  
-      
-       await sendSMS.sendSMSForHotelBookingAgent(response);
     }
 
-    
+
     actionCompleteResponse(res, response, msg);
-    
+
   } catch (error) {
     console.log("heelelele")
     sendActionFailedResponse(res, {}, error.message);
@@ -77,7 +77,7 @@ exports.sendHotelBookingCencelRequestForAdmin = async () => {
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     } else {
-      const isAdmin = await User.find({userType:"ADMIN", status:"ACTIVE"}).select('-_id email username');
+      const isAdmin = await User.find({ userType: "ADMIN", status: "ACTIVE" }).select('-_id email username');
       const emailMessage = `Hotel Booking Cancellation Request\n\nName: ${booking.name}\nEmail: ${booking.email}\nCheck-in Date: ${booking.CheckInDate}\nCheck-out Date: ${booking.CheckOutDate}`;
       const payload = {
         email: isAdmin[0].email,

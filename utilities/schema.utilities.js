@@ -299,13 +299,19 @@ const schemas = {
     bookingId: joi.number().required(),
     pnr: joi.string().optional(),
   }) ,
-
+  bookmarkSchema:joi.object().keys({
+    questionId:joi.string().required(), 
+    userId:joi.string().required()
+  }),
+  getPostByIdSchema:joi.object().keys({
+    postId:joi.string().required(),
+  }),
   cancelUserBusBookingSchema:joi.object().keys({
     reason:joi.string().required(),
     busBookingId:joi.string().required(),
     busId: joi.number().required(),
     pnr: joi.string().optional(),
-  })
+  }),
 };
 
 module.exports = schemas;

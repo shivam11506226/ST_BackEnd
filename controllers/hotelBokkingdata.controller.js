@@ -51,7 +51,7 @@ exports.addHotelBookingData = async (req, res) => {
 
       await commonFunction.HotelBookingConfirmationMail(data);  
       
-      // await sendSMS.sendSMSForHotelBooking(response);
+       await sendSMS.sendSMSForHotelBookingAgent(response);
     }
 
     

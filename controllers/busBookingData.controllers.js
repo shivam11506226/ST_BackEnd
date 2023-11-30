@@ -66,7 +66,7 @@ exports.addBusBookingData = async (req, res) => {
       const pdfFilePath = "bus_booking.pdf";
       fs.writeFileSync(pdfFilePath, pdfBytes);
       await commonFunction.BusBookingConfirmationMail(data, pdfFilePath);
-      await sendSMS.sendSMSForBusBookingConfirmation(response);
+      await sendSMS.sendSMSBusBookingAgent(response);
 
      // await commonFunction.sendBusBookingConfirmation(data);
      // await sendSMS.sendSMSBusBooking(response);

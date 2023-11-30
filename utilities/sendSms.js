@@ -293,5 +293,47 @@ module.exports = {
       console.error("Error occurred in axios request:", error);
       throw error;
     }
-  }
+  },
+  sendSMSBusBookingAgent:async(data)=>{
+    const details=`Hello, ${data.name}.We appreciate your Bus booking with The Skytrails. Your booking has been verified! Click the following link to view details= https://theskytrails.com/google`;
+    const url = `http://sms.txly.in/vb/apikey.php?`;
+    const params = {
+      apikey: key,
+      senderid: senderid,
+      templateid: templateid3,
+      number: data.phone,
+      message: details,
+    };
+    try {
+      console.log("url,{params:params==========", url, params);
+      const response = await axios.get(url, { params: params });
+      console.log("=====================", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error occurred in axios request:", error);
+      throw error;
+    }
+  },
+
+  sendSMSForHotelBookingAgent:async(data)=>{
+    const urldata="https://www.google.com/"
+    const details=`Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:${urldata}. Or You Can login theskytrails.com/login`;
+    const url = `http://sms.txly.in/vb/apikey.php?`;
+    const params = {
+      apikey: key,
+      senderid: senderid,
+      templateid: templateid2,
+      number: data.phone,
+      message: details,
+    };
+    try {
+      console.log("url,{params:params==========", url, params);
+      const response = await axios.get(url, { params: params });
+      console.log("=====================", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error occurred in axios request:", error);
+      throw error;
+    }
+  },
 };

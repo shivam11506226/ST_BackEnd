@@ -982,6 +982,48 @@ exports.fixDeparturedata =async(req, res) =>{
   
 }
 
+//update fixDepartureData
+exports.updateFixDepartureData = async (req, res) => {
+    try {
+      const { _id, noOfBooking } = req.body; // Assuming _id and AvailableSeats are sent in the request body
+  
+      // Check if _id or AvailableSeats is missing in the request
+      if (!_id || !noOfBooking) {
+        return res.status(400).send({ status: 'error', message: 'Missing _id or AvailableSeats in request body' });
+      }
+  
+      // Assuming fixdepartures is the model for your database collection
+      const departure = await fixdepartures.findById(_id);
+  
+      if (!departure) {
+        return res.status(404).send({ status: 'error', message: 'Departure not found' });
+      }
+  
+      if (departure.AvailableSeats < noOfBooking) {
+        return res.status(400).send({ status: 'error', message: 'Requested seats exceed available seats' });
+      }
+  
+      const updatedAvailableSeats = departure.AvailableSeats - noOfBooking;
+  
+      const updatedDeparture = await fixdepartures.findByIdAndUpdate(
+        _id,
+        { $set: { AvailableSeats: updatedAvailableSeats } }, // Update the AvailableSeats field with the updated value
+        { new: true }
+      );
+  
+      if (!updatedDeparture) {
+        return res.status(404).send({ status: 'error', message: 'Failed to update departure' });
+      }
+  
+      res.status(200).send({ status: 'success', data: updatedDeparture });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ status: 'error', message: 'Internal server error' });
+    }
+  };
+  
+
+
 
 exports.fixDeparturefilter=async (req, res) =>{
   try {

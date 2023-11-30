@@ -887,7 +887,49 @@ exports.changeBusBookingDetailsRequest = async (req, res, next) => {
   }
 }
 
+//get change flight booking details request by agent**********************************
+exports.getchangeFlightRequest=async(req,res,next)=>{
+  try {
+    const { page, limit, search, fromDate, toDate } =  req.query;
+    const result=aggregatePaginatechangeRequestList(req.query);
+    if(!result){
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+  } catch (error) {
+    console.log("Error to getting data",error);
+    return next(error)
+  }
+}
 
+//get change hotel booking details request by agent**********************************
+exports.getchangeHotelRequest=async(req,res,next)=>{
+  try {
+    const { page, limit, search, fromDate, toDate } =  req.query;
+    const result=aggregatePaginatechangeHotelRequestList(req.query);
+    if(!result){
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+  } catch (error) {
+    console.log("Error to getting data",error);
+    return next(error)
+  }
+}
+//get change bus booking details request by agent**********************************
+exports.getchangeBusRequest=async(req,res,next)=>{
+  try {
+    const { page, limit, search, fromDate, toDate } =  req.query;
+    const result=aggregatePaginatechangeBusRequestList(req.query);
+    if(!result){
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+  } catch (error) {
+    console.log("Error to getting data",error);
+    return next(error)
+  }
+}
 
 exports.addSector= async (req, res) =>{
    try {

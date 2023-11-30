@@ -49,6 +49,7 @@ const changeBusRequestServices = {
         return await changeBusRequestModel.paginate(query, options);
     },
 
+   
     aggregatePaginatechangeBusRequestList: async (body) => {
         const { page, limit, search, fromDate, toDate } = body;
         if (search) {
@@ -59,7 +60,7 @@ const changeBusRequestServices = {
             {
                 $lookup: {
                     from: "userb2bs",
-                    localField: 'userId',
+                    localField: 'agentId',
                     foreignField: '_id',
                     as: "userDetails",
                 }
@@ -71,40 +72,54 @@ const changeBusRequestServices = {
                 }
             },
             {
-                $match: {
-                    $or: [
-                        { "BusName": { $regex: data, $options: "i" }, },
-                        { "userDetails.username": { $regex: data, $options: "i" } },
-                        { "userDetails.email": { $regex: data, $options: "i" } },
-                        { "paymentStatus": { $regex: data, $options: "i" } },
-                        { "destination": { $regex: data, $options: "i" } },
-                        { "night": parseInt(data) },
-                        { "room": parseInt(data) },
-                        { "bookingStatus": { $regex: data, $options: "i" } }
-                    ],
+                $lookup: {
+                    from: "busBookingData",
+                    localField: 'busBookingId',
+                    foreignField: '_id',
+                    as: "busDetails",
                 }
             },
+            {
+                $unwind: {
+                    path: "$busDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { "userDetails.username": { $regex: data, $options: "i" } },
+                        { "userDetails.email": { $regex: data, $options: "i" } },
+                        { "busDetails.paymentStatus": { $regex: data, $options: "i" } },
+                        { "busDetails.busId": { $regex: data, $options: "i" } },
+                        { "busDetails.pnr": { $regex: data, $options: "i" } },
+                        { "bookingId": { $regex: data, $options: "i" } },
+                        { "busDetails.dateOfJourney": { $regex: data, $options: "i" } },
+                        { "busDetails.amount": parseInt(data) }
+                    ],
+                }
+            }
         ]
-        if (fromDate && !toDate) {
-            pipeline.CheckInDate = { $eq: fromDate };
+        if (fromDate) {
+            pipeline.push({ $match: { "busDetails.dateOfJourney": { $eq: fromDate } } });
         }
-        if (!fromDate && toDate) {
-            pipeline.CheckOutDate = { $eq: toDate };
+
+        if (toDate) {
+            pipeline.push({ $match: { "busDetails.createdAt": { $eq: toDate } } });
         }
-        if (fromDate && toDate) {
-            pipeline.$and = [
-                { CheckInDate: { $eq: fromDate } },
-                { CheckOutDate: { $eq: toDate } },
-            ]
-        }
-        let aggregate = changeBusRequestModel.aggregate(pipeline)
+
+        pipeline.push({
+            $sort: { createdAt: -1 },
+        });
+
+        let aggregate = changeBusRequestModel.aggregate(pipeline);
         let options = {
             page: parseInt(page) || 1,
-            limit: parseInt(limit) || 5,
-            sort: { createdAt: -1 },
+            limit: parseInt(limit) || 10,
         };
-        return await changeBusRequestModel.aggregatePaginate(aggregate, options)
 
+        const result = await changeBusRequestModel.aggregatePaginate(aggregate, options);
+        return result;
     },
 
     countTotalchangeBusRequest:async()=>{

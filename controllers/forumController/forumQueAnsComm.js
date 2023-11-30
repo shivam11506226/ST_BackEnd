@@ -1,6 +1,8 @@
 const status = require("../../enums/status");
 const schemas = require("../../utilities/schema.utilities");
 const commentStatus = require("../../enums/commentStatus");
+const responseMessage = require('../../utilities/responses');
+const statusCode = require('../../utilities/responceCode')
 //************************************SERVICES**********************************************************/
 
 const { forumQueServices } = require("../../services/forumQueServices");
@@ -164,14 +166,15 @@ exports.likeComments = async (req, res, next) => {
         const { userId, commentId } = req.body;
         const isUser = await findUser({ _id: userId });
         if (!isUser) {
-            return sendActionFailedResponse(res, {}, "User not found");
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+
         }
         const isCommentExist = await findforumQueAnsComm({
             _id: commentId,
             status: status.ACTIVE,
         });
         if (!isCommentExist) {
-            return sendActionFailedResponse(res, {}, "Comment not found");
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
         }
         const isAlreadyLiked = await findlikes({
             commentId: commentId,
@@ -183,18 +186,15 @@ exports.likeComments = async (req, res, next) => {
                 { $pull: { likes: userId } }
             );
             updateResult._doc.ikeslength = updateResult.likes.length;
-            return actionCompleteResponse(
-                res,
-                updateResult,
-                "You have removed your like from the comment"
-            );
+          
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.REMOVE_FROM_LIKE ,result:updateResult});
         } else {
             const updateResult = await updatelikes(
                 { commentId: commentId, status: status.ACTIVE },
                 { $push: { likes: userId } }
             );
             updateResult._doc.likeslength = updateResult.likes.length;
-            actionCompleteResponse(res, updateResult, "You have liked the comment");
+           res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.LIKED ,result:updateResult});
         }
         const newLike = {
             commentId: commentId,
@@ -203,7 +203,7 @@ exports.likeComments = async (req, res, next) => {
         };
         const savedLike = await createlikes(newLike);
         savedLike._doc.likeslength = savedLike.likes.length;
-        return actionCompleteResponse(res, savedLike, "You have liked the comment");
+        return  res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.LIKED ,result:savedLike});
     } catch (error) {
         console.log("error========>>>>>>", error);
         return next(error);

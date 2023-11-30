@@ -19,7 +19,8 @@ module.exports = function (app) {
     // app.delete('/skyTrails/api/user/', controller.deletePost);
     app.get('/skyTrails/api/user/getUserflightBooking',[authJwt.verifcationToken],flightBookingController.getUserflightBooking);
     app.get('/skyTrails/api/user/getUserFlightData',[authJwt.verifcationToken],flightBookingController.getUserFlightData);
-    app.post('/skyTrails/api/createadvertisment',[authJwt.verifcationToken],SchemaValidator(schemas.advertisementSchema), advertisementController.createadvertismentController);
+    // [authJwt.verifcationToken]
+    app.post('/skyTrails/api/createadvertisment',SchemaValidator(schemas.advertisementSchema), advertisementController.createadvertismentController);
     app.put('/skyTrails/api/updateadvertisement',[authJwt.verifcationToken],SchemaValidator(schemas.updateadvertisementSchema), advertisementController.updateadvertisementController);
     app.get('/skyTrails/api/getadvertisement',advertisementController.getadvertisementController);
     app.post('/skyTrails/api/createflightadvertisment',[authJwt.verifcationToken],SchemaValidator(schemas.advertisementSchema), advertisementController.createflightadvertismentController);

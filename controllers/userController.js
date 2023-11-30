@@ -66,6 +66,7 @@ exports.verifyOtp = async (req, res, next) => {
         if (new Date().getTime() > userResult.otpExpireTime) {
             return res.status(statusCode.badRequest).json({ message: responseMessage.OTP_EXPIRED });
         };
+        const updateResult=await updateUser({ _id:userResult._id},{$set:{otp:'',otpVerified:true}})
         var token = await commonFunction.getToken({ _id: updateResult._id, email: updateResult.email, mobile_number: updateResult.mobile_number, userType: updateResult.userType });
         var obj = {
             _id: updateResult._id,

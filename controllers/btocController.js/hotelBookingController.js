@@ -14,6 +14,7 @@ const userType = require("../../enums/userType");
 const sendSMS = require("../../utilities/sendSms");
 const commonFunction = require('../../utilities/commonFunctions');
 const sendSMSUtils = require('../../utilities/sendSms');
+const whatsApi=require("../../utilities/whatsApi")
 const { userhotelBookingModelServices } = require('../../services/btocServices/hotelBookingServices');
 const { createUserhotelBookingModel, findUserhotelBookingModel, getUserhotelBookingModel, deleteUserhotelBookingModel, userhotelBookingModelList, updateUserhotelBookingModel, paginateUserhotelBookingModelSearch,countTotalhotelBooking,aggregatePaginateHotelBookingList } = userhotelBookingModelServices
 exports.hotelBooking= async (req, res, next)=> {
@@ -44,8 +45,11 @@ exports.hotelBooking= async (req, res, next)=> {
         hotelName:req.body.hotelName
       }
       const result = await createUserhotelBookingModel(object);
+      const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login`
+      await sendSMS.sendSMSForHotelBooking(object);
+      await whatsAppMsg.sendWhatsAppMessage(data.phone, message);
       // await commonFunction.HotelBookingConfirmationMail(data);
-    // await sendSMS.sendSMSForHotelBooking(object)
+ 
       if(result){
         return res.status(statusCode.OK).send({statusCode:statusCode.OK, message: responseMessage.BOOKING_SUCCESS,result:result });
       }

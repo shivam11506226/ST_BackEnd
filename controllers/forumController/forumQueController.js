@@ -21,7 +21,8 @@ const { createbookmark, findbookmark, deletebookmark, bookmarkList, updatebookma
 exports.createPost = async (req, res, next) => {
     try {
         const {  content, image } = req.body;
-        const isUser = await findUser({ _id: req.userId, status: status.ACTIVE });
+        const isUser = await findUser({ _id:req.userId, status: status.ACTIVE });
+        console.log(isUser)
         if (!isUser) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.USERS_NOT_FOUND });
         }

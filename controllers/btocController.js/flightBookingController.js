@@ -60,7 +60,7 @@ exports.flighBooking = async (req, res, next) => {
     const userName = `${data?.passengerDetails[0]?.firstName} ${data?.passengerDetails[0]?.lastName}`
     const url1 = 'google';
     const phone = data?.passengerDetails[0]?.mobile_number;
-    const message = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details:https://theskytrails.com/google`
+    const message = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details:https://theskytrails.com/${url1}`
     await whatsApi.sendWhatsAppMessage(phone, message)
     const send = await sendSMSUtils.sendSMSForFlightBooking(data);
     await commonFunction.FlightBookingConfirmationMail(data);

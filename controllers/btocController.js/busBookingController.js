@@ -42,7 +42,8 @@ exports.busBooking = async (req, res, next) => {
     }
     const result = await createUserBusBooking(object);
     const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login,${pdfFilePath}`
-     await sendSMS.sendSMSBusBooking(isUserExist);  
+     await sendSMS.sendSMSBusBooking(result);  
+     await whatsApi.sendWhatsAppMessage(result.phone,message)
     await commonFunction.BusBookingConfirmationMail(data)
    
     if (result) {

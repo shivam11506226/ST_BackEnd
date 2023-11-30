@@ -43,7 +43,11 @@ module.exports = function (app) {
   app.get("/skytrails/api/admin/getAllHotelBookingListAgent",controller.getAllHotelBookingListAgent);
   app.get("/skytrails/api/admin/getAllFlightBookingListAgent",controller.getAllFlightBookingListAgent);
   app.get("/skytrails/api/admin/getAllBusBookingListAgent",controller.getAllBusBookingListAgent);
+
+  app.get("/skytrails/api/admin/getAllFixDepartureBooking", controller.getAllFixDepartureBooking);
+
   app.get("/skyTrails/api/admin/getchangeHotelRequestAgent",controller.getchangeHotelRequest)
   app.get("/skyTrails/api/admin/getchangeFlightRequestAgent",controller.getchangeFlightRequest);
   app.get("/skyTrails/api/admin/getchangeBusRequestAgent",controller.getchangeBusRequest);
+
 };

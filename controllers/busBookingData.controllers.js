@@ -8,7 +8,7 @@ const {
   sendActionFailedResponse,
 } = require("../common/common");
 const sendSMS = require("../utilities/sendSms");
-
+const whatsAppMsg = require("../utilities/whatsApi");
 exports.addBusBookingData = async (req, res) => {
   try {
     const data = {
@@ -65,11 +65,12 @@ exports.addBusBookingData = async (req, res) => {
       // Write the PDF to a temporary file
       const pdfFilePath = "bus_booking.pdf";
       fs.writeFileSync(pdfFilePath, pdfBytes);
-      await commonFunction.BusBookingConfirmationMail(data, pdfFilePath);
-      await sendSMS.sendSMSBusBookingAgent(response);
 
-     // await commonFunction.sendBusBookingConfirmation(data);
-     // await sendSMS.sendSMSBusBooking(response);
+      const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login,${pdfFilePath}`
+      await sendSMS.sendSMSBusBookingAgent(response);
+      await whatsAppMsg.sendWhatsAppMessage(data.phone, message);
+      await commonFunction.BusBookingConfirmationMail(data, pdfFilePath);
+    
 
     }
     

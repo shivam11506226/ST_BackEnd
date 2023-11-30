@@ -1,5 +1,7 @@
 const mongoose=require('mongoose');
 const { Schema } = require("mongoose");
+const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const FixDepartureBookingModal=new mongoose.Schema({
     userId:{
@@ -59,5 +61,6 @@ const FixDepartureBookingModal=new mongoose.Schema({
   }
 )
 
-
+FixDepartureBookingModal.plugin(mongoosePaginate);
+FixDepartureBookingModal.plugin(aggregatePaginate)
 module.exports=mongoose.model('fixdeparturebookings', FixDepartureBookingModal);

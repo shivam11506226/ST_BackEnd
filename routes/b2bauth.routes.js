@@ -60,10 +60,12 @@ module.exports = function (app) {
 
   // fixDeparture
   app.post("/skyTrails/fixDeparturedata", controller.fixDeparturedata);
-  app.get("/skyTrails/fixDeparturefilter",controller.fixDeparturefilter)
+  app.get("/skyTrails/fixDeparturefilter",controller.fixDeparturefilter);
 
   //add fixDeparture Booking Details
-  app.post("/skyTrails/fixDepartureBooking",controller.fixDepartureBooking)
+  app.post("/skyTrails/fixDepartureBooking",controller.fixDepartureBooking);
+
+  app.get("/skyTrails/getallfixdeparture",controller.getAllFixDepartureBooking);
 
 
 

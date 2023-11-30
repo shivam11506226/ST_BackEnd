@@ -29,7 +29,8 @@ const { createcancelFlightBookings, findAnd,updatecancelFlightBookings, aggregat
 
 //**********Necessary models***********/
 const flightModel = require('../model/flightBookingData.model')
-const hotelBookingModel = require('../model/hotelBooking.model')
+const hotelBookingModel = require('../model/hotelBooking.model');
+const fixdeparturebookings=require('../model/addFixDepartureBooking');
 const busBookingModel = require("../model/busBookingData.model");
 const userFlightBookingModel = require("../model/btocModel/flightBookingModel");
 const userhotelBookingModel = require("../model/btocModel/hotelBookingModel");
@@ -738,6 +739,8 @@ exports.getAllFlightBookingListAgent = async (req, res, next) => {
   }
 }
 
+
+
 //************GET ALL AGENT BUSBOKING DETAILS****************/
 
 exports.getAllBusBookingListAgent = async (req, res, next) => {
@@ -862,5 +865,63 @@ exports.getCancelUserBusBooking=async(req,res,next)=>{
   } catch (error) {
       console.log("error",error);
       return next(error);
+  }
+}
+
+
+
+//**************GET ALL AGENT Fix Departure BOOKING LIST*************/
+
+exports.getAllFixDepartureBooking = async (req, res, next) => {
+  try {
+    const { page, limit, search } = req.query;
+    // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
+    // if (!isAdmin) {
+    //   return res.status(statusCode.NotFound).send({ message: responseMessage.ADMIN_NOT_FOUND });
+    // }
+    if (search) {
+      var filter = search;
+    }
+    let data = filter || ""
+    const aggregateQuery = [
+      {
+        $lookup: {
+          from: "userb2bs",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "UserDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$Userb2bDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { "loginName": { $regex: data, $options: "i" } },
+            { "emailId": { $regex: data, $options: "i" } },
+            { "status": { $regex: data, $options: "i" } },
+          ],
+        }
+      },
+    ]
+    let aggregate = fixdeparturebookings.aggregate(aggregateQuery);
+    const options = {
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 10,
+      sort: { createdAt: -1 },
+    };
+    const result = await fixdeparturebookings.aggregatePaginate(aggregate, options);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
   }
 }

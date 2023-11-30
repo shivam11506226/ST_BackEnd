@@ -888,6 +888,9 @@ exports.changeBusBookingDetailsRequest = async (req, res, next) => {
 }
 
 
+//==========================================================================
+// ===== fix departure controllers admin ==============
+//==========================================================================
 
 exports.addSector= async (req, res) =>{
    try {
@@ -982,7 +985,67 @@ exports.fixDepartureBooking = async (req, res) => {
     res.status(500).send({"error":error});    
   }
 
+}
 
+//**************GET ALL Fix Departure BOOKING *************/
+
+exports.getAllFixDepartureBooking = async (req, res, next) => {
+  try {
+    const { page, limit, search, userId } = req.query;
+    const isAgent = await findbrbuser({ _id: userId });
+    if (!isAgent) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
+    }
+    if (search) {
+      var filter = search;
+    }
+    let data = filter || ""
+    const aggregateQuery = [
+      {
+        $match: {
+          userId: mongoose.Types.ObjectId(userId)
+        }
+      },
+      {
+        $lookup: {
+          from: "userb2bs",
+          localField: 'userId',
+          foreignField: '_id',
+          as: "userDetails",
+        }
+      },
+      {
+        $unwind: {
+          path: "$userDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { "loginName": { $regex: data, $options: "i" } },
+            { "emailId": { $regex: data, $options: "i" } },
+            { "status": { $regex: data, $options: "i" } },
+            
+          ],
+        }
+      },
+    ]
+    let aggregate = fixdeparturebookings.aggregate(aggregateQuery);
+    const options = {
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 10,
+      sort: { createdAt: -1 },
+    };
+    const result = await fixdeparturebookings.aggregatePaginate(aggregate, options);
+    if (result.docs.length == 0) {
+      return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error=======>>>>>>", error);
+    return next(error);
+  }
 }
 //cancel request if already booking Exit******************************
 // exports.cancelRequest = function

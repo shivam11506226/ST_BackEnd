@@ -1893,10 +1893,9 @@ module.exports = {
     return result.secure_url;
   },
 
-uploadgetSecureUrl: async (base64) => {
-    var result = await cloudinary.v2.uploader.upload(base64);
-    console.log("result=============",result)
-    return result;
+  getImageUrl: async (files) => {
+    var result = await cloudinary.v2.uploader.upload(files[0].path, { resource_type: "auto" })
+    return result.secure_url;
   },
   //===============================================================================================
   //===================== Send Email For Admin ====================================================

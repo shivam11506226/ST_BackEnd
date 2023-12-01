@@ -8,10 +8,12 @@ module.exports = function (app) {
         next();
     });
     // [authJwt.verifcationToken],
-    app.post('/skyTrails/forumPost/createPost', [authJwt.verifcationToken],SchemaValidator(schemas.forumQueSchema), controller.createPost);
+    app.post('/skyTrails/forumPost/createPost', [authJwt.verifcationToken], controller.createPost);
     app.post('/skyTrails/forumPost/addBookmark',controller.addBookmark)
     app.get('/skyTrails/forumPost/getPost', controller.getPost);
     app.put('/skyTrails/forumPost/updatePost', controller.updatePost);
     app.delete('/skyTrails/forumPost/deletePost', controller.deletePost);
     app.get('/skyTrails/forumPost/getTopStories',controller.getTopStories);
-    app.get('/skyTrails/forumPost/getPostByID',controller.getPostByID);}
+    app.get('/skyTrails/forumPost/getPostByID',controller.getPostByID);
+    app.post('/skyTrails/forumPost/createPost1', [authJwt.verifcationToken], controller.createPost1);
+}

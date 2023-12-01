@@ -29,7 +29,7 @@ const { createcancelFlightBookings, findAnd, updatecancelFlightBookings, aggrega
 const { changeRequestServices } = require('../services/changeRequest');
 const { createchangeRequest, findchangeRequest, findchangeRequestData, deletechangeRequest, changeRequestList, updatechangeRequest, paginatechangeRequestSearch, aggregatePaginatechangeRequestList, countTotalchangeRequest } = changeRequestServices;
 const { changeHotelRequestServices } = require('../services/changeHotelRequestServices');
-const { createchangeHotelRequest, findchangeHotelRequest, getchangeHotelRequest, deletechangeHotelRequest, changeHotelRequestList, updatechangeHotelRequest, paginatechangeHotelRequestSearch, aggregatePaginatechangeHotelRequestList, countTotalchangeHotelRequest } = changeHotelRequestServices;
+const { createchangeHotelRequest, findchangeHotelRequest, getchangeHotelRequest, deletechangeHotelRequest, changeHotelRequestList, updatechangeHotelRequest, paginatechangeHotelRequestSearch, aggregatePaginatechangeHotelRequestList, countTotalchangeHotelRequest, } = changeHotelRequestServices;
 const { changeBusRequestServices } = require('../services/changeBusRequest');
 const { createchangeBusRequest, findchangeBusRequest, getchangeBusRequest, deletechangeBusRequest, changeBusRequestList, updatechangeBusRequest, paginatechangeBusRequestSearch, aggregatePaginatechangeBusRequestList, countTotalchangeBusRequest } = changeBusRequestServices;
 
@@ -814,15 +814,6 @@ exports.getAllBusBookingListAgent = async (req, res, next) => {
   }
 }
 
-
-
-
-
-
-
-
-
-
 exports.getCancelUserFlightBooking = async (req, res, next) => {
   try {
 
@@ -845,8 +836,6 @@ exports.getCancelUserFlightBooking = async (req, res, next) => {
   }
 }
 
-
-
 exports.getCancelUserHotelBooking = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate } = req.query;
@@ -862,8 +851,6 @@ exports.getCancelUserHotelBooking = async (req, res, next) => {
   }
 }
 
-
-
 exports.getCancelUserBusBooking = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate } = req.query;
@@ -877,8 +864,6 @@ exports.getCancelUserBusBooking = async (req, res, next) => {
     return next(error);
   }
 }
-
-
 
 //**************GET ALL AGENT Fix Departure BOOKING LIST*************/
 
@@ -938,7 +923,7 @@ exports.getAllFixDepartureBooking = async (req, res, next) => {
 
 
 //get change flight booking details request by agent**********************************
-exports.getchangeFlightRequest = async (req, res, next) => {
+exports.getAgentchangeFlightRequest = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate, toDate } = req.query;
     const result = await aggregatePaginatechangeRequestList(req.query);
@@ -953,7 +938,7 @@ exports.getchangeFlightRequest = async (req, res, next) => {
 }
 
 //get change hotel booking details request by agent**********************************
-exports.getchangeHotelRequest = async (req, res, next) => {
+exports.getAgentchangeHotelRequest = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate, toDate } = req.query;
 
@@ -968,7 +953,7 @@ exports.getchangeHotelRequest = async (req, res, next) => {
   }
 }
 //get change bus booking details request by agent**********************************
-exports.getchangeBusRequest = async (req, res, next) => {
+exports.getAgentchangeBusRequest = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate, toDate } = req.query;
     const result = await aggregatePaginatechangeBusRequestList(req.query);

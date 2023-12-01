@@ -26,12 +26,6 @@ const userSchema = new mongoose.Schema(
     dob:{
       type:String
     },
-    roles: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Role",
-      },
-    ],
     socialId: {
       type: String
     },

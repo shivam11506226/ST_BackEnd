@@ -1,5 +1,5 @@
 const responseMessage = require('../../utilities/responses');
-const statusCode = require('../../utilities/responceCode')
+const statusCode = require('../../utilities/responceCode');
 const status = require("../../enums/status");
 /**********************************SERVICES********************************** */
 const { userServices } = require('../../services/userServices');

@@ -188,7 +188,6 @@ module.exports = {
       .catch((error) => console.error(error));
   },
   sendSMSForOtp: async (mobileNumber, otp) => {
-    console.log("mobileNumber, otp====================", mobileNumber, otp);
     const messageContent = `Use this OTP ${otp} to login to your. theskytrails account`;
     const url = `http://sms.txly.in/vb/apikey.php?`;
     const params = {
@@ -199,9 +198,7 @@ module.exports = {
       message: messageContent,
     };
     try {
-      console.log("url,{params:params==========", url, params);
       const response = await axios.get(url, { params: params });
-      console.log("=====================", response.data);
       return response.data;
     } catch (error) {
       console.error("Error occurred in axios request:", error);

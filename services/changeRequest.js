@@ -88,6 +88,83 @@ const changeRequestServices = {
                 $match: {
                     $or: [
                         { "hotelName": { $regex: data, $options: "i" }, },
+                        { "userDetails.personal_details.first_name": { $regex: data, $options: "i" } },
+                        { "userDetails.personal_details.last_name": { $regex: data, $options: "i" } },
+                        { "userDetails.personal_details.email": { $regex: data, $options: "i" } },
+                        { "flightDetails.paymentStatus": { $regex: data, $options: "i" } },
+                        { "flightDetails.destination": { $regex: data, $options: "i" } },
+                        { "amount": parseInt(data) },
+                        { "room": parseInt(data) },
+                        { "bookingId":parseInt(data) }
+                    ],
+                }
+            },
+        ]
+        if (fromDate && !toDate) {
+            pipeline.CheckInDate = { $eq: fromDate };
+        }
+        if (!fromDate && toDate) {
+            pipeline.CheckOutDate = { $eq: toDate };
+        }
+        if (fromDate && toDate) {
+            pipeline.$and = [
+                { CheckInDate: { $eq: fromDate } },
+                { CheckOutDate: { $eq: toDate } },
+            ]
+        }
+        let aggregate = changeRequestModel.aggregate(pipeline)
+        let options = {
+            page: parseInt(page) || 1,
+            limit: parseInt(limit) || 5,
+            sort: { createdAt: -1 },
+        };
+        return await changeRequestModel.aggregatePaginate(aggregate, options)
+
+    },
+
+    countTotalchangeRequest:async()=>{
+        return await changeRequestModel.countDocuments({bookingStatus:bookingStatus.BOOKED})
+    },
+
+    flightchangeRequestAgentList:async(body)=>{
+        const { page, limit, search, fromDate, toDate } = body;
+        if (search) {
+            var filter = search;
+        }
+        let data = filter || ""
+        let pipeline = [
+            {
+                $lookup: {
+                    from: "userb2bs",
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: "userDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$userDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "flightbookingdatas",
+                    localField: 'flightBookingId',
+                    foreignField: '_id',
+                    as: "flightDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$flightDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { "hotelName": { $regex: data, $options: "i" }, },
                         { "userDetails.username": { $regex: data, $options: "i" } },
                         { "userDetails.email": { $regex: data, $options: "i" } },
                         { "paymentStatus": { $regex: data, $options: "i" } },
@@ -119,11 +196,7 @@ const changeRequestServices = {
         };
         return await changeRequestModel.aggregatePaginate(aggregate, options)
 
-    },
-
-    countTotalchangeRequest:async()=>{
-        return await changeRequestModel.countDocuments({bookingStatus:bookingStatus.BOOKED})
-    },
+    }
 }
 
 module.exports = { changeRequestServices }

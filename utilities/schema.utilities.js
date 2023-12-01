@@ -312,6 +312,12 @@ const schemas = {
     busId: joi.number().required(),
     pnr: joi.string().optional(),
   }),
+
+  updateLocationSchema:joi.object().keys({
+    latitude:joi.string().required(),
+    longitude:joi.string().required()
+  })
+  
 };
 
 module.exports = schemas;

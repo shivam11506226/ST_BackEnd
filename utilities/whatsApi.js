@@ -7,12 +7,8 @@ async function sendWhatsAppMessage( number, msg) {
         const mobileNumbers = number;
         const message = msg;
         const response = await axios.get(`${whatsappAPIUrl}?apikey=${apiKey}&mobile=${mobileNumbers}&msg=${message}`);
-        
-        
-        console.log('WhatsApp API Response:', response.data);
         return response.data;
     } catch (error) {
-        
         console.error('Error in WhatsApp API:', error);
         throw error;
     }

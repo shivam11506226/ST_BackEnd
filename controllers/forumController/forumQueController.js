@@ -2,7 +2,8 @@ const status = require("../../enums/status");
 const schemas = require('../../utilities/schema.utilities');
 const commonFuction = require("../../utilities/commonFunctions")
 const responseMessage = require('../../utilities/responses');
-const statusCode = require('../../utilities/responceCode')
+const statusCode = require('../../utilities/responceCode');
+const base64 = require('nodejs-base64');
 //************************************SERVICES**********************************************************/
 
 const { forumQueServices } = require('../../services/forumQueServices');
@@ -20,7 +21,7 @@ const { createbookmark, findbookmark, deletebookmark, bookmarkList, updatebookma
 
 exports.createPost = async (req, res, next) => {
     try {
-        const {  content, image } = req.body;
+        const {  content, image } = req.file;
         const isUser = await findUser({ _id:req.userId, status: status.ACTIVE });
         console.log(isUser)
         if (!isUser) {
@@ -220,4 +221,40 @@ try {
     console.log("Error to get data from server",error);
     return next(error);
 }
+}
+
+
+exports.createPost1 = async (req, res, next) => {
+    try {
+        const image=req.file;
+        const { content } = req.body;
+        const isUser = await findUser({ _id:req.userId, status: status.ACTIVE });
+        console.log(isUser,"+","====================",req)
+        if (!isUser) {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.USERS_NOT_FOUND });
+        }
+        if (!image) {
+            return res.status(statusCode.badRequest).json({
+                statusCode: statusCode.badRequest,
+                message: 'No file uploaded'
+            });
+        }
+        const base64Image = base64.encode(image);
+        if (uploadedFile) {
+            console.log('Uploading',base64Image)
+           const secureurl = await commonFuction.getSecureUrl(base64Image);
+           req.file.image=secureurl;
+        }
+        const obj = {
+            userId: isUser._id,
+            content: content,
+            image:req.file.image
+        }
+        const result = await createforumQue(obj);
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.POST_CREATED, result: result });
+    } catch (error) {
+        console.log("error========>>>>>>", error);
+        // sendActionFailedResponse(res, {}, error.message);
+        return next(error);
+    }
 }

@@ -37,7 +37,7 @@ const advertisementSchema = new mongoose.Schema({
         enum:[approvalStatus.APPROVED, approvalStatus.PENDING,approvalStatus.REJECT],
         default:approvalStatus.APPROVED,
     }
-})
+},{timestamps:true})
 advertisementSchema.plugin(mongoosePaginate);
 
 advertisementSchema.plugin(aggregatePaginate);

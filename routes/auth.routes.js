@@ -49,5 +49,9 @@ module.exports = function (app) {
   app.get("/skyTrails/api/admin/getchangeHotelRequestAgent",controller.getAgentchangeHotelRequest)
   app.get("/skyTrails/api/admin/getchangeFlightRequestAgent",controller.getAgentchangeFlightRequest);
   app.get("/skyTrails/api/admin/getchangeBusRequestAgent",controller.getAgentchangeBusRequest);
-
+  app.get("/skyTrails/api/admin/getMarkup",controller.getMarkup);
+  app.post("/skytrails/api/admin/createMarkup",SchemaValidator(schemas.markupSchema),controller.createMarkup);
+  app.get('/skyTrails/api/admin/getCancelUserFlightBooking',controller.getCancelUserFlightBooking);
+  app.get('/skyTrails/api/admin/getCancelUserHotelBooking',controller.getCancelUserHotelBooking);
+  app.get('/skyTrails/api/admin/getCancelUserBusBooking',controller.getCancelUserBusBooking);
 };

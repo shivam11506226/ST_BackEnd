@@ -14,7 +14,6 @@ const sendSMS = require("../../utilities/sendSms");
 const commonFunction = require('../../utilities/commonFunctions');
 const whatsappAPIUrl = require("../../utilities/whatsApi")
 //******************************************User SignUp api*************************/
-
 exports.signUp = async (req, res, next) => {
     try {
         const { email, mobileNumber, password } = req.body;
@@ -39,8 +38,6 @@ exports.signUp = async (req, res, next) => {
     }
 
 }
-
-
 exports.login = async (req, res, next) => {
     try {
         const { mobileNumber } = req.body;
@@ -57,8 +54,8 @@ exports.login = async (req, res, next) => {
         if (!isExist) {
             const result1 = await createUser(obj);
             await sendSMS.sendSMSForOtp(mobileNumber, otp);
-            const message = `Use this OTP ${otp} to login to your. theskytrails account`
-            await whatsappAPIUrl.sendWhatsAppMessage(mobileNumber, message)
+            const message = `Use this OTP ${otp} to login to your. theskytrails account`;
+            await whatsappAPIUrl.sendWhatsAppMessage(mobileNumber, message);
             token = await commonFunction.getToken({ _id: result1._id, mobile_number: result1.mobile_number });
             const result = {
                 firstTime: result1.firstTime,
@@ -96,9 +93,6 @@ exports.login = async (req, res, next) => {
         return next(error)
     }
 }
-
-
-
 exports.verifyUserOtp = async (req, res, next) => {
     try {
         const { otp, fullName, dob } = req.body;
@@ -106,7 +100,7 @@ exports.verifyUserOtp = async (req, res, next) => {
         if (!isUserExist) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
         }
-        console.log("isUserExist.otp !== otp",isUserExist.otp !== otp)
+        console.log("isUserExist.otp !== otp", isUserExist.otp !== otp)
         if (isUserExist.otp !== otp) {
             return res.status(statusCode.badRequest).json({ statusCode: statusCode.badRequest, message: responseMessage.INCORRECT_OTP });
         }
@@ -149,8 +143,6 @@ exports.verifyUserOtp = async (req, res, next) => {
         return next(error);
     }
 }
-
-
 exports.resendOtp = async (req, res, next) => {
     try {
         const { mobileNumber } = req.body;
@@ -184,7 +176,6 @@ exports.resendOtp = async (req, res, next) => {
         return next(error);
     }
 }
-
 exports.uploadImage = async (req, res, next) => {
     try {
         const { profilePic } = req;
@@ -203,8 +194,6 @@ exports.uploadImage = async (req, res, next) => {
         return next(error);
     }
 }
-
-
 exports.getUserProfile = async (req, res, next) => {
     try {
         const isUserExist = await findUserData({ _id: req.userId, status: status.ACTIVE });
@@ -217,8 +206,6 @@ exports.getUserProfile = async (req, res, next) => {
         return next(error);
     }
 }
-
-
 exports.updateLocation = async (req, res, next) => {
     try {
         const { latitude, longitude } = req.body;
@@ -241,7 +228,6 @@ exports.updateLocation = async (req, res, next) => {
         return next(error);
     }
 }
-
 exports.forgetPassword = async (req, res, next) => {
     try {
         const { phoneNumber } = req.body;
@@ -251,17 +237,16 @@ exports.forgetPassword = async (req, res, next) => {
         }
         const otp = commonFunction.getOTP();
         const otpExpireTime = new Date().getTime() + 300000;
-        const updateUser=await updateUser({_id:isUserExist._id},{ $set: { otp: otp, otpExpireTime: otpExpireTime } })
+        const updateUser = await updateUser({ _id: isUserExist._id }, { $set: { otp: otp, otpExpireTime: otpExpireTime } })
         await sendSMS.sendSMSForOtp(mobileNumber, otp);
         const message = `Use this OTP ${otp} to login to your. theskytrails account`
         await whatsappAPIUrl.sendWhatsAppMessage(mobileNumber, message);
         await commonFunction.sendEmailOtp(userResult.email, otp);
-        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.OTP_SEND})
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.OTP_SEND })
     } catch (error) {
         console.log("Forget Password", error)
     }
 }
-
 // exports.changePassword = async(req, res, next) => {
 //     try {
 //         const {oldPassword,newPassword,confrmPass}=req.body;
@@ -271,8 +256,116 @@ exports.forgetPassword = async (req, res, next) => {
 //         }
 //         const newPass=bcrypt.compareSync(oldPassword,isUserExist)
 //     } catch (error) {
-        
+
 //     }
 // }
-
+// exports.createUserId = async (req, res, next) => {
+//     try {
+//         const { socialId, phoneNumber } = req.body;
+//         const isUserExist = await findUser({ 'phone.mobile_number': phoneNumber, status: status.ACTIVE });
+//         if (!isUserExist) {
+//             const otp = commonFunction.getOTP();
+//             const otpExpireTime = new Date().getTime() + 300000;
+//             const obj = {
+//                 phone: {
+//                     mobile_number: mobileNumber
+//                 },
+//                 socialId: socialId,
+//                 otp: otp,
+//                 otpExpireTime: otpExpireTime
+//             }
+//             const data = await createUser(obj);
+//             await sendSMS.sendSMSForOtp(mobileNumber, otp);
+//             const message = `Use this OTP ${otp} to login to your. theskytrails account`;
+//             await whatsappAPIUrl.sendWhatsAppMessage(mobileNumber, message);
+//             token = await commonFunction.getToken({ _id: data._id, mobile_number: data.mobile_number });
+//             const result = {
+//                 firstTime: data.firstTime,
+//                 _id: data._id,
+//                 phone: data.phone,
+//                 userType: data.userType,
+//                 otpVerified: data.otpVerified,
+//                 status: data.status,
+//                 socialId: data.socialId,
+//                 otp: otp,
+//                 token: token
+//             }
+//             return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.LOGIN_SUCCESS, result: result });
+//         }
+        
+//         const updatedUser = await updateUser({ _id: isUserExist._id }, { socialId: socialId, 'phone.mobile_number': mobileNumber, });
+//         if (!updatedUser) {
+//             return res.status(statusCode.InternalError).json({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
+//         }
+//         await sendSMS.sendSMSForOtp(mobileNumber, otp);
+//         const message = `Use this OTP ${otp} to login to your. theskytrails account`;
+//         await whatsappAPIUrl.sendWhatsAppMessage(mobileNumber, message);
+//         const token = await commonFunction.getToken({ _id: updatedUser._id, 'mobile_number': updatedUser.phone.mobile_number, socialId: socialId });
+//         const result = {
+//             firstTime: updatedUser.firstTime,
+//             _id: updatedUser._id,
+//             phone: updatedUser.phone,
+//             socialId: socialId,
+//             userType: updatedUser.userType,
+//             otpVerified: updatedUser.otpVerified,
+//             otp: otp,
+//             status: updatedUser.status,
+//             token: token
+//         }
+//         return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.LOGIN_SUCCESS, result: result });
+//     } catch (error) {
+//         console.log("Error creating", error);
+//         return next(error);
+//     }
+// }
+exports.verifyUserOtpWithSocialId = async (req, res, next) => {
+    try {
+        const { otp, fullName, dob,socialId } = req.body;
+        const isUserExist = await findUserData({ _id: req.userId });
+        if (!isUserExist) {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+        }
+        console.log("isUserExist.otp !== otp", isUserExist.otp !== otp)
+        if (isUserExist.otp !== otp) {
+            return res.status(statusCode.badRequest).json({ statusCode: statusCode.badRequest, message: responseMessage.INCORRECT_OTP });
+        }
+        if (new Date().getTime() > isUserExist.otpExpireTime) {
+            return res.status(statusCode.badRequest).json({ statusCode: statusCode.badRequest, message: responseMessage.OTP_EXPIRED });
+        };
+        const updation = await updateUser({ _id: isUserExist._id, status: status.ACTIVE }, { otpVerified: true });
+        console.log("======================", updation);
+        if (updation.firstTime === false) {
+            const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number });
+            const result = {
+                firstTime: updation.firstTime,
+                _id: updation._id,
+                phone: updation.phone,
+                userType: updation.userType,
+                otpVerified: updation.otpVerified,
+                status: updation.status,
+                token: token
+            }
+            return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.OTP_VERIFY, result: result });
+        }
+        if (!fullName || !dob || !socialId) {
+            return res.status(statusCode.Forbidden).send({ statusCode: statusCode.Forbidden, message: responseMessage.FIELD_REQUIRED });
+        }
+        const updateData = await updateUser({ _id: updation._id }, { username: fullName, dob: dob, socialId:socialId,otp: "", firstTime: false });
+        const token = await commonFunction.getToken({ _id: updation._id, 'mobile_number': updation.phone.mobile_number, username: fullName });
+        const result = {
+            phoneNumber: updateData.phone,
+            _id: updateData._id,
+            firstTime: updation.firstTime,
+            dob: updateData.dob,
+            token: token,
+            status: updateData.status,
+            otpVerified: updateData.otpVerified,
+            userType: updateData.userType,
+        }
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.REGISTER_SUCCESS, result: result });
+    } catch (error) {
+        console.log("Error==============>", error);
+        return next(error);
+    }
+}
 

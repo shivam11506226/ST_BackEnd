@@ -80,6 +80,9 @@ const forumQueServices={
    
       const pipeline = [
         {
+          $match: { "image": { $exists: true, $ne: null } },
+        },
+        {
           $lookup: {
             from: "users",
             localField: "userId",

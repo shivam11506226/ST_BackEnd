@@ -105,16 +105,6 @@ exports.searchOneWay = async (req, res) => {
 
     const response = await axios.post(`${api.flightSearchURL}`, data);
     msg = "Flight Searched Successfully!";
-    const dat = response.data.Response.Results[0];
-    // console.log("'date============================='",dat)
-    console.log("================Data: ", response.data.Response.Results[0].length);
-    // for(var i=0; i<=response.data.Response.Results[0].length; i++) {
-    //   const result=await addImageToResults(dat);
-    //   console.log("============FUNCTIONED DATA++++++++++++",result)
-    //   results=result;
-    // }
-    const results=await addImageToResults(dat);
-    // console.log("==========================aaaaaaaaaaaaaaaaaaaaa",results );
     actionCompleteResponse(res, response.data, msg);
   } catch (err) {
     console.log(err);

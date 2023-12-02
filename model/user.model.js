@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     username: { type: String },
     email: { type: String },
     password: { type: String },
+    roles:[{type:mongoose.Types.ObjectId,ref:'roles'}],
     phone: {
       country_code: {
         type: String,
@@ -128,11 +129,12 @@ User.find({ userType: userType.ADMIN }, async (err, result) => {
       userType: userType.ADMIN,
       username: "shivam@123", // Use "username" instead of "userName" if that's your schema field
       email: "shivam@gmail.com",
+      roles:["639c3761a9d14355e0713f37"],
       phone: {
         country_code: "+91",
         mobile_number: "8115199076",
       },
-      password: bcrypt.hashSync("theskytrails@1", 10),
+      password: bcrypt.hashSync("asdf1234", 10),
       Address: "New Delhi, India", // Use "Address" instead of "address" if that's your schema field
       isOnline: false,
       approveStatus: approveStatus.APPROVED, // Set approveStatus as needed

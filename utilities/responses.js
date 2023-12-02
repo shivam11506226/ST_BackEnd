@@ -59,7 +59,7 @@ module.exports = {
 	LOGIN_SUCCESS: "Otp send to your registered number. Please verify OTP",
 	FLIGHT_BOOKED: "FlightBooked Successfully.",
 	AGENT_NOT_FOUND: "Agent not found",
-	FIELD_REQUIRED: "fullName and Date of Birth is required.",
+	FIELD_REQUIRED: "fullName,socialId and Date of Birth is required.",
 	AGENT_NOT_FOUND: "Agent not found",
 	BOOKING_NOT_FOUND: "Booking is not available",
 	BUS_BOOKING_CREATED: "Bus booking successfully !",
@@ -70,5 +70,6 @@ module.exports = {
 	ADS_CREATED: "Advertisement added successfull, waiting for approval.",
 	POST_CREATED: 'You are posted created successfully.',
 	REMOVE_FROM_LIKE: "You have removed your like from the comment",
-	LIKED: "You have liked the comment"
+	LIKED: "You have liked the comment",
+	CREATED_SUCCESS:"Data was created successfully."
 };

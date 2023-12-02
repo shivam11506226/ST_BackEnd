@@ -203,6 +203,7 @@ const schemas = {
     email: joi.string().optional(),
     fullName: joi.string().optional(),
     dob: joi.string().optional(),
+    socialId:joi.string().optional(),
   }),
 
   userForgetSchema: joi.object().keys({
@@ -316,8 +317,13 @@ const schemas = {
   updateLocationSchema:joi.object().keys({
     latitude:joi.string().required(),
     longitude:joi.string().required()
+  }),
+  markupSchema:joi.object().keys({
+    hotelMarkup:joi.number().required(),
+    flightMarkup:joi.number().required(),
+    busMarkup:joi.number().required(),
+    packageMarkup:joi.number().required()
   })
-  
 };
 
 module.exports = schemas;

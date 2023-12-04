@@ -23,7 +23,7 @@ const { createWeeklyVisa, findWeeklyVisa, deleteWeeklyVisa, weeklyVisaList, upda
 const { brbuserServices } = require('../services/btobagentServices');
 const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser, deletebrbuser, brbuserList, paginatebrbuserSearch, countTotalbrbUser } = brbuserServices;
 const { userflightBookingServices } = require('../services/btocServices/flightBookingServices');
-const { aggregatePaginateGetBooking1 } = userflightBookingServices;
+const { aggregatePaginateGetBooking,aggregatePaginateGetBooking1 } = userflightBookingServices;
 const { cancelUserBookingServices } = require("../services/btocServices/cancelBookingServices");
 const { createcancelFlightBookings, findAnd, updatecancelFlightBookings, aggregatePaginatecancelFlightBookingsList, countTotalcancelFlightBookings, createHotelCancelRequest, updateHotelCancelRequest, getHotelCancelRequesrByAggregate, countTotalHotelCancelled, createBusCancelRequest, updateBusCancelRequest, getBusCancelRequestByAggregate, countTotalBusCancelled } = cancelUserBookingServices;
 const { changeRequestServices } = require('../services/changeRequest');
@@ -415,6 +415,7 @@ exports.getAllFlightBookingList = async (req, res, next) => {
             { "UserDetails.email": { $regex: data, $options: "i" } },
             { "paymentStatus": { $regex: data, $options: "i" } },
             { "pnr": parseInt(data) },
+            { "bookingId": parseInt(data) },
           ],
         }
       },
@@ -782,15 +783,15 @@ exports.getAllBusBookingListAgent = async (req, res, next) => {
 exports.getCancelUserFlightBooking = async (req, res, next) => {
   try {
 
-    const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE, userType: userType.USER });
-    // console.log("isAgentExists", isAgentExists);
-    if (!isUserExist) {
-      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
-    }
-    var userId = isUserExist._id;
+    // const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE, userType: userType.USER });
+    // // console.log("isAgentExists", isAgentExists);
+    // if (!isUserExist) {
+    //   return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+    // }
+    // var userId = isUserExist._id;
     const { page, limit, search, fromDate } = req.query;
-    const query = { page, limit, search, fromDate, userId };
-    const result = await aggregatePaginateGetBooking(query);
+    const query = { page, limit, search, fromDate, };
+    const result = await aggregatePaginateGetBooking1(req.query);
     if (!result) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
     }

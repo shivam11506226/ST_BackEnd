@@ -1,7 +1,7 @@
 const { verifySignUp } = require("../middleware");
 const controller = require("../controllers/auth.controller");
 const agentChangeReqController=require("../controllers/b2bauth.controller")
-const subAdminController=require("../controllers/subAdmin")
+const subAdminController=require("../controllers/subAdminController")
 const { authJwt } = require("../middleware");
 const SchemaValidator = require("../utilities/validations.utilities");
 const schemas = require('../utilities/schema.utilities');
@@ -54,4 +54,5 @@ module.exports = function (app) {
   app.get('/skyTrails/api/admin/getCancelUserFlightBooking',controller.getCancelUserFlightBooking);
   app.get('/skyTrails/api/admin/getCancelUserHotelBooking',controller.getCancelUserHotelBooking);
   app.get('/skyTrails/api/admin/getCancelUserBusBooking',controller.getCancelUserBusBooking);
+  
 };

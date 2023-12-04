@@ -825,174 +825,529 @@ module.exports = {
     
   },
 
-  // FlightBookingConfirmationMail: async (to) => {
+
     
-  //   const name=`${to?.passengerDetails[0]?.firstName} ${to?.passengerDetails[0]?.lastName}`
-  //   const pdfDoc = await PDFDocument.create();
-  //   const page = pdfDoc.addPage([600, 400]);
-  //   const content = `
-  //     First Name: ${to.passengerDetails[0].firstName}
-  //     Last Name: ${to.passengerDetails[0].lastName}
-  //     Gender: ${to.passengerDetails[0].gender}
-  //     Phone: ${to.passengerDetails[0].ContactNo}
-  //     Date of Birth: ${to.passengerDetails[0].DateOfBirth}
-  //     Email: ${to.passengerDetails[0].email}
-  //     Address: ${to.passengerDetails[0].addressLine1}
-  //     City: ${to.passengerDetails[0].city}
-  //     PNR: ${to.pnr}
-  //   `;
   
-  //   page.drawText(content, {
-  //     x: 50,
-  //     y: 350,
-  //     size: 12,
-  //     color: rgb(0, 0, 0),
-  //   });
   
-  //   // Serialize the PDF to bytes
-  //   const pdfBytes = await pdfDoc.save();
   
-  //   // Write the PDF to a temporary file
-  //   const pdfFilePath = 'temp_api_data.pdf';
-  //   fs.writeFileSync(pdfFilePath, pdfBytes);
   
-  //   const transporter = nodemailer.createTransport({
-  //     host: 'smtp.gmail.com',
-  //     port: 587,
-  //     secure: false,
-  //     auth: {
-  //       user: nodemailerConfig.options.auth.user,
-  //       pass: nodemailerConfig.options.auth.pass,
-  //     },
-  //   });
-  
-  //   const passengerEmail = to.passengerDetails[0].email;
-  
-  //   const mailOptions = {
-  //     from: nodemailerConfig.options.auth.user,
-  //     to: passengerEmail,
-  //     subject: 'Flight Booking Confirmation Mail',
-  //     html: getHtmlContent(name),
-  //     attachments: [{ filename: 'api_data.pdf', path: pdfFilePath }],
-  //   };
-  
-  //   try {
-  //     // Verify the connection
-  //     await transporter.verify();
-  
-  //     // Send the email
-  //     const info = await transporter.sendMail(mailOptions);
-  //     console.log('Email sent: ' + info.response);
-  
-  //     // Clean up the temporary PDF file
-  //     fs.unlinkSync(pdfFilePath);
-  
-  //     return info;
-  //   } catch (error) {
-  //     console.error('Email sending failed:', error);
-  //     throw error;
-  //   }
-  
-  //   // let html = `<!DOCTYPE html>
-  //   //     <html lang="en">
-        
-  //   //     <head>
-  //   //         <title>FlightApplyConfirmationMail</title>
-  //   //     </head>
-  //   //     <body>
-  //   //         <div class="card" style=" box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  //   //             transition: 0.3s;
-  //   //             width: 100%; margin: auto; min-height:15em;margin-top: 25px;">
-  //   //             <div class="main" style="background-image: url('');">
-  //   //                 <div class="main-container" style="text-align: center;">
-  //   //                     <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
-  //   //                     <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
-  //   //                         style="width: 30%;" alt="logo">
-        
-  //   //                     <div style="width: 90%;margin: auto; text-align: left;">
-  //   //                         <br><br>
-  //   //                         <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear ${name},
-  //   //                             Your Flight Booking successfully from skyTrails.
-  //   //                     </div>
-  //   //                 </div>
-        
-  //   //             </div>
-  //   //         </div>
-        
-  //   //     </body>
-  //   //     </html>`;
-  //   // var transporter = nodemailer.createTransport({
-  //   //   host: "smtp.gmail.com",
-  //   //   port: 587,
-  //   //   secure: false,
-  //   //   auth: {
-  //   //     user: nodemailerConfig.options.auth.user,
-  //   //     pass: nodemailerConfig.options.auth.pass,
-  //   //   },
-  //   // });
-  //   // const passengerEmail = to.passengerDetails[0].email;
-  //   // var mailOptions = {
-  //   //   from: nodemailerConfig.options.auth.user,
-  //   //   to: passengerEmail,
-  //   //   subject: "Flight Booking Confirmation Mail",
-  //   //   html: html,
-  //   //   attachments: [{ filename: "api_data.pdf", path: pdfFilePath }],
-  //   // };
-  //   // try {
-  //   //   // Verify the connection
-  //   //   transporter.verify(function (error, success) {
-  //   //     if (error) {
-  //   //       console.log("SMTP Connection Error: " + error);
-  //   //     } else {
-  //   //       console.log("SMTP Connection Success: " + success);
-  //   //     }
-  //   //   });
 
-  //   //   // Send the email
-  //   //   const info = await transporter.sendMail(mailOptions);
-  //   //   console.log("Email sent: " + info.response);
-  //   //   return info;
-  //   // } catch (error) {
-  //   //   console.error("Email sending failed:", error);
-  //   //   throw error;
-  //   // }
-  // },
-
-   //==========================================================
+  //==========================================================
   //========== Send Email Bus Booking Confirmation Mail with pdf=======
   //==========================================================
 
-  BusBookingConfirmationMail: async (to, pdfFilePath) => {
-    let html = `<!DOCTYPE html>S
-        <html lang="en">
-        
-        <head>
-            <title>BusBookingConfirmationMail</title>
-        </head>
-        <body>
-            <div class="card" style=" box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-                transition: 0.3s;
-                width: 100%; margin: auto; min-height:15em;margin-top: 25px;">
-                <div class="main" style="background-image: url('');">
-                    <div class="main-container" style="text-align: center;">
-                        <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
-                        <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
-                            style="width: 30%;" alt="logo">
-        
-                        <div style="width: 90%;margin: auto; text-align: left;">
-                            <br><br>
-                            <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear ${to.name},
-                                Your Bus Booking successfully from skyTrails.
-                        </div>
-                    </div>
-        
+
+
+
+  BusBookingConfirmationMail: async (to) => {
+
+    const currentDate = new Date();
+    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+    const formattedDate = currentDate.toLocaleDateString('en-US', options);
+    
+  // console.log("to================>>>>>>>",to)
+      const name = to.name;
+      // Define your HTML content with nested elements
+      const htmlContent = `<!DOCTYPE html>
+      <html lang="en">
+      
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Roboto:wght@400;500;700;900&display=swap"
+          rel="stylesheet">
+        <style>
+          p {
+            margin: 0 4px 0 0;
+          }  
+        </style>
+        <title></title>
+      </head>
+      
+      
+      
+      
+      <body style="margin: 0; padding: 0; font-size: 16px; font-family: Arial, sans-serif; line-height: 1.6;">
+      
+        <div
+          class="print" style=" background:#fff; overflow:hidden; padding: 10px; max-width: 800px; border:1px solid #D6D8E7;font-size:12px; font-family:arial, sans-serif; margin:10px auto;">
+          <div>
+            <div  style="justify-content: space-between; align-items: flex-start; display: flex; margin-top: 24px;">
+              <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo"
+                style="width: 25%; margin-top: -10px;" />
+              <div style="color: black; font-size: 24px; font-family: Montserrat; font-weight: 600; word-wrap: break-word;">
+                Bus - Ticket
+              </div>
+              <div style="flex-direction: column; justify-content: center; align-items: center; gap: 8px; display: flex;">
+                <div style="justify-content: center; align-items: center; gap: 4px; display: flex;">
+                  <div
+                    style="color: #868686; font-size: 12px; font-family: Montserrat; font-weight: 500; word-wrap: break-word;">
+                    Booking Id:
+                  </div>
+                  <div
+                    style="color: #071c2c; font-size: 12px; font-family: Montserrat; font-weight: 500; word-wrap: break-word;">
+                    ${to.pnr}
+                  </div>
                 </div>
+                <div style="justify-content: center; align-items: center; gap: 4px; display: flex;">
+                  <div
+                    style="color: #868686; font-size: 12px; font-family: Montserrat; font-weight: 500; word-wrap: break-word;">
+                    PNR:
+                  </div>
+                  <div
+                    style="color: #071c2c; font-size: 12px; font-family: Montserrat; font-weight: 500; word-wrap: break-word;">
+                    ${to.pnr}
+                  </div>
+                </div>
+                <div style="justify-content: center; align-items: center; gap: 4px; display: flex;">
+                  <div
+                    style="color: #868686; font-size: 12px; font-family: Montserrat; font-weight: 500; word-wrap: break-word;">
+                    (Booked on ${formattedDate})
+                  </div>
+                </div>
+              </div>
             </div>
+            <div style="margin-top: 15px;">
+              <b>Ticket Reservation</b> Please take a print of this ticket. A copy of the ticket has to be produced at the
+              time of boarding. Please be present atleast 15 mins prior to time of departure at the boarding point
+            </div>
+            <div style="width: 100%; margin-top: 20px; border: 1px solid #D6D8E7;">
+              <div
+                style="width:100%; display: flex; background: #004684; font-weight: bold; padding: 5px;padding-right: 0; color: #fff; overflow: hidden;">
+                <p style="width: 40%;">
+                  Passenger Name
+                </p>
+                <p style="width: 20%; text-align: center;">
+                  Ticket Number
+                </p>
+                <p style="width: 20%;text-align: center;">
+                  Seat Number
+                </p>
+                <p style="width: 20%; text-align: center;">
+                  Price
+                </p>
+              </div>
+      
+              <div style="width:100%; display: flex; padding: 5px 0 0 5px; overflow: hidden;">
+                <p style="width: 40%">
+                  Mr Md Raufur Rahman
+                </p>
+                <p style="width: 20%; text-align: center;">
+                  MCTVRI
+                </p>
+                <p style="width: 20%; text-align: center;">
+                  2
+                </p>
+                <p style="width: 20%; text-align: center;">
+                  Rs. 105
+                </p>
+              </div>
+      
+      
+      
+      
+      
+      
+      
+      
+            </div>
+      
+            <!-- Bus Detail start -->
+            <div style="width: 100%; float: left; margin-top: 15px; border: 1px solid #D6D8E7;">
+      
+              <div
+                style="width: 100%; background: #004684; float: left; font-weight: bold; padding: 5px;padding-right: 0px; border-bottom: 1px solid #D6D8E7; color: #fff;">
+                <div style="width: 100%; float: left; margin-right: 0;">
+                  Bus Details
+                </div>
+              </div>
+      
+              <div style="width: 100%; display: flex; justify-content: flex-start; gap: 35%; padding: 5px 0 1px 5px;">
+                <div style="display: flex; gap: 10px;">
+                  <div>
+                    <p>
+                      <strong>From:</strong>
+                    </p>
+                    <p>
+                      <strong>Travels:</strong>
+                    </p>
+                    <p>
+                      <strong>Journey Date:</strong>
+                    </p>
+                    <p>
+                      <strong>PNR:</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      ${to.origin}
+                    </p>
+                    <p>
+                      TESTING ACCOUNT
+                    </p>
+      
+                    <p>
+                      ${to.dateOfJourney}
+                    </p>
+                    <p>
+                      ${to.pnr}
+                    </p>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                  <div>
+                    <p>
+                      <strong>To:</strong>
+                    </p>
+                    <p>
+                      <strong>Bus Type:</strong>
+                    </p>
+      
+                    <p>
+                      <strong>Dep time:</strong>
+                    </p>
+                    <p>
+                      <strong>Price:</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      ${to.destination}
+                    </p>
+                    <p>
+                      ${to.busType}
+                    </p>
+      
+                    <p>
+                      10:00 AM
+                    </p>
+                    <p>
+                      ${to.amount.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+      
+            </div>
+      
+            <!-- Bus Detail end -->
+      
+      
+            <!-- Boarding Detail -->
+      
+      
+            <div style="width: 100%; float: left; margin-top: 15px; border: 1px solid #D6D8E7;">
+      
+              <div
+                style="width: 100%; background: #004684; display: flex; font-weight: bold; padding: 5px;padding-right: 0px; border-bottom: 1px solid #D6D8E7; color: #fff;">
+                <div style="width: 50%;  margin-right: 0;">
+                  Boarding Address
+                </div>
+                <div style="width: 50%; margin-right: 0;">
+                  RedBus Support No: 080-30916657
+                </div>
+              </div>
+      
+              <div style="width: 100%; display: flex; justify-content: flex-start; gap: 20%; padding: 5px 0 0px 5px;">
+                <div style="display: flex; gap: 10px;">
+                  <div>
+                    <p>
+                      <strong>Location:</strong>
+                    </p>
+                    <p>
+                      <strong>Landmark:</strong>
+                    </p>
+                    <p>
+                      <strong>Address:</strong>
+                    </p>
+                    <p>
+                      <strong>Boarding time:</strong>
+                    </p>
+                    <p>
+                      <strong>Contact number:</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      APSRTC M G Bus Station
+                    </p>
+                    <p>
+                      APSRTC M G Bus Station
+                    </p>
+      
+                    <p>
+                      Testingg
+                    </p>
+                    <p>
+                      30 November 2023 10:00 AM
+                    </p>
+                    <p>
+                      1234567890
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    RedBus Help Line Numbers
+                  </div>
+                  <div style="display: flex; gap: 10px;">
+                    <div>
+                      <p>
+                        <strong>Ahmedabad</strong>
+                      </p>
+                      <p>
+                        <strong>Bangalore</strong>
+                      </p>
+                      <p>
+                        <strong>Chennai</strong>
+                      </p>
+                      <p>
+                        <strong>Delhi</strong>
+                      </p>
+                      <p>
+                        <strong>Hyderabad</strong>
+                      </p>
+                      <p>
+                        <strong>Mumbai</strong>
+                      </p>
+                      <p>
+                        <strong>Pune</strong>
+                      </p>
+                    </div>
+                    <div>
+                      <p>
+                        :
+                      </p>
+                      <p>
+                        :
+                      </p>
+      
+                      <p>
+                        :
+                      </p>
+                      <p>
+                        :
+                      </p>
+                      <p>
+                        :
+                      </p>
+                      <p>
+                        :
+                      </p>
+                      <p>
+                        :
+                      </p>
+                    </div>
+                    <div>
+                      <p>
+                        079-39412345
+                      </p>
+                      <p>
+                        080-39412345
+                      </p>
+      
+                      <p>
+                        044-39412345
+                      </p>
+                      <p>
+                        011-39412345
+                      </p>
+                      <p>
+                        040-39412345
+                      </p>
+                      <p>
+                        022-39412345
+                      </p>
+                      <p>
+                        020-39412345
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      
+            </div>
+      
+      
+            <!-- End Boarding Detail -->
+      
+            <!-- Cancellation Details -->
+      
+      
+            <div style="width: 100%; float: left; margin-top: 15px; border: 1px solid #D6D8E7;">
+      
+              <div
+                style="width: 100%; background: #004684; float: left; font-weight: bold; padding: 5px;padding-right: 0px; border-bottom: 1px solid #D6D8E7; color: #fff;">
+                <div style="width: 100%; float: left; margin-right: 0;">
+                  Cancellation Details
+                </div>
+              </div>
+      
+              <div style="width: 100%; display: flex; justify-content: flex-start; gap: 35%; padding: 5px 0 0px 5px;">
+      
+                <div>
+                  <p>
+                    <strong>Cancellation time</strong>
+                  </p>
+                  <p>
+                    If cancelled before 29 hours of departure time
+                  </p>
+                  <p>
+                    If cancelled before 17 - 29 hours of departure time
+                  </p>
+                  <p>
+                    If cancelled within 17 hours of departure time
+                  </p>
+                </div>
+      
+      
+                <div>
+                  <p>
+                    <strong>Cancellation charges</strong>
+                  </p>
+                  <p>
+                    10.00%
+                  </p>
+      
+                  <p>
+                    50.00%
+                  </p>
+                  <p>
+                    100.00%
+                  </p>
+                </div>
+      
+              </div>
+            </div>
+          </div>
+      
+      
+          <!-- End Cancellation Details -->
+      
+          <!-- Booking Details -->
+          <div>
+            <div style="
+                        margin-bottom: 0;                
+                        background: white;
+                        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                        border-radius: 12px;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 12px;
+                        display: flex;
+                        width: 100%;
+                      ">
+              <div style="
+                          color: #e73c33;
+                          font-size: 20px;
+                          font-family: Montserrat;
+                          font-weight: 700;
+                          word-wrap: break-word;
+                        ">
+                The Skytrails Support
+              </div>
+              <div style="
+                          width: 80%;
+                          height: 48px;
+                          justify-content: center;
+                          align-items: center;
+                          gap: 40px;
+                          display: inline-flex;
+                        ">
+                <div style="
+                            padding: 4px;
+                            background-color: #b3b8bd;
+                            border-radius: 12px;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 10px;
+                            display: flex;
+                          ">
+                  <p style="
+                              color: #e73c33;
+                              font-size: 20px;
+                              font-family: Montserrat;
+                              font-weight: 700;
+                              word-wrap: break-word;
+                              margin: 0;
+                            ">
+                    +91 8917972301
+                  </p>
+                </div>
+                <div style="
+                            justify-content: flex-start;
+                            align-items: flex-start;
+                            gap: 8px;
+                            display: flex;
+                          ">
+                  <div style="width: 20px; height: 20px; position: relative">
+                    <div style="
+                                width: 20px;
+                                height: 20px;
+                                left: 0px;
+                                top: 0px;
+                                position: absolute;
+                                background: #21325d;
+                              "></div>
+                    <div style="
+                                width: 16.67px;
+                                height: 13.33px;
+                                left: 1.67px;
+                                top: 3.33px;
+                                position: absolute;
+                                background: #e73c33;
+                              "></div>
+                  </div>
+                  <div style="
+                              color: #e73c33;
+                              font-size: 16px;
+                              font-family: Montserrat;
+                              font-weight: 600;
+                              word-wrap: break-word;
+                            ">
+                    support@theskytrails.com
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div id="RoamerBanner" style="float: left; width: 100%; margin:0px; padding:0px;">
+            <img src="https://tbolite.tektravels.com/Images/roamer_banner.jpg" alt=" Roamer Banner" style="width: 100%;
+              margin-top: 15px;
+              border-radius: 15px;">
+          </div> -->
+        </div>
+      </body>
+      
+      </html>`;
+
+      // Create a new PDF document
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+
+      // Save the PDF to a temporary file
+      await page.setContent(htmlContent);
+  
+      const pdfFilePath = 'Bus_Booking.pdf';
+      
+     const pdfBytes= await page.pdf({ path: pdfFilePath, format: 'A4' });
+      await browser.close();
+      // const pdfBytes= await pdf.saveAs(pdfFilePath);
+
+      console.log("PDF generation complete.");
         
-        </body>
-        </html>`;
-    var transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
+    fs.writeFileSync(pdfFilePath, pdfBytes);
+
+      
+
+    
+ 
+
+  
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
       port: 587,
       secure: false,
       auth: {
@@ -1000,32 +1355,34 @@ module.exports = {
         pass: nodemailerConfig.options.auth.pass,
       },
     });
-    const email = to.email;
-    var mailOptions = {
+  
+    const passengerEmail = to.email;
+  console.log("=================",passengerEmail)
+    const mailOptions = {
       from: nodemailerConfig.options.auth.user,
-      to: email,
-      subject: "Bus Booking Confirmation Mail",
-      html: html,
-      attachments: [{ filename: "bus_booking.pdf", path: pdfFilePath }],
+      to: passengerEmail,
+      subject: 'Flight Booking Confirmation Mail',
+      html: getHtmlContent(name),
+      attachments: [{ filename: 'Bus_Booking.pdf', path: pdfFilePath }],
     };
+  
     try {
       // Verify the connection
-      transporter.verify(function (error, success) {
-        if (error) {
-          console.log("SMTP Connection Error: " + error);
-        } else {
-          console.log("SMTP Connection Success: " + success);
-        }
-      });
-
+      await transporter.verify();
+  
       // Send the email
       const info = await transporter.sendMail(mailOptions);
-      console.log("Email sent: " + info.response);
+      console.log('Email sent: ' + info.response);
+  
+      // Clean up the temporary PDF file
+      fs.unlinkSync(pdfFilePath);
+  
       return info;
     } catch (error) {
-      console.error("Email sending failed:", error);
+      console.error('Email sending failed:', error);
       throw error;
     }
+   
   },
 
   
@@ -1070,15 +1427,7 @@ module.exports = {
   }
   
 
- 
-
-
-
-// console.log("Number of nights:", noOfNights);
-// console.log(formattedDate);
-
-
-    let htmlContent = `<!DOCTYPE html>
+     let htmlContent = `<!DOCTYPE html>
     <html lang="en">
       <head>
         <meta charset="UTF-8" />

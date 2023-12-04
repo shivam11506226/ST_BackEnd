@@ -32,44 +32,10 @@ exports.addBusBookingData = async (req, res) => {
 
     const msg = "Bus booking details added successfully";
     if(response.bookingStatus === "BOOKED"){
-
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([600, 400]);
-      
-      const content=`      
-      name:${response.name},
-      phone:${response.phone},
-      email:${response.email},
-      address:${response.address},
-      destination":${response.destination},
-      origin:${response.origin},
-      dateOfJourney:${response.dateOfJourney},
-      busType:${response.busType},
-      pnr:${response.pnr},
-      busId:${response.busId},
-      noOfSeats:${response.noOfSeats},
-      amount:${response.amount},
-      bookingStatus:${response.bookingStatus}
-      `;
-
-      page.drawText(content, {
-        x: 50,
-        y: 350,
-        size: 12,
-        color: rgb(0, 0, 0),
-      });
-
-      // Serialize the PDF to bytes  
-      const pdfBytes = await pdfDoc.save();
-
-      // Write the PDF to a temporary file
-      const pdfFilePath = "bus_booking.pdf";
-      fs.writeFileSync(pdfFilePath, pdfBytes);
-
-      const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login,${pdfFilePath}`
+      const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login,`
       await sendSMS.sendSMSBusBookingAgent(response);
       await whatsAppMsg.sendWhatsAppMessage(data.phone, message);
-      await commonFunction.BusBookingConfirmationMail(data, pdfFilePath);
+      await commonFunction.BusBookingConfirmationMail(data);
     
 
     }

@@ -15,7 +15,7 @@ const changeBookingDataSchema =
             type: String
         },
         bookingId: {
-            type: String
+            type: Number
         },
         flightBookingId: {
             type: Schema.Types.ObjectId,

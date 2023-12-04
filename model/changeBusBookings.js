@@ -14,8 +14,8 @@ const changeBookingDataSchema =
         reason: {
             type: String
         },
-        bookingId: {
-            type: String
+        busId: {
+            type: Number
         },
         busBookingId: {
             type: Schema.Types.ObjectId,

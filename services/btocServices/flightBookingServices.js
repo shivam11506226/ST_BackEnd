@@ -117,7 +117,7 @@ const userflightBookingServices = {
         return result;
     },
     aggregatePaginateGetBooking1: async (query) => {
-        const { toDate, fromDate, userId, page, limit, search } = query;
+        const { toDate, fromDate, page, limit, search } = query;
        
         if (search) {
             var filter = search;

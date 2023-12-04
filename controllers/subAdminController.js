@@ -14,6 +14,9 @@ const { userServices } = require('../services/userServices');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
 const { createUser, findUser, getUser, findUserData, updateUser } = userServices;
+const { subAdminServices } = require('../services/subAdminServices');
+const { createSubAdmin, findSubAdmin, findSubAdminData, deleteSubAdmin,subAdminList,updateSubAdmin,paginateSubAdminSearch,countTotalSubAdmin } = subAdminServices;
+
 
 
 exports.createSubAdmin = async (req, res, next) => {
@@ -23,7 +26,7 @@ exports.createSubAdmin = async (req, res, next) => {
         if (!isAdmin) {
             return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
         }
-        const isSubAdminExist = await findUser({ email: email, userType: 'SUBADMIN', mobile_number: mobile_number });
+        const isSubAdminExist = await findSubAdmin({ email: email, userType: 'SUBADMIN', mobile_number: mobile_number });
         if (isSubAdminExist) {
             return res.status(statusCode.Conflict).send({ message: responseMessage.SUBADMIN_ALREADY_EXIST })
         }
@@ -36,7 +39,7 @@ exports.createSubAdmin = async (req, res, next) => {
             approveStatus: approvestatus.APPROVED,
             userType: userType.SUBADMIN
         }
-        const doc = await createUser(data)
+        const doc = await createSubAdmin(data)
         const result = {
             username: doc.username,
             email: doc.email,
@@ -60,7 +63,7 @@ exports.updateSubAdmin = async (req, res, next) => {
             return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
         }
         if (email || mobile_number) {
-            const isSubAdminAlreadyExist = await findUser({ $or: [{ email: email }, { mobile_number: mobile_number }], _id: { $nin: subAdminId } });
+            const isSubAdminAlreadyExist = await findSubAdmin({ $or: [{ email: email }, { mobile_number: mobile_number }], _id: { $nin: subAdminId } });
             if (isSubAdminAlreadyExist) {
                 return res.status(statusCode.Conflict).send({ message: responseMessage.SUBADMIN_ALREADY_EXIST });
             }
@@ -68,7 +71,7 @@ exports.updateSubAdmin = async (req, res, next) => {
         if (profilePic) {
             profilePic = await commonFunction.getSecureUrl(profilePic);
         }
-        const result = await updateUser({ _id: subAdminId }, req.body);
+        const result = await updateSubAdmin({ _id: subAdminId }, req.body);
         return res.status(statusCode.OK).send({ message: responseMessage.UPDATE_SUCCESS, result: result });
     } catch (error) {
         console.log("error======>>>>.", error);
@@ -83,7 +86,7 @@ exports.deleteSubAdmin = async (req, res, next) => {
         if (!isAdmin) {
             return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
         }
-        const result = await updateUser({ _id: subAdminID }, { status: status.DELETE });
+        const result = await updateSubAdmin({ _id: subAdminID }, { status: status.DELETE });
         return res.status(statusCode.OK).send({ message: responseMessage.DELETE_SUCCESS, result: result });
     } catch (error) {
         console.log("error======>>>>.", error);
@@ -97,7 +100,7 @@ exports.getSubAdmin = async (req, res, next) => {
         // if (!isAdmin) {
         //     return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
         // }
-        const result = await findUserData({ userType: userType.SUBADMIN });
+        const result = await findSubAdminData({ userType: userType.SUBADMIN });
         return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND,result:result });
     } catch (error) {
         console.log("error======>>>>.", error);
@@ -108,7 +111,7 @@ exports.getSubAdmin = async (req, res, next) => {
 exports.subAdminLogin = async (req, res, next) => {
     try {
         const { email, mobileNumber, password } = req.body;
-        const isAdminExist = await findUser({ $or: [{ email: email }, { mobileNumber: mobileNumber }], userType: userType.SUBADMIN, status: status.ACTIVE });
+        const isAdminExist = await findSubAdminData({ $or: [{ email: email }, { mobileNumber: mobileNumber }], userType: userType.SUBADMIN, status: status.ACTIVE });
         if (!isAdminExist) {
             return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND })
         }
@@ -120,6 +123,7 @@ exports.subAdminLogin = async (req, res, next) => {
             id: isAdminExist._id,
             email: isAdminExist.email,
             userType: isAdminExist.userType,
+            authType:isAdminExist.authType
         });
         const result = {
             token, isAdminExist

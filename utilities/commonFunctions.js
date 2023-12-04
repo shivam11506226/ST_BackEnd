@@ -353,595 +353,411 @@ module.exports = {
 
 
   FlightBookingConfirmationMail: async (to) => {
+
+    const currentDate = new Date();
+    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+    const formattedDate = currentDate.toLocaleDateString('en-US', options);
     
-  console.log("to================>>>>>>>",to)
+  // console.log("to================>>>>>>>",to)
       const name = `${to?.passengerDetails[0]?.firstName} ${to?.passengerDetails[0]?.lastName}`;
       // Define your HTML content with nested elements
       const htmlContent = `<!DOCTYPE html>
       <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>pdf layout</title>
-        </head>
-        <body
-          style="margin: 0; padding: 0; box-sizing: border-box; background: #f4f3f3"
-        >
-          <div style="width: 80vw; margin: 5% 10%">
-            <div
-              style="
-                justify-content: space-between;
-                align-items: center;
-                display: flex;
-                height: 156px;
-              "
-            >
-              <img
-                src="https://travvolt.s3.amazonaws.com/ST-Main-Logo.png"
-                alt="logo"
-                style="height: 100%"
-              />
-              <div
-                style="
-                  color: black;
-                  font-size: 24px;
-                  font-family: Montserrat;
-                  font-weight: 600;
-                  word-wrap: break-word;
-                "
-              >
-                Booking Voucher
-              </div>
-              <div
-                style="
-                  flex-direction: column;
-                  justify-content: center;
-                  align-items: center;
-                  gap: 8px;
-                  display: flex;
-                "
-              >
-                <div
-                  style="
-                    justify-content: center;
-                    align-items: center;
-                    gap: 4px;
+      
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+        <title>Flight booking pdf</title>
+      </head>
+      
+      <body>
+        <div style=" background:#fff; overflow:hidden; padding: 10px; width: 800px; border:1px solid #D6D8E7;font-size:12px; font-family:arial, sans-serif; margin:10px auto;">
+          <div style="
+                    justify-content: space-between;
+                    align-items: flex-start;
                     display: flex;
-                  "
-                >
-                  <div
-                    style="
-                      color: #868686;
-                      font-size: 12px;
-                      font-family: Montserrat;
-                      font-weight: 500;
-                      word-wrap: break-word;
-                    "
-                  >
-                    Booking Id:
-                  </div>
-                  <div
-                    style="
-                      color: #071c2c;
-                      font-size: 12px;
-                      font-family: Montserrat;
-                      font-weight: 500;
-                      word-wrap: break-word;
-                    "
-                  >
-                    NH72050289874804
-                  </div>
-                </div>
-                <div
-                  style="
-                    justify-content: center;
-                    align-items: center;
-                    gap: 4px;
-                    display: flex;
-                  "
-                >
-                  <div
-                    style="
-                      color: #868686;
-                      font-size: 12px;
-                      font-family: Montserrat;
-                      font-weight: 500;
-                      word-wrap: break-word;
-                    "
-                  >
-                    PNR:
-                  </div>
-                  <div
-                    style="
-                      color: #071c2c;
-                      font-size: 12px;
-                      font-family: Montserrat;
-                      font-weight: 500;
-                      word-wrap: break-word;
-                    "
-                  >
-                    B987XKH89SCH
-                  </div>
-                </div>
-                <div
-                  style="
-                    justify-content: center;
-                    align-items: center;
-                    gap: 4px;
-                    display: flex;
-                  "
-                >
-                  <div
-                    style="
-                      color: #868686;
-                      font-size: 12px;
-                      font-family: Montserrat;
-                      font-weight: 500;
-                      word-wrap: break-word;
-                    "
-                  >
-                    (Booked on 04 Nov 2023)
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              style="
-                background: white;
-                padding: 24px;
-                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-                border-radius: 12px;
-                height: 700px;
-              "
-            >
-              <!-- <div style="display: flex; justify-content: space-between">
-                <div>
-                  <div
-                    style="
+                    margin-top: 24px;
+                  ">
+            <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo" style="width:25%;margin-top: -10px;" />
+            <div style="
                       color: black;
-                      font-size: 20px;
-                      font-family: Montserrat;
-                      font-weight: 600;
-                      word-wrap: break-word;
-                    "
-                  >
-                    Pullaman Hotel
-                  </div>
-                </div>
-                <div>
-                  <h2
-                    style="
-                      color: #e73c33;
                       font-size: 24px;
                       font-family: Montserrat;
                       font-weight: 600;
                       word-wrap: break-word;
-                    "
-                  >
-                    CONFIRM
-                  </h2>
-                  <p>THANK YOU</p>
-                </div>
-              </div> -->
-             
-              <!--  -->
-              <div style="width: 100%; height: 53px; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                <div style="flex-direction: column; justify-content: center; align-items: flex-start; gap: 4px; display: inline-flex">
-                  <div style="color: black; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Pullaman Hotel</div>
-                  <div style="height: 24px; justify-content: flex-start; align-items: flex-start; display: inline-flex">
-                    <div style="width: 24px; height: 24px; position: relative">
-                      <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                      <div style="width: 20px; height: 19px; left: 2px; top: 3px; position: absolute; background: #071C2C"></div>
-                    </div>
-                    <div style="width: 24px; height: 24px; position: relative">
-                      <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                      <div style="width: 20px; height: 19px; left: 2px; top: 3px; position: absolute; background: #071C2C"></div>
-                    </div>
-                    <div style="width: 24px; height: 24px; position: relative">
-                      <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                      <div style="width: 20px; height: 19px; left: 2px; top: 3px; position: absolute; background: #071C2C"></div>
-                    </div>
-                    <div style="width: 24px; height: 24px; position: relative">
-                      <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                      <div style="width: 20px; height: 19px; left: 2px; top: 3px; position: absolute; background: #071C2C"></div>
-                    </div>
-                    <div style="width: 24px; height: 24px; position: relative">
-                      <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                      <div style="width: 20px; height: 19px; left: 2px; top: 3px; position: absolute; background: #071C2C"></div>
-                    </div>
-                  </div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-end; display: inline-flex">
-                  <div style="color: #E73C33; font-size: 24px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">CONFIRMED </div>
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">THANK YOU</div>
-                </div>
-              </div>
-      
-      
-              <div style="width: 100%; height: 84px; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; display: inline-flex">
-                <div style="color: #868686; font-size: 16px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">347/1-B, Chapora Fort Road, New Delhi, IN</div>
-                <div style="justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-                  <div style="width: 20px; height: 20px; position: relative">
-                    <div style="width: 20px; height: 20px; left: 0px; top: 0px; position: absolute; background: #D9D9D9"></div>
-                    <div style="width: 15px; height: 15px; left: 2.50px; top: 2.50px; position: absolute; background: #21325D"></div>
-                  </div>
-                  <div style="color: #21325D; font-size: 16px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">98173678181, 8912731729</div>
-                </div>
-                <div style="justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-                  <div style="width: 20px; height: 20px; position: relative">
-                    <div style="width: 20px; height: 20px; left: 0px; top: 0px; position: absolute; background: #21325D"></div>
-                    <div style="width: 16.67px; height: 13.33px; left: 1.67px; top: 3.33px; position: absolute; background: #21325D"></div>
-                  </div>
-                  <div style="color: #21325D; font-size: 16px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">HB374-RE@Skytrails.com</div>
-                </div>
-              </div>
-             
-      
-              <!--  -->
-              
-              <div style="width: 100%; height: 428.67px; padding-top: 20px; padding-bottom: 20px; border-radius: 12px; flex-direction: column; justify-content: center; align-items: flex-start; gap: 36px; display: inline-flex">
-                <div style="align-self: stretch; height: 0px; border: 1px black solid"></div>
-                <div style="align-self: stretch; height: 66.33px; padding-left: 20px; padding-right: 20px; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                  <div style="justify-content: center; align-items: center; gap: 8px; display: flex">
-                    <div style="width: 20px; height: 20px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                      <div style="flex: 1 1 0; align-self: stretch"></div>
-                      <div style="width: 15px; height: 16.67px; left: 2.50px; top: 1.66px; position: absolute; background: #E73C33"></div>
-                    </div>
-                    <div style="text-align: center; color: #E73C33; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">5-Nights Stay</div>
-                  </div>
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
-                    <div style="text-align: center; color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Check-in</div>
-                    <div style="text-align: center"><span style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Sat, 18 Nov </span><span style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">2023</span></div>
-                    <div style="text-align: center; color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">After 03:00 PM</div>
-                  </div>
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex">
-                    <div style="text-align: center; color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Check-out</div>
-                    <div style="text-align: center"><span style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Thu, 23 Nov </span><span style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">2023</span></div>
-                    <div style="text-align: center; color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Before 12:00 PM</div>
-                  </div>
-                </div>
-                <div style="align-self: stretch; height: 0px; border: 1px black solid"></div>
-                <div style="align-self: stretch; height: 66.33px; padding-left: 20px; padding-right: 20px; justify-content: flex-start; align-items: center; gap: 120px; display: inline-flex">
-                  <div style="justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                    <div style="width: 20px; height: 20px; position: relative">
-                      <div style="width: 20px; height: 20px; left: 0px; top: 0px; position: absolute; background: #D9D9D9"></div>
-                      <div style="width: 18.33px; height: 13.33px; left: 0.83px; top: 3.33px; position: absolute; background: #E73C33"></div>
-                    </div>
-                    <div><span style="color: #E73C33; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">2 Guests<br/></span><span style="color: #868686; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">(2 Adults)</span></div>
-                  </div>
-                  <div style="align-self: stretch; flex-direction: column; justify-content: center; align-items: flex-start; gap: 20px; display: inline-flex">
-                    <div style="text-align: center"><span style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Ms. Archana Kumari </span><span style="color: #868686; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">(Primary Guest)</span></div>
-                    <div style="text-align: center; color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">archana071996@gmail.com, 9180183212</div>
-                  </div>
-                </div>
-                <div style="align-self: stretch; height: 0px; border: 1px black solid"></div>
-                <div style="align-self: stretch; padding-left: 20px; padding-right: 20px; justify-content: flex-start; align-items: flex-start; gap: 136px; display: inline-flex">
-                  <div style="justify-content: center; align-items: center; gap: 8px; display: flex">
-                    <div style="width: 20px; height: 20px; position: relative">
-                      <div style="width: 20px; height: 20px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                      <div style="width: 16.67px; height: 11.67px; left: 1.67px; top: 4.17px; position: absolute; background: #E73C33"></div>
-                    </div>
-                    <div style="text-align: center; color: #E73C33; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">1 Room</div>
-                  </div>
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-                    <div style="text-align: center; color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Standard Room With 2 Single Beds</div>
-                    <div style="justify-content: center; align-items: center; gap: 8px; display: inline-flex">
-                      <div style="width: 20px; height: 20px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 58px; display: inline-flex">
-                        <div style="justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
-                          <div style="width: 12px; height: 16px; left: 6px; top: 4px; position: absolute; background: #071C2C"></div>
-                        </div>
-                      </div>
-                      <div style="text-align: center; color: #071C2C; font-size: 12px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">Restaurant</div>
-                    </div>
-                    <div style="justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-                      <div style="width: 20px; height: 20px; position: relative">
-                        <div style="width: 20px; height: 20px; left: 0px; top: 0px; position: absolute; background: #D9D9D9"></div>
-                        <div style="width: 18.33px; height: 13.33px; left: 0.83px; top: 3.33px; position: absolute; background: #071C2C"></div>
-                      </div>
-                      <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">2 Adults</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              
+                    ">
+              E - Ticket<br />
+              Ticketed
             </div>
-            <div style="width: 100%; margin-top: 5px; height: 200px; padding-top: 24px; padding-bottom: 24px; background: white; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 12px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 20px; display: inline-flex">
-              <div style="align-self: stretch; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                <div style="flex-direction: column; justify-content: flex-start;  padding-left: 28px; padding-right: 28px; align-items: flex-start; gap: 12px; display: inline-flex">
-                  <div style="color: #071C2C; font-size: 24px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Pullman Hotel New Delhi</div>
-                  <div style="justify-content: center; align-items: center; gap: 24px; display: inline-flex">
-                    <div style="width: 120px; justify-content: flex-start; align-items: flex-start; display: flex">
-                      <div style="width: 24px; height: 24px; position: relative">
-                        <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                        <div style="width: 20px; height: 19px; left: 2px; top: 3px; position: absolute; background: #071C2C"></div>
-                      </div>
-                      <div style="width: 24px; height: 24px; position: relative">
-                        <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                        <div style="width: 20px; height: 19px; left: 2px; top: 3px; position: absolute; background: #071C2C"></div>
-                      </div>
-                      <div style="width: 24px; height: 24px; position: relative">
-                        <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                        <div style="width: 20px; height: 19px; left: 2px; top: 3px; position: absolute; background: #071C2C"></div>
-                      </div>
-                      <div style="width: 24px; height: 24px; position: relative">
-                        <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                        <div style="width: 20px; height: 19px; left: 2px; top: 3px; position: absolute; background: #071C2C"></div>
-                      </div>
-                      <div style="width: 24px; height: 24px; position: relative">
-                        <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #071C2C"></div>
-                        <div style="width: 20px; height: 19px; left: 2px; top: 3px; position: absolute; background: #071C2C"></div>
-                      </div>
-                    </div>
-                    <div style="padding: 4px; border-radius: 4px; border: 2px #E73C33 solid; justify-content: center; align-items: center; gap: 10px; display: flex">
-                      <div style="color: #071C2C; font-size: 8px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">Couple Friendly</div>
-                    </div>
-                  </div>
+            <div style="
+                      flex-direction: column;
+                      justify-content: center;
+                      align-items: center;
+                      gap: 8px;
+                      display: flex;
+                    ">
+              <div style="
+                        justify-content: center;
+                        align-items: center;
+                        gap: 4px;
+                        display: flex;
+                      ">
+                <div style="
+                          color: #868686;
+                          font-size: 12px;
+                          font-family: Montserrat;
+                          font-weight: 500;
+                          word-wrap: break-word;
+                        ">
+                  Booking Id:
                 </div>
-                <img style="width: 247px; height: 117px; background: linear-gradient(0deg, #D9D9D9 0%, #D9D9D9 100%); border-radius: 8px" src="https://via.placeholder.com/247x117" />
-              </div>
-              <div style="align-self: stretch; padding-left: 28px; padding-right: 28px; justify-content: flex-start; align-items: center; gap: 10px; display: inline-flex">
-                <div style="flex: 1 1 0; color: #BBBBBB; font-size: 12px; font-family: Montserrat; font-weight: 700; letter-spacing: 0.48px; word-wrap: break-word">Sat, 18 Nov 2023 - Thu, 23 Nov 2023 | 1 Room | 2 Adults (Ms. Archana Kumari +1)</div>
-              </div>
-            </div>
-      
-            <div style="width: 100%; margin-top: 5px; height: 422px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-              <div style="color: #071C2C; font-size: 24px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">Room Type & Amenities </div>
-              <div style="height: 369px; padding: 24px; border-radius: 12px; border: 1px #868686 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: flex">
-                <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Standard Room With 2 Single Beds</div>
-                <div style="justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                  <div style="width: 20px; height: 20px; position: relative">
-                    <div style="width: 20px; height: 20px; left: 0px; top: 0px; position: absolute; background: #D9D9D9"></div>
-                    <div style="width: 12.50px; height: 16.67px; left: 3.33px; top: 1.66px; position: absolute; background: #071C2C"></div>
-                  </div>
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Breakfast</div>
-                </div>
-                <div style="justify-content: flex-start; align-items: flex-start; gap: 8px; display: inline-flex">
-                  <div style="width: 24px; height: 24px; position: relative">
-                    <div style="width: 24px; height: 24px; left: 0px; top: 0px; position: absolute; background: #D9D9D9"></div>
-                    <div style="width: 22px; height: 16px; left: 1px; top: 4px; position: absolute; background: #071C2C"></div>
-                  </div>
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">2 Guests</div>
-                </div>
-                <div style="align-self: stretch; color: #071C2C; font-size: 12px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">TV, Telephone, Centre Table, Bathroom, Chair, Seating Area, Cupboards with Locks, Hot & Cold Water, Dining Table, Sofa, Blackout Curtains, Blanket, Electronic Safe, Living Area, Room Service, Western Toilet Seat, Bidet, Housekeeping, Dining Area, Shaving Mirror, Toiletries, Mineral Water, Wi-Fi, Bathroom Phone, Balcony, Hairdryer, Geyser/Water Heater, Shower Cap, Mini Fridge, Kettle, Air Conditioning, Dental Kit, Charging Points, Slippers, In-room Dining.</div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                  <div style="text-align: center; color: black; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">INCLUSIONS</div>
-                  <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-                    <div style="justify-content: flex-start; align-items: center; gap: 21px; display: inline-flex">
-                      <div style="width: 472px; color: #071C2C; font-size: 12px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">All transfers on private basis to airport and sightseeing places.</div>
-                    </div>
-                    <div style="justify-content: flex-start; align-items: flex-start; gap: 21px; display: inline-flex">
-                      <div style="color: #071C2C; font-size: 12px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Tickets to Miracle Garden</div>
-                    </div>
-                  </div>
+                <div style="
+                          color: #071c2c;
+                          font-size: 12px;
+                          font-family: Montserrat;
+                          font-weight: 500;
+                          word-wrap: break-word;
+                        ">
+                  ${to.bookingId}
                 </div>
               </div>
-            </div>
-      
-            <!-- cancel refund policy start -->
-      
-            <div style="width: 100%; height: 100px; margin-top: 5px; background: white; box-shadow: 0px 2px 8px 2px rgba(0, 0, 0, 0.25); border-radius: 12px; overflow: hidden; flex-direction: column; justify-content: center; align-items: center; gap: 24px; display: inline-flex">
-              <div style="align-self: stretch; height: 20px; padding-left: 24px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 26px; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C;  font-size: 16px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">Cancellation Refund Policy</div>
+              <div style="
+                        justify-content: center;
+                        align-items: center;
+                        gap: 4px;
+                        display: flex;
+                      ">
+                <div style="
+                          color: #868686;
+                          font-size: 12px;
+                          font-family: Montserrat;
+                          font-weight: 500;
+                          word-wrap: break-word;
+                        ">
+                  PNR:
+                </div>
+                <div style="
+                          color: #071c2c;
+                          font-size: 12px;
+                          font-family: Montserrat;
+                          font-weight: 500;
+                          word-wrap: break-word;
+                        ">
+                  ${to.pnr}
                 </div>
               </div>
-              <div style="align-self: stretch; padding-left: 24px; color: #868686; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word"> Free Cancellation (100% refund) till Sat, 18 Nov 2023, 10:59 AM.</div>
-             
-            </div>
-      
-            <!-- cancel refund policy end -->
-      
-            <!-- fare break-down start-->
-      
-            <div style="width: 100%; margin-top: 5px; height: 329px; padding-top: 20px; padding-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px #868686 solid; flex-direction: column; justify-content: center; align-items: center; gap: 24px; display: inline-flex">
-              <div style="align-self: stretch; padding-left: 20px; padding-right: 20px; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex">
-                <div style="color: #071C2C; font-size: 24px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">Booking Price Break-up</div>
-              </div>
-              <div style="flex-direction: column; width: 100%; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
-                <div style="align-self: stretch; padding-left: 20px; padding-right: 20px;  justify-content: flex-start; align-items: flex-start; gap: 64px; display: inline-flex">
-                  <div style="width: 100%; color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Accommodation charges collected on behalf of hotel (incl. applicable hotel taxes)</div>
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">INR 33,629</div>
-                </div>
-                <div style="align-self: stretch; padding-left: 20px; padding-right: 20px; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Skytrails Service Fee</div>
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">INR 254</div>
-                </div>
-                <div style="align-self: stretch; padding-left: 20px; padding-right: 20px; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                  <div style="width: 80%; color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">HR-SGST @ 9%</div>
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">INR 23</div>
-                </div>
-                <div style="align-self: stretch; padding-left: 20px; padding-right: 20px; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                  <div style="width: 80%; color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">CGST @ 9%</div>
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">INR 23</div>
-                </div>
-                <div style="align-self: stretch; height: 0px; border: 1px #868686 solid"></div>
-                <div style="align-self: stretch; padding-left: 20px; padding-right: 20px; justify-content: space-between; align-items: flex-start; display: inline-flex">
-                  <div style="width: 80%; color: #E73C33; font-size: 20px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">TOTAL</div>
-                  <div style="color: #E73C33; font-size: 20px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">INR 33,929</div>
-                </div>
-              </div>
-            </div>
-      
-      
-            <!-- fare break-down end -->
-      
-            <!-- hotel Amenities start-->
-      
-            <div style="width: 100%; margin-top: 5px; height: 693px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-              <div style="color: #071C2C; font-size: 24px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">Hotel Amenities</div>
-              <div style="align-self: stretch; height: 640px; padding: 24px; border-radius: 12px; border: 1px #868686 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Common Area</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Lounge, Lawn, Reception, Library, Seating Area, Outdoor Furniture</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Outdoor Activities and Sports</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Water Sports, Outdoor Sports</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Business Center and Conferences</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Business Centre, Conference Room, Banquet</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Common Area</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Lounge, Lawn, Reception, Library, Seating Area, Outdoor Furniture</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Outdoor Activities and Sports</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Water Sports, Outdoor Sports</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Business Center and Conferences</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Business Centre, Conference Room, Banquet</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Common Area</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Lounge, Lawn, Reception, Library, Seating Area, Outdoor Furniture</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Business Center and Conferences</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Business Centre, Conference Room, Banquet</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Outdoor Activities and Sports</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Water Sports, Outdoor Sports</div>
-                </div>
-              </div>
-            </div>
-      
-      
-            <!-- hotel amenities end -->
-      
-            <!-- hotel rule start -->
-      
-      
-            <div style="width: 100%; height: 300px; margin-top: 5px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-              <div style="color: #071C2C; font-size: 24px; font-family: Montserrat; font-weight: 700; word-wrap: break-word">Rules & Policies</div>
-              <div style="align-self: stretch; height: 812px; padding: 24px; border-radius: 12px; border: 1px #868686 solid; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex">
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Food Arrangement</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">Non veg food is allowed<br/>Food delivery service is not available at the property<br/>Outside food is not allowed</div>
-                </div>
-                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-                  <div style="color: #071C2C; font-size: 20px; font-family: Montserrat; font-weight: 600; word-wrap: break-word">Smoking/alcohol Consumption Rules</div>
-                  <div style="color: #071C2C; font-size: 16px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">There are no restrictions on alcohol consumption.<br/>Smoking within the premises is not allowed</div>
-                </div>
-              </div>
-            </div>
-      
-      
-      
-            <!-- hotel rule end -->
-      
-      
-            <div
-              style="
-                padding-left: 28px;
-                margin-top: 5px;
-                padding-right: 28px;
-                padding-top: 24px;
-                padding-bottom: 24px;
-                background: white;
-                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-                border-radius: 12px;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 24px;
-                display: flex;
-              "
-            >
-              <div
-                style="
-                  color: #e73c33;
-                  font-size: 20px;
-                  font-family: Montserrat;
-                  font-weight: 700;
-                  word-wrap: break-word;
-                "
-              >
-                The Skytrails Support
-              </div>
-              <div
-                style="
-                  width: 456px;
-                  height: 48px;
-                  justify-content: flex-start;
-                  align-items: center;
-                  gap: 40px;
-                  display: inline-flex;
-                "
-              >
-                <div
-                  style="
-                    padding: 12px;
-                    background: #e73c33;
-                    border-radius: 12px;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 10px;
-                    display: flex;
-                  "
-                >
-                  <div
-                    style="
-                      color: white;
-                      font-size: 20px;
-                      font-family: Montserrat;
-                      font-weight: 700;
-                      word-wrap: break-word;
-                    "
-                  >
-                    +91 8917972301
-                  </div>
-                </div>
-                <div
-                  style="
-                    justify-content: flex-start;
-                    align-items: flex-start;
-                    gap: 8px;
-                    display: flex;
-                  "
-                >
-                  <div style="width: 20px; height: 20px; position: relative">
-                    <div
-                      style="
-                        width: 20px;
-                        height: 20px;
-                        left: 0px;
-                        top: 0px;
-                        position: absolute;
-                        background: #21325d;
-                      "
-                    ></div>
-                    <div
-                      style="
-                        width: 16.67px;
-                        height: 13.33px;
-                        left: 1.67px;
-                        top: 3.33px;
-                        position: absolute;
-                        background: #e73c33;
-                      "
-                    ></div>
-                  </div>
-                  <div
-                    style="
-                      color: #e73c33;
-                      font-size: 16px;
-                      font-family: Montserrat;
-                      font-weight: 600;
-                      word-wrap: break-word;
-                    "
-                  >
-                    HB374-RE@Skytrails.com
-                  </div>
+              <div style="
+                        justify-content: center;
+                        align-items: center;
+                        gap: 4px;
+                        display: flex;
+                      ">
+                <div style="
+                          color: #868686;
+                          font-size: 12px;
+                          font-family: Montserrat;
+                          font-weight: 500;
+                          word-wrap: break-word;
+                        ">
+                  (Booked on ${formattedDate})
                 </div>
               </div>
             </div>
           </div>
-        </body>
+          <div style="
+                    background: white;
+                    padding: 24px;
+                    /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
+                    border-radius: 12px;
+                  ">
+            <div style="width: 100%; float: left; margin-top: 15px; border: 1px solid #D6D8E7;">
+              <div
+                style="width:100%; background-color: #004684; float: left; font-weight: bold; padding: 5px; padding-right: 0px; border-bottom: 1px solid #D6D8E7; color: #fff;">
+                <div style="width: 40%; float: left; margin-right: 0;">
+                  Passenger Name</div>
+                <div style="width: 30%; float: left; margin-right: 0;">
+                  Ticket Number</div>
+                <div style="width: 21%; float: right; text-align: left; margin-right: 0;">
+                  Frequent flyer no.</div>
+              </div>
+      
+
+              ${[1,2].map(item =>`
+              <div style="width:100%; float: left; padding: 5px;">
+      
+                <div style="width:100%; float: left; padding-bottom:5px;">
+                  <div style="width: 40%; float: left; margin-right: 0;">
+      
+      
+      
+                    <span style="margin-top: 5px; width: 100%; float: left;"><b>Name:</b>
+                      Mr
+                      Md Raufur
+                      Rahman</span><br>
+      
+      
+                  </div>
+                  <div style="width: 30%; float: left; margin-right: 8px;">
+      
+      
+      
+                    <span style="margin-top: 5px; width: 100%; float: left;">
+                      MCTVRI
+      
+                    </span>
+      
+      
+                  </div>
+                  <div style="width: 15%; float: right; margin-right: 45px; text-align: left;">
+      
+      
+                    <span style="margin-top: 5px; width: 100%; float: left; text-align: left;">-</span>
+      
+      
+      
+                  </div>
+                </div>
+      
+      
+             
+      
+      
+                
+      
+      
+                
+      
+      
+              </div>
+              
+                `).join('')}
+            </div>
+      
+      
+            <div style="width: 100%; float: left; margin-top: 15px; border: 1px solid #D6D8E7;">
+      
+              <div
+                style="width: 100%; background-color: #004684; float: left; font-weight: bold; padding: 5px;padding-right: 0px; border-bottom: 1px solid #D6D8E7; color: #fff;">
+                <div style="width: 23%; float: left; margin-right: 0;">
+                  Flight</div>
+                <div style="width: 25%; float: left; margin-right: 10px;">
+                  Departure</div>
+                <div style="width: 25%; float: left; margin-right: 10px;">
+                  Arrival</div>
+                <div style="width: 20%; float: right; margin-right: 10px;">
+                  Status</div>
+              </div>
+      
+              <div style="width: 100%; float: left; padding: 5px;">
+                <div style="width: 23%; float: left; margin-right: 0;">
+                  <span style="margin-top: 5px; width: 18%; height: 75px; float: left;">
+                    <img id="airlineLogo" src="https://raw.githubusercontent.com/The-SkyTrails/ST_BackEnd/main/utilities/FlightImages/UK.png" height="27px" width="30px" alt="UK">
+                  </span><span style="margin-top: 5px; width: 70%; float: left;">
+                    Air Vistara
+                    UK
+                    911<br>
+                    E
+                    Class
+                    <br>
+      
+                    Aircraft:
+                    320
+                    <br>
+      
+                    Operating Carrier:UK
+      
+                    <label>Cabin:Economy</label>
+      
+                  </span>
+                </div>
+                <div style="width: 25%; float: left; margin-right: 10px;">
+                  <span style="margin-top: 5px; width: 100%; float: left;">
+                    DEL
+                    (Indira Gandhi Airport ,
+                    Delhi
+                    ) </span>
+      
+                  <span style="margin-top: 5px;
+                                   width: 100%; float: left;">Terminal:
+                    3
+                  </span>
+                  <span style="margin-top: 5px; width: 100%; float: left;">
+                    6:30 PM
+                    Thu, 30-Nov-2023</span>
+                </div>
+                <div style="width: 25%; float: left; margin-right: 10px;">
+                  <span style="margin-top: 5px; width: 100%; float: left;">
+                    IDR
+                    (Devi Ahilya Bai Holkar International Airport,
+                    Indore) </span>
+      
+                  <span style="margin-top: 5px; width: 100%; float: left;">
+                    7:55 PM
+                    Thu, 30-Nov-2023
+                  </span>
+                </div>
+                <div style="width: 20%; float: right; margin-right: 10px;">
+                  <span style="margin-top: 5px; width: 100%; float: left;">
+                    Confirmed</span>
+      
+      
+                  <span style="margin-top: 5px; width: 100%; float: left;">Airline Ref :
+                    JV35G9</span>
+      
+                  <span> <span style="float: left;">Baggage(per Adult):1 PC(s)</span></span>
+                  <br>
+                  <span><span style="float: left;">Meal(per Adult):Included</span>
+      
+                    <span style="margin-top: 5px; width: 100%; float: left;">
+      
+                    </span>
+      
+      
+                    <span style="margin-top: 5px; width: 100%; float: left;">Non stop</span>
+                  </span>
+                </div>
+              </div>
+      
+            </div>
+      
+            <div
+              style="width: 100%; background-color: #004684; float: left; font-weight: bold; padding: 5px; border-bottom: 1px solid #D6D8E7; color: #fff; margin-top: 8px;">
+              <div style="width: 43%; float: left; margin-right: 0;" id="paymentDetails">
+                Payment Details </div>
+            </div>
+            <div style="width:100%; float:left; margin-top:8px; padding:5px; border-bottom:1px solid #D6D8E7">
+              <div id="txnMsg" style=" width:100%; text-align:center; font-weight:bold; color:red; display:none">
+                Txn fee/Discount amount will be equally divided on all the pax except infant and cancelled ticket.
+              </div>
+              <div style="margin-top:5px; float:left; width:300px; ">
+                <div style="float:left; width:100%; text-align:left; font-weight:bold;">
+                  This is an electronic ticket. Passengers must carry a valid photo ID card for check-in at the airport.
+                </div>
+      
+              </div>
+      
+      
+              <div style="float:right; width:300px; margin-top:10px;" id="fareDetails">
+                <div style="margin-top:5px; float:left; width:100%; font-weight:bold;">
+                  <div style="float:left; width:140px; text-align:right">
+                    Total Amount:
+                  </div>
+                  <div style="width:85px; float:right; text-align:right;">
+                    ₹ ${to.amount}.00
+                  </div>
+                </div> 
+              </div>
+            </div>
+            <div style="float: left; width: 100%; margin-top:10px; padding-bottom:10px; border-bottom:1px solid #D6D8E7" "="">         
+            <div style=" margin:0; padding:5px;">
+              Carriage and other services provided by the carrier are subject to conditions of carriage which hereby
+              incorporated by reference. These conditions may be obtained from the issuing carrier. If the passenger's journey
+              involves an ultimate destination or stop in a country other than country of departure the Warsaw convention may
+              be applicable and the convention governs and in most cases limits the liability of carriers for death or
+              personal injury and in respect of loss of or damage to baggage.</div>
+              <!-- <p style=" margin:0; padding:15px 5px 5px 5px; color:red">Don't Forget to purchase travel insurance for your
+              Visit. Please Contact your travel agent to purchase travel insurance.</p> -->
+          </div>
+            <!-- Rest of your content -->
+            <!-- ... -->
+          </div>
+          <!-- Booking Details -->
+          <div style="
+                      
+                      margin-top: 5px;
+                      
+                      padding-top: 24px;
+                      padding-bottom: 24px;
+                      background: white;
+                      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                      border-radius: 12px;
+                      flex-direction: column;
+                      justify-content: center;
+                      align-items: center;
+                      gap: 24px;
+                      display: flex;
+                      width: 100%;
+                    ">
+            <div style="
+                        color: #e73c33;
+                        font-size: 20px;
+                        font-family: Montserrat;
+                        font-weight: 700;
+                        word-wrap: break-word;
+                      ">
+              The Skytrails Support
+            </div>
+            <div style="
+                        width: 80%;
+                        height: 48px;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 40px;
+                        display: inline-flex;
+                      ">
+              <div style="
+                          padding: 12px;
+                          background-color: #b3b8bd;
+                          border-radius: 12px;
+                          justify-content: center;
+                          align-items: center;
+                          gap: 10px;
+                          display: flex;
+                        ">
+                <p style="
+                            color: #e73c33;
+                            font-size: 20px;
+                            font-family: Montserrat;
+                            font-weight: 700;
+                            word-wrap: break-word;
+                            margin:0;
+                          ">
+                  +91 8917972301
+                </p>
+              </div>
+              <div style="
+                          justify-content: flex-start;
+                          align-items: flex-start;
+                          gap: 8px;
+                          display: flex;
+                        ">
+                <div style="width: 20px; height: 20px; position: relative">
+                  <div style="
+                              width: 20px;
+                              height: 20px;
+                              left: 0px;
+                              top: 0px;
+                              position: absolute;
+                              background: #21325d;
+                            "></div>
+                  <div style="
+                              width: 16.67px;
+                              height: 13.33px;
+                              left: 1.67px;
+                              top: 3.33px;
+                              position: absolute;
+                              background-color: #e73c33;
+                            "></div>
+                </div>
+                <div style="
+                            color: #e73c33;
+                            font-size: 16px;
+                            font-family: Montserrat;
+                            font-weight: 600;
+                            word-wrap: break-word;
+                          ">
+                  support@theskytrails.com
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="RoamerBanner" style="float: left; width: 100%; margin:0px; padding:0px;">
+      <img src="https://tbolite.tektravels.com/Images/roamer_banner.jpg" alt=" Roamer Banner" style="width: 100%;
+      margin-top: 15px;
+      border-radius: 15px;"></div>
+        </div>
+      </body>
       </html>
       `;
 

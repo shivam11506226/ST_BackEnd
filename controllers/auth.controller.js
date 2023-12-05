@@ -120,7 +120,7 @@ exports.signin = (req, res) => {
         res.status(500).send({ message: err });
         return;
       }
-
+console.log("req.body",req.body)
       if (!user) {
         return res.status(404).send({ message: "User Not found." });
       }

@@ -2300,4 +2300,111 @@ return await transporter.sendMail(mailOptions);
     return await transporter.sendMail(mailOptions)
   },
 
+  sendSubAdmin:async(to,userName,pass)=> {
+    let html = `<!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <title>Welcome to TheSkytrails!</title>
+        <style>
+            .card {
+                border-radius: 10px;
+                background-color: #fff;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                width: 80%;
+                margin: auto;
+                min-height: 25em;
+                margin-top: 25px;
+                padding: 20px;
+            }
+    
+            .main {
+                background-image: url('path/to/your/image.jpg');
+                background-size: cover;
+                background-position: center;
+                opacity: 0.8;
+            }
+    
+            .main-container {
+                text-align: center;
+            }
+    
+            h1 {
+                font-family: 'Poppins', sans-serif;
+                font-weight: 600;
+                color: #333030;
+                font-size: 24px;
+                margin-top: 30px;
+            }
+    
+            img {
+                width: 30%;
+                margin-bottom: 20px;
+            }
+    
+            p {
+                font-family: 'Open Sans', sans-serif;
+                font-size: 16px;
+                line-height: 1.5;
+                color: #444;
+                margin-top: 0;
+            }
+    
+            button {
+                background-color: #4285F4;
+                color: #fff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+                margin-top: 20px;
+            }
+    
+            button:hover {
+                background-color: #3D7AF1;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div class="card">
+            <div class="main-container">
+                <h1>Hi, ${userName}!</h1>
+                <img src="https://asset.cloudinary.com/dva0pxegk/71805b75cabf8a0b8cee4d00b172473e" alt="logo">
+                <p>Welcome to TheSkytrails! Your journey begins now.</p>
+                <p>Your login credentials are:</p>
+                <p>Username: ${userName}<br> Password: ${pass}</p>
+                <button>Unlock your Skytrails adventure now!</button>
+            </div>
+        </div>
+    </body>
+    
+    </html>
+    `;
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+ auth: {
+  user: nodemailerConfig.options.auth.user,
+  pass: nodemailerConfig.options.auth.pass,
+},
+});
+// const transporter = nodemailer.createTransport({
+//   host: 'smtp.gmail.com',
+//   port: 587,
+//   secure: false,
+//   auth: {
+//     user: nodemailerConfig.options.auth.user,
+//     pass: nodemailerConfig.options.auth.pass,
+//   },
+// });
+var mailOptions = {
+  from: nodemailerConfig.user,
+  to: to,
+  subject: "Congratulations,your are become member of theSkyTrais, ",
+  html: html,
+};
+return await transporter.sendMail(mailOptions);
+  },
+
 };

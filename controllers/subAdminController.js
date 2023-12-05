@@ -3,11 +3,14 @@ const db = require("../model");
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const { userInfo } = require("os");
-const commonFunction = require('../utilities/commonFunctions');
 const approvestatus = require('../enums/approveStatus')
 //require responsemessage and statusCode
 const statusCode = require('../utilities/responceCode');
 const responseMessage = require('../utilities/responses')
+const sendSMS = require("../utilities/sendSms");
+const commonFunction = require('../utilities/commonFunctions');
+const whatsappAPIUrl = require("../utilities/whatsApi")
+
 //***********************************SERVICES********************************************** */
 
 const { userServices } = require('../services/userServices');
@@ -21,14 +24,14 @@ const { createSubAdmin, findSubAdmin, findSubAdminData, deleteSubAdmin,subAdminL
 
 exports.createSubAdmin = async (req, res, next) => {
     try {
-        const { username, email, password, mobile_number } = req.body;
+        const { username, email, password, mobile_number,authType } = req.body;
         const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
         // if (!isAdmin) {
         //     return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
         // }
         const isSubAdminExist = await findSubAdmin({ email: email, userType: 'SUBADMIN', mobile_number: mobile_number });
         if (isSubAdminExist) {
-            return res.status(statusCode.Conflict).send({ message: responseMessage.SUBADMIN_ALREADY_EXIST })
+            return res.status(statusCode.Conflict).send({status:statusCode.Conflict, message: responseMessage.SUBADMIN_ALREADY_EXIST })
         }
         const pass = await bcrypt.hash(password, 10)
         const data = {
@@ -36,6 +39,7 @@ exports.createSubAdmin = async (req, res, next) => {
             email: email,
             password: pass,
             contactNumber:  mobile_number ,
+            authType:authType
         }
         const result = await createSubAdmin(data)
         // const result = {
@@ -45,7 +49,11 @@ exports.createSubAdmin = async (req, res, next) => {
         //     userType: doc.userType
 
         // }
-        return res.status(statusCode.Conflict).send({ message: responseMessage.SUBADMIN_CREATED, result: result });
+        await sendSMS.sendSMSForSubAdmin(mobile_number,result.email);
+        const message = `Welcom To TheSkyTrails, your our subAdmin.`;
+        await whatsappAPIUrl.sendWhatsAppMessage(mobile_number, message);
+        await commonFunction.sendSubAdmin(result.email,result.userName,password,)
+        return res.status(statusCode.OK).send({status:statusCode.OK, message: responseMessage.SUBADMIN_CREATED, result: result });
 
     } catch (error) {
         console.log("error======>>>>.", error);

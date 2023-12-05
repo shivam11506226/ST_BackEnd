@@ -1,6 +1,7 @@
 const joi = require('joi');
 joi.objectId = require('joi-objectid')(joi);
-const issuedType=require('../enums/issuedType')
+const issuedType=require('../enums/issuedType');
+const authType=require('../enums/authType')
 const schemas = {
   flightBookingSchema: joi.object().keys({
     userId: joi.string().required(),
@@ -167,6 +168,7 @@ const schemas = {
     email: joi.string().required(),
     mobile_number: joi.string().required(),
     password: joi.string().required(),
+    authType:joi.string().valid(...Object.values(authType)).required(),
   }),
   updateSubAdmin: joi.object().keys({
     subAdminId: joi.string().required(),

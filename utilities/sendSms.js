@@ -333,4 +333,23 @@ module.exports = {
       throw error;
     }
   },
+
+  sendSMSForSubAdmin: async (mobileNumber, otp) => {
+    const messageContent = `Welcome to TheSkyTrails, and check your mail for login credential your mail is: ${otp} to login to your. theskytrails account`;
+    const url = `http://sms.txly.in/vb/apikey.php?`;
+    const params = {
+      apikey: key,
+      senderid: senderid,
+      templateid: templateid,
+      number: mobileNumber,
+      message: messageContent,
+    };
+    try {
+      const response = await axios.get(url, { params: params });
+      return response.data;
+    } catch (error) {
+      console.error("Error occurred in axios request:", error);
+      throw error;
+    }
+  },
 };

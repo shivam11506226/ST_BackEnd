@@ -256,7 +256,7 @@ module.exports = {
     var mailOptions = {
       from: nodemailerConfig.options.auth.user,
       to: to.email,
-      subject: "Hotel Booking Confirmation",
+      subject: "Bus Booking Confirmation",
       html: html,
     };
     try {
@@ -868,10 +868,9 @@ module.exports = {
       
       
       
-      <body style="margin: 0; padding: 0; font-size: 16px; font-family: Arial, sans-serif; line-height: 1.6;">
+      <body style="margin: 0; padding: 0; font-size: 16px; font-family: Montserrat, sans-serif; line-height: 1.6;">
       
-        <div
-          class="print" style=" background:#fff; overflow:hidden; padding: 10px; max-width: 800px; border:1px solid #D6D8E7;font-size:12px; font-family:arial, sans-serif; margin:10px auto;">
+        <div style=" background:#fff; overflow:hidden; padding: 10px; max-width: 800px; border:2px solid #000;font-size:12px; font-family:Montserrat, sans-serif; margin:10px auto;">
           <div>
             <div  style="justify-content: space-between; align-items: flex-start; display: flex; margin-top: 24px;">
               <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo"
@@ -1023,7 +1022,7 @@ module.exports = {
                       10:00 AM
                     </p>
                     <p>
-                      ${to.amount.toFixed(2)}
+                      ${to.amount}
                     </p>
                   </div>
                 </div>
@@ -1186,7 +1185,7 @@ module.exports = {
       
               <div style="width: 100%; display: flex; justify-content: flex-start; gap: 35%; padding: 5px 0 0px 5px;">
       
-                <div>
+                <div style="text-align: center;">
                   <p>
                     <strong>Cancellation time</strong>
                   </p>
@@ -1361,7 +1360,7 @@ module.exports = {
     const mailOptions = {
       from: nodemailerConfig.options.auth.user,
       to: passengerEmail,
-      subject: 'Flight Booking Confirmation Mail',
+      subject: 'Bus Booking Confirmation Mail',
       html: getHtmlContent(name),
       attachments: [{ filename: 'Bus_Booking.pdf', path: pdfFilePath }],
     };

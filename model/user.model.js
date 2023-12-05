@@ -1,16 +1,21 @@
 const mongoose = require("mongoose");
 const userType = require("../enums/userType");
 const { user } = require(".");
-const status = require('../enums/status');
+const status = require("../enums/status");
 const approveStatus = require("../enums/approveStatus");
 var bcrypt = require("bcryptjs");
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoosePaginate = require("mongoose-paginate-v2");
 const userSchema = new mongoose.Schema(
   {
     username: { type: String },
     email: { type: String },
     password: { type: String },
-    roles:[{type:mongoose.Types.ObjectId,ref:'roles'}],
+    roles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Role",
+      },
+    ],
     phone: {
       country_code: {
         type: String,
@@ -18,49 +23,53 @@ const userSchema = new mongoose.Schema(
       },
       mobile_number: { type: String },
     },
-    firstName:{
-      type: String
+    firstName: {
+      type: String,
     },
-    lastName:{
-      type: String
+    lastName: {
+      type: String,
     },
-    dob:{
-      type:String
+    dob: {
+      type: String,
     },
     socialId: {
-      type: String
+      type: String,
     },
     socialType: {
-      type: String
+      type: String,
     },
     deviceType: {
-      type: String
+      type: String,
     },
     isOnline: {
       type: Boolean,
-      default: false
+      default: false,
     },
     firstTime: {
       type: Boolean,
-      default: true
+      default: true,
     },
     Address: {
-      type: String
+      type: String,
     },
     approveStatus: {
       type: String,
-      enum: [approveStatus.APPROVED, approveStatus.PENDING, approveStatus.REJECT],
-      default: approveStatus.PENDING
+      enum: [
+        approveStatus.APPROVED,
+        approveStatus.PENDING,
+        approveStatus.REJECT,
+      ],
+      default: approveStatus.PENDING,
     },
     userType: {
       type: String,
       enum: [userType.ADMIN, userType.AGENT, userType.USER, userType.SUBADMIN],
-      default: userType.USER
+      default: userType.USER,
     },
     status: {
       type: String,
       enum: [status.ACTIVE, status.BLOCK, status.DELETE],
-      default: status.ACTIVE
+      default: status.ACTIVE,
     },
     reason: {
       type: String,
@@ -78,40 +87,39 @@ const userSchema = new mongoose.Schema(
     },
     otpVerified: {
       type: Boolean,
-      default: false
+      default: false,
     },
     location: {
       type: {
         type: String,
-        default: "Point"
+        default: "Point",
       },
       coordinates: {
         type: [Number],
-        default: [0, 0]
-      }
-
+        default: [0, 0],
+      },
     },
     fcmToken: {
       type: [],
       _id: false,
       default: [],
     },
-    balance:{
-      type:Number
+    balance: {
+      type: Number,
     },
-    bio:{
-      type:String,
-      default:""
+    bio: {
+      type: String,
+      default: "",
     },
-    coverPic:{
-      type:String,
-      default:""
-    }
+    coverPic: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
   }
-)
+);
 userSchema.plugin(mongoosePaginate);
 
 const User = mongoose.model("users", userSchema);
@@ -129,7 +137,7 @@ User.find({ userType: userType.ADMIN }, async (err, result) => {
       userType: userType.ADMIN,
       username: "shivam@123", // Use "username" instead of "userName" if that's your schema field
       email: "shivam@gmail.com",
-      roles:["639c3761a9d14355e0713f37"],
+      roles: ["639c3761a9d14355e0713f37"],
       phone: {
         country_code: "+91",
         mobile_number: "8115199076",

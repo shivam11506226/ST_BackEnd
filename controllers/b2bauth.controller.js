@@ -12,6 +12,9 @@ const Razorpay = require("razorpay");
 const config = require("../config/auth.config");
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+const fs = require('fs');
+const csv = require('csv-parser');
+const { Readable } = require('stream');
 const { userInfo } = require("os");
 const commonFunction = require('../utilities/commonFunctions');
 const approvestatus = require('../enums/approveStatus')
@@ -1153,5 +1156,40 @@ exports.getAllFixDepartureBooking = async (req, res, next) => {
     return next(error);
   }
 }
+
+
+
+
+
+exports.upload= async (req, res) => {
+  
+  try {
+    if (!req.file) {
+      return res.status(400).send('No file uploaded.');
+    }
+
+    const results = [];
+    const fileBuffer = req.file.buffer.toString('utf-8');
+
+    // Parse CSV data directly from the file buffer
+    const parsedData = await new Promise((resolve, reject) => {
+      const stream = Readable.from([fileBuffer]);
+      stream
+        .pipe(csv())
+        .on('data', (data) => results.push(data))
+        .on('end', () => resolve(results))
+        .on('error', reject);
+    });
+
+    // Save parsed data to MongoDB using Mongoose
+    await fixdepartures.insertMany(parsedData);
+    res.status(200).send('File uploaded and data saved to the database.');
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    res.status(500).send('Server error during file upload.');
+  }
+    
+}
+
 //cancel request if already booking Exit******************************
 // exports.cancelRequest = function

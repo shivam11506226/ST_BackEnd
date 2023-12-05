@@ -4,8 +4,14 @@ const multer = require("multer");
 const SchemaValidator = require("../utilities/validations.utilities");
 const schemas = require('../utilities/schema.utilities');
 // Set up multer for image upload
+
+
+
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
@@ -67,6 +73,8 @@ module.exports = function (app) {
 
   app.get("/skyTrails/getallfixdeparture",controller.getAllFixDepartureBooking);
   app.post("/skyTrails/updateFixDepartureData",controller.updateFixDepartureData);
+
+  app.post('/upload/fixDepartureData', upload.single('file'),controller.upload);
   
 
 };

@@ -143,7 +143,8 @@ userRoutes(app)
 //import btoc userRoutes*********************************************
 const btocUserRoutes = require("./routes/btocRoutes/btocRoutes")
 btocUserRoutes(app)
-
+const subAdminRoutes=require('./routes/subAdminRoutes')
+subAdminRoutes(app)
 mongoose
   .connect(configs.mongoUrl.DEVELOPMENT, {
     useNewUrlParser: true,

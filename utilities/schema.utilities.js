@@ -162,6 +162,8 @@ const schemas = {
 
   subAdminSchema: joi.object().keys({
     username: joi.string().required(),
+    firstName:joi.string().optional(),
+    lastName:joi.string().optional(),
     email: joi.string().required(),
     mobile_number: joi.string().required(),
     password: joi.string().required(),
@@ -169,6 +171,8 @@ const schemas = {
   updateSubAdmin: joi.object().keys({
     subAdminId: joi.string().required(),
     username: joi.string().optional(),
+    firstName:joi.string().optional(),
+    lastName:joi.string().optional(),
     email: joi.string().optional(),
     mobile_number: joi.string().optional(),
   }),

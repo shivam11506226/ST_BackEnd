@@ -7,6 +7,9 @@ const authType=require("../../enums/authType")
 mongoose.pluralize(null);
 const subAdminSchema = new mongoose.Schema(
   {
+    userName:{
+      type: String,
+    },
     firstName: {
       type: String,
     },
@@ -21,6 +24,9 @@ const subAdminSchema = new mongoose.Schema(
     },
     contactNumber: {
       type: String,
+    },
+    password:{
+      type:String
     },
     status: {
       type: String,
@@ -39,4 +45,4 @@ const subAdminSchema = new mongoose.Schema(
   { timestamps: true }
 );
 subAdminSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("SUBADMINS", subAdminSchema);
+module.exports = mongoose.model("subAdmins", subAdminSchema);

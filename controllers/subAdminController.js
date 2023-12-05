@@ -23,30 +23,28 @@ exports.createSubAdmin = async (req, res, next) => {
     try {
         const { username, email, password, mobile_number } = req.body;
         const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
-        if (!isAdmin) {
-            return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
-        }
+        // if (!isAdmin) {
+        //     return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
+        // }
         const isSubAdminExist = await findSubAdmin({ email: email, userType: 'SUBADMIN', mobile_number: mobile_number });
         if (isSubAdminExist) {
             return res.status(statusCode.Conflict).send({ message: responseMessage.SUBADMIN_ALREADY_EXIST })
         }
         const pass = await bcrypt.hash(password, 10)
         const data = {
-            username: username,
+            userName: username,
             email: email,
             password: pass,
-            phone: { mobile_number: mobile_number },
-            approveStatus: approvestatus.APPROVED,
-            userType: userType.SUBADMIN
+            contactNumber:  mobile_number ,
         }
-        const doc = await createSubAdmin(data)
-        const result = {
-            username: doc.username,
-            email: doc.email,
-            mobileNumber: doc.phone.mobile_number,
-            userType: doc.userType
+        const result = await createSubAdmin(data)
+        // const result = {
+        //     userName: doc.username,
+        //     email: doc.email,
+        //     contactNumber: doc.mobile_number,
+        //     userType: doc.userType
 
-        }
+        // }
         return res.status(statusCode.Conflict).send({ message: responseMessage.SUBADMIN_CREATED, result: result });
 
     } catch (error) {

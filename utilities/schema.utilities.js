@@ -184,8 +184,7 @@ const schemas = {
     password: joi.string().required(),
   }),
   subAdminLogin: joi.object().keys({
-    email: joi.string().optional(),
-    mobileNumber: joi.string().optional(),
+    userName: joi.string().required(),
     password: joi.string().required(),
   }),
 

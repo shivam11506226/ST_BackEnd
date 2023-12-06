@@ -7,6 +7,7 @@ const approvalStatus = require("../../enums/approveStatus");
 mongoose.pluralize(null);
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');
+const { timeStamp } = require("console");
 
 const advertisementSchema = new mongoose.Schema({
     image: {
@@ -42,7 +43,7 @@ const advertisementSchema = new mongoose.Schema({
         enum:[offerType.FLIGHTS,offerType.BUS,offerType.HOTELS,offerType.HOLIDAYS],
         default:offerType.FLIGHTS
     }
-})
+},{timeStamp:true})
 advertisementSchema.plugin(mongoosePaginate);
 
 advertisementSchema.plugin(aggregatePaginate);

@@ -20,17 +20,17 @@ module.exports = function (app) {
     app.get('/skyTrails/api/user/getUserflightBooking',[authJwt.verifcationToken],flightBookingController.getUserflightBooking);
     app.get('/skyTrails/api/user/getUserFlightData',[authJwt.verifcationToken],flightBookingController.getUserFlightData);
     // [authJwt.verifcationToken]
-    app.post('/skyTrails/api/createadvertisment',SchemaValidator(schemas.advertisementSchema), advertisementController.createadvertismentController);
-    app.put('/skyTrails/api/updateadvertisement',[authJwt.verifcationToken],SchemaValidator(schemas.updateadvertisementSchema), advertisementController.updateadvertisementController);
+    app.post('/skyTrails/api/admin/createadvertisment',SchemaValidator(schemas.advertisementSchema), advertisementController.createadvertismentController);
+    app.put('/skyTrails/api/admin/updateadvertisement',[authJwt.verifcationToken],SchemaValidator(schemas.updateadvertisementSchema), advertisementController.updateadvertisementController);
     app.get('/skyTrails/api/getadvertisement',advertisementController.getadvertisementController);
-    app.post('/skyTrails/api/createflightadvertisment',[authJwt.verifcationToken],SchemaValidator(schemas.advertisementSchema), advertisementController.createflightadvertismentController);
-    app.put('/skyTrails/api/updateflightadvertisement',[authJwt.verifcationToken],SchemaValidator(schemas.updateadvertisementSchema), advertisementController.updateadvertisementController);
-    app.get('/skyTrails/api/getflightadvertisementr',advertisementController.getflightadvertisementController);
-    app.post('/skyTrails/api/createbustadvertisment',[authJwt.verifcationToken],SchemaValidator(schemas.advertisementSchema), advertisementController.createbustadvertismentController);
-    app.put('/skyTrails/api/updatebusadvertisement',[authJwt.verifcationToken],SchemaValidator(schemas.updateadvertisementSchema), advertisementController.updatebusadvertisementController);
+    app.post('/skyTrails/api/admin/createflightadvertisment',[authJwt.verifcationToken],SchemaValidator(schemas.advertisementSchema), advertisementController.createflightadvertismentController);
+    app.put('/skyTrails/api/admin/updateflightadvertisement',[authJwt.verifcationToken],SchemaValidator(schemas.updateadvertisementSchema), advertisementController.updateadvertisementController);
+    app.get('/skyTrails/api/getflightadvertisement',advertisementController.getflightadvertisementController);
+    app.post('/skyTrails/api/admin/createbustadvertisment',[authJwt.verifcationToken],SchemaValidator(schemas.advertisementSchema), advertisementController.createbustadvertismentController);
+    app.put('/skyTrails/api/admin/updatebusadvertisement',[authJwt.verifcationToken],SchemaValidator(schemas.updateadvertisementSchema), advertisementController.updatebusadvertisementController);
     app.get('/skyTrails/api/getbusadvertisement',advertisementController.getbusadvertisementController);
-    app.post('/skyTrails/api/createhoteladvertisment',[authJwt.verifcationToken],SchemaValidator(schemas.advertisementSchema), advertisementController.createhoteladvertismentController);
-    app.put('/skyTrails/api/updatehoteladvertisement',[authJwt.verifcationToken],SchemaValidator(schemas.updateadvertisementSchema), advertisementController.updatehoteladvertisementController);
+    app.post('/skyTrails/api/admin/createhoteladvertisment',[authJwt.verifcationToken],SchemaValidator(schemas.advertisementSchema), advertisementController.createhoteladvertismentController);
+    app.put('/skyTrails/api/admin/updatehoteladvertisement',[authJwt.verifcationToken],SchemaValidator(schemas.updateadvertisementSchema), advertisementController.updatehoteladvertisementController);
     app.get('/skyTrails/api/gethoteladvertisement',advertisementController.gethoteladvertisementController);
 
     app.post('/skyTrails/api/user/cancelUserHotelBooking',[authJwt.verifcationToken],SchemaValidator(schemas.cancelUserHotelBookingSchema),userCancelController.cancelUserHotelBooking);

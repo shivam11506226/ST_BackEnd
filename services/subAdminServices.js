@@ -13,7 +13,7 @@ const subAdminServices = {
     
 
     findSubAdminData: async (query) => {
-        return await subAdminModel.findOne(query).select('-createdAt -updatedAt -roles -password -isOnline -firstTime -isApproved');
+        return await subAdminModel.findOne(query);
     },
 
     deleteSubAdmin: async (query) => {

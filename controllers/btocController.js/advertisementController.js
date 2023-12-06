@@ -158,9 +158,9 @@ exports.updateflightadvertisementController = async (req, res, next) => {
 // approvalStatus:{$nin:[approvalStatus.PENDING,approvalStatus.REJECT]},
 exports.getflightadvertisementController = async (req, res, next) => {
     try {
-        const { page, limit } = req.query;
+        // const { page, limit } = req.query;
        
-        const result=await getflightAdvertisment(req.query);
+        const result=await advertisementflightList({status:status.ACTIVE});
         if(!result){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
         }
@@ -236,7 +236,7 @@ exports.getbusadvertisementController = async (req, res, next) => {
     try {
         const { page, limit } = req.query;
        
-        const result=await getbusAdvertisment(req.query);
+        const result=await advertisementbusList({status:status.ACTIVE});
         if(!result){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
         }
@@ -313,7 +313,7 @@ exports.gethoteladvertisementController = async (req, res, next) => {
     try {
         const { page, limit } = req.query;
        
-        const result=await gethotelAdvertisment(req.query);
+        const result=await hoteladvertisementList({status:status.ACTIVE});
         if(!result){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
         }

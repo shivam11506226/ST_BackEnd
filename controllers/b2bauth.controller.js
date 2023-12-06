@@ -3,6 +3,7 @@ const b2bUser = db.userb2b;
 const mongoose = require('mongoose')
 var bcrypt = require("bcryptjs");
 const wallet = require('../model/wallet.model');
+const agentWallets=require('../model/agentWallet.model');
 const User = require('../model/user.model');
 const Role = require('../model/role.model');
 const sectors=require('../model/addSectorModal');
@@ -304,7 +305,7 @@ exports.GetMarkup = async (req, res) => {
 exports.updateUserBalance = async (req, res) => {
 
   try {
-    const { _id, amount } = req.body; // Destructure userId and additionalBalance from the request body
+    const { _id, amount, paymentId } = req.body; // Destructure userId and additionalBalance from the request body
 
     // Check if userId is valid in your user table
     console.log(req.body);
@@ -334,6 +335,13 @@ exports.updateUserBalance = async (req, res) => {
       //   data: order,
       // });
     });
+
+    const AgentWalletData={
+      userId:_id,
+      orderId:paymentId,
+      amount:amount
+    };
+    await agentWallets.create(AgentWalletData);
     const user = await b2bUser.findById(_id);
 
     if (!user) {

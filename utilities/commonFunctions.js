@@ -2010,7 +2010,6 @@ module.exports = {
        
    fs.writeFileSync(pdfFilePath, pdfBytes);
 
-    
 
     var transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",

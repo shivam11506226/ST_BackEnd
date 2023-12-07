@@ -45,14 +45,15 @@ exports.hotelBooking= async (req, res, next)=> {
         hotelName:req.body.hotelName
       }
       const result = await createUserhotelBookingModel(object);
-      const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login`
-      await sendSMS.sendSMSForHotelBooking(result);
-      await whatsApi.sendWhatsAppMessage(result.phoneNumber.mobile_number, message);
-      // await commonFunction.HotelBookingConfirmationMail(data);
- 
+      console.log("result==========",result)
       if(result){
+        const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login`
+        await sendSMS.sendSMSForHotelBooking(result);
+        await whatsApi.sendWhatsAppMessage(result.phoneNumber.mobile_number, message);
+        await commonFunction.HotelBookingConfirmationMail(data);
         return res.status(statusCode.OK).send({statusCode:statusCode.OK, message: responseMessage.BOOKING_SUCCESS,result:result });
       }
+    
     } catch (error) {
       console.log("error: ", error);
       return next(error);

@@ -72,5 +72,7 @@ module.exports = {
 	REMOVE_FROM_LIKE: "You have removed your like from the comment",
 	LIKED: "You have liked the comment",
 	CREATED_SUCCESS:"Data was created successfully.",
-	QUERY_SUBMITTED:"Dear user your query submitted to our support team, we will reach you soon."
+	QUERY_SUBMITTED:"Dear user your query submitted to our support team, we will reach you soon.",
+	QUERY_RESOLVED:"Query is resolved.",
+	BAD_REQUEST:"Bad request."
 };

@@ -117,7 +117,7 @@ exports.createflightadvertismentController = async (req, res, next) => {
         }
         const result = await createflightadvertisement(object);
         if(!result){
-            return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
+            return res.status(statusCode.InternalError).send({statusCode:statusCode.InternalError,responseMessage:responseMessage.INTERNAL_ERROR})
         }
         return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.ADS_CREATED, result: result });
     } catch (error) {

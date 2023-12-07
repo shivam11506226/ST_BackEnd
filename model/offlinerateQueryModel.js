@@ -9,7 +9,7 @@ mongoose.pluralize(null);
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require("mongoose-paginate-v2");
 
-const rateQuerySchema = new mongoose.Schema(
+const QuerySchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -21,6 +21,9 @@ const rateQuerySchema = new mongoose.Schema(
       type: String,
     },
     destination: {
+      type: String,
+    },
+    message: {
       type: String,
     },
     resolveStatus: {
@@ -43,12 +46,12 @@ const rateQuerySchema = new mongoose.Schema(
   },
   { timeStamp: true }
 );
-rateQuerySchema.plugin(mongoosePaginate);
+QuerySchema.plugin(mongoosePaginate);
 
-rateQuerySchema.plugin(aggregatePaginate);
+QuerySchema.plugin(aggregatePaginate);
 const Advertisement = mongoose.model(
-  "rateQuery",
-  rateQuerySchema
+  "offlineQuery",
+  QuerySchema
 );
 
 module.exports = Advertisement;

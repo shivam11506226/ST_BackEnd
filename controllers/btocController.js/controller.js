@@ -176,14 +176,22 @@ exports.resendOtp = async (req, res, next) => {
         return next(error);
     }
 }
+
+//**********************************************************UPLOAD IMAGE********************************************/
 exports.uploadImage = async (req, res, next) => {
     try {
-        const { profilePic } = req;
-        const isUserExist = await findUserData({ _id: req.userId });
+        if (!req.files || !req.files.profilePic) {
+            return res.status(400).send({ message: 'No file uploaded.' });
+        }
+
+        const { profilePic } = req.files;
+        console.log("profilePic========",profilePic);
+        const isUserExist = await findUserData({ _id: req.userId, status: status.ACTIVE });
         if (!isUserExist) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
         }
         const imageFiles = await commonFunction.getSecureUrl(profilePic);
+        console.log("imageFiles==================", imageFiles);
         if (!imageFiles) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
         }
@@ -193,7 +201,7 @@ exports.uploadImage = async (req, res, next) => {
         console.log("error", error);
         return next(error);
     }
-}
+};
 exports.getUserProfile = async (req, res, next) => {
     try {
         const isUserExist = await findUserData({ _id: req.userId, status: status.ACTIVE });

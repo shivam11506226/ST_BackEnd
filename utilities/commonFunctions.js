@@ -2407,4 +2407,105 @@ var mailOptions = {
 return await transporter.sendMail(mailOptions);
   },
 
+  senConfirmationQuery:async(to)=>{
+    let html = `<!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <title>Thank You for Your Query</title>
+        <style>
+            body {
+                font-family: 'Open Sans', sans-serif;
+                background: linear-gradient(to bottom right, #4b6cb7, #182848);
+                margin: 0;
+                padding: 0;
+            }
+    
+            .card {
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                transition: 0.5s;
+                width: 80%;
+                margin: auto;
+                min-height: 15em;
+                margin-top: 50px;
+                background-color: #fff;
+                border-radius: 20px;
+                overflow: hidden;
+            }
+    
+            .main {
+                background-image: url(''); /* Add your background image URL here */
+                background-size: cover;
+                background-position: center;
+                height: 250px;
+            }
+    
+            .main-container {
+                text-align: center;
+                padding: 20px;
+                color: #1a1a1a;
+            }
+    
+            img {
+                width: 150px;
+                border-radius: 50%;
+                margin-top: 20px;
+            }
+    
+            .message-container {
+                width: 90%;
+                margin: auto;
+                text-align: left;
+                padding-top: 20px;
+            }
+    
+            p {
+                font-size: 20px;
+                line-height: 1.6;
+                margin-top: 0;
+                color: #555;
+            }
+    
+            h1 {
+                font-size: 42px;
+                color: #1a1a1a;
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div class="card">
+            <div class="main" style="background-image: url('');"></div>
+            <div class="main-container">
+                <h1><strong>The SkyTrails</strong></h1>
+                <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
+                    alt="The SkyTrails Logo">
+                <div class="message-container">
+                    <p>Dear user, thank you for reaching out to The SkyTrails support team. Your query has been submitted, and we will get back to you as soon as possible.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    
+    </html>
+    `;
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+     auth: {
+      user: nodemailerConfig.options.auth.user,
+      pass: nodemailerConfig.options.auth.pass,
+    },
+  });
+    var mailOptions = {
+      from: nodemailerConfig.user,
+      to: to,
+      subject: "Your query Submitted successfull, connect you soon",
+      html: html,
+    };
+    return await transporter.sendMail(mailOptions);
+    
+
+  }
+
 };

@@ -11,30 +11,37 @@ const sendSMS = require("../utilities/sendSms");
 const whatsAppMsg = require("../utilities/whatsApi");
 exports.addBusBookingData = async (req, res) => {
   try {
-    const data = {
-      userId: req.body.userId,
-      name: req.body.name,
-      phone: req.body.phone,
-      email: req.body.email,
-      address: req.body.address,
-      destination: req.body.destination,
-      origin: req.body.origin,
-      dateOfJourney: req.body.dateOfJourney,
-      busType: req.body.busType,
-      pnr: req.body.pnr,
-      busId: req.body.busId,
-      noOfSeats: req.body.noOfSeats,
-      amount:req.body.amount,
+    // const data = {
+    //   userId: req.body.userId,
+    //   name: req.body.name,
+    //   phone: req.body.phone,
+    //   email: req.body.email,
+    //   address: req.body.address,
+    //   destination: req.body.destination,
+    //   origin: req.body.origin,
+    //   dateOfJourney: req.body.dateOfJourney,
+    //   busType: req.body.busType,
+    //   pnr: req.body.pnr,
+    //   busId: req.body.busId,
+    //   noOfSeats: req.body.noOfSeats,
+    //   amount:req.body.amount,
+    //   bookingStatus:"BOOKED",
+    // };
+    
+    const data={
+      ...req.body,
       bookingStatus:"BOOKED",
-    };
-    const response = await busBookingData.create(data);
+    }
+    const busBooking = new busBookingData(data);
+    const response = await busBooking.save();
     // console.log(response.bookingStatus,"status")
 
     const msg = "Bus booking details added successfully";
     if(response.bookingStatus === "BOOKED"){
-      const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login,`
+      const message = `Hello ${data.passenger[0]?.title} ${data.passenger[0]?.firstName} ${data.passenger[0]?.lastName} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login,`
       await sendSMS.sendSMSBusBookingAgent(response);
-      await whatsAppMsg.sendWhatsAppMessage(data.phone, message);
+      await whatsAppMsg.sendWhatsAppMessage(data?.passenger[0]?.phone, message);
+      // console.log(data, "data")
       await commonFunction.BusBookingConfirmationMail(data);
     
 

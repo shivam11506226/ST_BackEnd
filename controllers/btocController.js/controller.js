@@ -180,11 +180,11 @@ exports.resendOtp = async (req, res, next) => {
 //**********************************************************UPLOAD IMAGE********************************************/
 exports.uploadImage = async (req, res, next) => {
     try {
-        if (!req.files || !req.files.profilePic) {
+        if (!req.body || !req.body.profilePic) {
             return res.status(400).send({ message: 'No file uploaded.' });
         }
 
-        const { profilePic } = req.files;
+        const { profilePic } = req.body;
         console.log("profilePic========",profilePic);
         const isUserExist = await findUserData({ _id: req.userId, status: status.ACTIVE });
         if (!isUserExist) {

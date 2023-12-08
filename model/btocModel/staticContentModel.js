@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const status = require("../enums/status");
-const staticContentsType = require("../enums/staticContentType");
-const subStaticContentType = require("../enums/subStaticContentType");
+const status = require("../../enums/status");
+const staticContentsType = require("../../enums/staticContentType");
+const subStaticContentType = require("../../enums/subStaticContentType");
 
 const mongoosePaginate = require("mongoose-paginate-v2");
 mongoose.pluralize(null);
@@ -37,16 +37,20 @@ const staticContentSchema = new mongoose.Schema(
         staticContentsType.QUESTION,
       ],
     },
+    // staticContentType: {
+    //   type: String,
+    //   enum:[subStaticContentType.ABOUTUS,subStaticContentType.BOOKINGPOLICY,subStaticContentType.CORPORATETRAVEL,subStaticContentType.RETURNPOLICY,subStaticContentType.TNC,subStaticContentType.PRIVACYPOLICY]
+    // },
     status: {
       type: String,
-      enum: [status.ACTIVE, status.BLOCK, status.BLOCK],
+      enum:[status.ACTIVE,status.BLOCK,status.BLOCK],
       default: status.ACTIVE,
     },
   },
   { timestamps: true }
 );
 staticContentSchema.plugin(mongoosePaginate);
-module.exports = mongoose.model("staticContent", staticContentSchema);
+module.exports = mongoose.model("AppStaticContent", staticContentSchema);
 
 mongoose
   .model("staticContent", staticContentSchema)
@@ -64,7 +68,7 @@ mongoose
       };
       var obj2 = {
         type: staticContentsType.PRIVACYPOLICY,
-        title: "Privacy Policy",
+        title: "Privacy Policy - TheSkytrails",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget.",
       };

@@ -1,10 +1,6 @@
-const status = require("../enums/status");
-const staticContentModel=require("../model/staticContentModel")
+const status = require("../../enums/status");
+const staticContentModel=require("../../model/btocModel/staticContentModel")
 
-
-//**************************************WORK BY */
-//**********CHARU YADAV*****************//
-//**********NODE JS DEVELOPER, This is a services which we need mongodb queries to perform operation on db********//
 
 const staticContentServices={
     createstaticContent: async (insertObj) => {

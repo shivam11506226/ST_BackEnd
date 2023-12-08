@@ -1,6 +1,9 @@
 const status = require("../enums/status");
 const forumQueAnsCommModel = require("../model/forum/forumQueAnsComm")
 
+//**************************************WORK BY */
+//**********CHARU YADAV*****************//
+//**********NODE JS DEVELOPER, This is a services which we need mongodb queries to perform operation on db********//
 
 const forumQueAnsCommServices = {
     createforumQueAnsComm: async (insertObj) => {

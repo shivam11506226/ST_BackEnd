@@ -1,6 +1,9 @@
 const status = require("../enums/status");
 const forumQueModel=require("../model/forum/forumQue")
 
+//**************************************WORK BY */
+//**********CHARU YADAV*****************//
+//**********NODE JS DEVELOPER, This is a services which we need mongodb queries to perform operation on db********//
 
 const forumQueServices={
     createforumQue: async (insertObj) => {
@@ -12,7 +15,7 @@ const forumQueServices={
     },
 
     findforumQueData: async (query) => {
-        return await forumQueModel.find(query);
+        return await forumQueModel.find(query).sort({createdAt:-1});
     },
 
     deleteforumQue: async (query) => {

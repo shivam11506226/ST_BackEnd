@@ -16,4 +16,5 @@ module.exports = function (app) {
     app.get('/skyTrails/forumPost/getTopStories',controller.getTopStories);
     app.get('/skyTrails/forumPost/getPostByID',controller.getPostByID);
     app.post('/skyTrails/forumPost/createPost1', [authJwt.verifcationToken], controller.createPost1);
+    app.get('/skyTrails/forumPost/getComments',controller.getComments)
 }

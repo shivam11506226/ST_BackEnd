@@ -3,6 +3,11 @@ const userType = require("../../enums/userType");
 const status = require("../../enums/status");
 const approvalStatus=require("../../enums/approveStatus")
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
+
+//**************************************WORK BY */
+//**********CHARU YADAV*****************//
+//**********NODE JS DEVELOPER, This is a services which we need mongodb queries to perform operation on db********//
+
 const flightadvertisementServices={
     createflightadvertisement: async (insertObj) => {
         return await advertisementModel.create(insertObj);

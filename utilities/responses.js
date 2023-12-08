@@ -74,5 +74,8 @@ module.exports = {
 	CREATED_SUCCESS:"Data was created successfully.",
 	QUERY_SUBMITTED:"Dear user your query submitted to our support team, we will reach you soon.",
 	QUERY_RESOLVED:"Query is resolved.",
-	BAD_REQUEST:"Bad request."
+	BAD_REQUEST:"Bad request.",
+	STATIC_CREATED:"Static content created successfully.",
+	STATIC_DELETED:"Static content deleted successfully.",
+	POST_NOT_FOUND:"Post not found"
 };

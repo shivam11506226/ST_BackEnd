@@ -7,11 +7,14 @@ module.exports = function (app) {
     res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
     next();
   });
+  // app.post(
+  //   "/skyTrails/busBooking/addBusBookingData",
+  //   SchemaValidator(schemas.busBookingSchema),
+  //   controller.addBusBookingData
+  // );
+
   app.post(
-    "/skyTrails/busBooking/addBusBookingData",
-    SchemaValidator(schemas.busBookingSchema),
-    controller.addBusBookingData
-  );
+    "/skyTrails/busBooking/addBusBookingData", controller.addBusBookingData);
 
   // Get All Bus Boooking list for Admin
 

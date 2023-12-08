@@ -279,7 +279,7 @@ module.exports = {
       apikey: key,
       senderid: senderid,
       templateid: templateid1,
-      number: data.passengerDetails[0].ContactNo,
+      number: data.passengerDetails[0].ContactNo.slice(5),
       message: details,
     };
     try {
@@ -293,13 +293,15 @@ module.exports = {
     }
   },
   sendSMSBusBookingAgent:async(data)=>{
-    const details=`Hello, ${data.name}.We appreciate your Bus booking with The Skytrails. Your booking has been verified! Click the following link to view details= https://theskytrails.com/google`;
+    const name=`${data.passenger[0]?.title} ${data.passenger[0]?.firstName} ${data.passenger[0]?.lastName}`;
+    const phone=`${data.passenger[0]?.Phone}`;
+    const details=`Hello, ${name}.We appreciate your Bus booking with The Skytrails. Your booking has been verified! Click the following link to view details= https://theskytrails.com/google`;
     const url = `http://sms.txly.in/vb/apikey.php?`;
     const params = {
       apikey: key,
       senderid: senderid,
       templateid: templateid3,
-      number: data.phone,
+      number: phone,
       message: details,
     };
     try {

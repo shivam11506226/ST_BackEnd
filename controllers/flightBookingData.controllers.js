@@ -34,7 +34,7 @@ exports.addFlightBookingData = async (req, res) => {
     // console.log(response.paymentStatus)
     const userName = data.passengerDetails[0].firstName + data.passengerDetails[0].lastName;
     const message = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details:https://theskytrails.com/google`
-    await whatsAppMsg.sendWhatsAppMessage(data.passengerDetails[0].ContactNo.slice(5), message)
+    await whatsAppMsg.sendWhatsAppMessage(data.passengerDetails[0].ContactNo, message)
     const send = await sendSMS.sendSMSForFlightBookingAgent(response);
     await commonFunction.FlightBookingConfirmationMail(data);
     actionCompleteResponse(res, response, msg);

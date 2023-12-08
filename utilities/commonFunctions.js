@@ -840,33 +840,13 @@ module.exports = {
 
 
   BusBookingConfirmationMail: async (to) => {
-    // console.log(to,"data");
 
     const currentDate = new Date();
     const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
     const formattedDate = currentDate.toLocaleDateString('en-US', options);
-
-    // dateFormate
-
-    function formatDate(dateString, format) {
-      const date = new Date(dateString);
-      const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-      };
-      return date.toLocaleString('en-US', options);
-    }
-
-    const boardingTimeFormatted = formatDate(to.departureTime, 'DD MMMM YYYY hh:mm A');
-    const journeyDateFormatted = formatDate(to.departureTime, 'ddd, DD MMM YYYY');
-    const depTimeFormatted = formatDate(to.departureTime, 'hh:mm A');
     
   // console.log("to================>>>>>>>",to)
-      const name = `${to.passenger[0]?.title} ${to.passenger[0]?.firstName} ${to.passenger[0]?.lastName}`;
+      const name = to.name;
       // Define your HTML content with nested elements
       const htmlContent = `<!DOCTYPE html>
       <html lang="en">
@@ -948,22 +928,20 @@ module.exports = {
                 </p>
               </div>
       
-              ${to.passenger.map(item =>`
               <div style="width:100%; display: flex; padding: 5px 0 0 5px; overflow: hidden;">
                 <p style="width: 40%">
-                ${item?.title} ${item?.firstName} ${item?.lastName}
+                  Mr Md Raufur Rahman
                 </p>
                 <p style="width: 20%; text-align: center;">
-                  ${to.pnr}
+                  MCTVRI
                 </p>
                 <p style="width: 20%; text-align: center;">
-                  ${item.seatNumber}
+                  2
                 </p>
                 <p style="width: 20%; text-align: center;">
-                  Rs. ${item.Price}
+                  Rs. 105
                 </p>
               </div>
-              `).join('')}
       
       
       
@@ -1005,11 +983,11 @@ module.exports = {
                       ${to.origin}
                     </p>
                     <p>
-                      ${to.travelName}
+                      TESTING ACCOUNT
                     </p>
       
                     <p>
-                      ${journeyDateFormatted}
+                      ${to.dateOfJourney}
                     </p>
                     <p>
                       ${to.pnr}
@@ -1041,10 +1019,10 @@ module.exports = {
                     </p>
       
                     <p>
-                      ${depTimeFormatted}
+                      10:00 AM
                     </p>
                     <p>
-                    ₹ ${to.amount}.00
+                      ${to.amount}
                     </p>
                   </div>
                 </div>
@@ -1091,17 +1069,17 @@ module.exports = {
                   </div>
                   <div>
                     <p>
-                      ${to?.BoardingPoint?.Location}
+                      APSRTC M G Bus Station
                     </p>
                     <p>
-                      ${to?.BoardingPoint?.Landmark}
+                      APSRTC M G Bus Station
                     </p>
       
                     <p>
-                      ${to?.BoardingPoint?.Address}
+                      Testingg
                     </p>
                     <p>
-                      ${boardingTimeFormatted}
+                      30 November 2023 10:00 AM
                     </p>
                     <p>
                       1234567890
@@ -1205,19 +1183,41 @@ module.exports = {
                 </div>
               </div>
       
-              
               <div style="width: 100%; display: flex; justify-content: flex-start; gap: 35%; padding: 5px 0 0px 5px;">
+      
                 <div style="text-align: center;">
-                  <p><strong>Cancellation time</strong></p>
-                  ${to.CancelPolicy.map(policy => `
-                  <p>${policy.PolicyString}</p>`).join('')}
+                  <p>
+                    <strong>Cancellation time</strong>
+                  </p>
+                  <p>
+                    If cancelled before 29 hours of departure time
+                  </p>
+                  <p>
+                    If cancelled before 17 - 29 hours of departure time
+                  </p>
+                  <p>
+                    If cancelled within 17 hours of departure time
+                  </p>
                 </div>
+      
+      
                 <div>
-                  <p><strong>Cancellation charges</strong></p>
-                  ${to.CancelPolicy.map(policy => `<p>${policy.CancellationCharge.toFixed(2)}%</p>`).join('')}
+                  <p>
+                    <strong>Cancellation charges</strong>
+                  </p>
+                  <p>
+                    10.00%
+                  </p>
+      
+                  <p>
+                    50.00%
+                  </p>
+                  <p>
+                    100.00%
+                  </p>
                 </div>
+      
               </div>
-            
             </div>
           </div>
       
@@ -1355,8 +1355,8 @@ module.exports = {
       },
     });
   
-    const passengerEmail = to.passenger[0]?.Email;
-  // console.log("=================",passengerEmail,name)
+    const passengerEmail = to.email;
+  console.log("=================",passengerEmail)
     const mailOptions = {
       from: nodemailerConfig.options.auth.user,
       to: passengerEmail,

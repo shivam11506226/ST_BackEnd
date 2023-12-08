@@ -12,31 +12,55 @@ const busBookingDataSchema =
         type: Schema.Types.ObjectId,
         ref: "userb2bs",
       },
+      name: {
+        type: String,
+        required: [true, 'Name is required'],
+      },
+
+      phone:
+        { type: String, required: [true, 'phone is required'] },
+
+      email: {
+        type: String,
+        required: [true, 'email is required'],
+        match: [/.+\@.+\..+/, 'Please enter a valid email'],
+      },
+      address: {
+        type: String,
+        required: [true, 'address is required'],
+      },
       destination: {
         type: String,
+        required: [true, 'destination is required'],
       },
       origin: {
         type: String,
+        required: [true, 'origin is required'],
       },
-      departureTime: {
+
+      dateOfJourney: {
         type: String,
+        required: [true, 'Date of Journey is required']
       },
-      arrivalTime: String,
-      travelName: String,
       busType: {
         type: String,
+        required: [true, 'Bus name is required'],
       },
       pnr: {
         type: String,
+        required: [true, 'pnr is required'],
       },
       busId: {
         type: Number,
+        required: [true, 'bus Id is required'],
       },
       noOfSeats: {
-        type: Number,
+        type: Number, required: [true, 'no of seats is required'],
       },
       amount:{
         type:Number,
+        required:[true, 'amount is required'],
+
       },
       status: {
         type: String,
@@ -45,35 +69,7 @@ const busBookingDataSchema =
       bookingStatus: {
         type: String,
         default: bookingStatus.PENDING
-      },
-      passenger: [
-        {
-          title: String,
-          firstName: String,
-          lastName: String,
-          Email: String,
-          Phone: String,
-          Address: String,
-          seatNumber: String,
-          Price: Number
-        }
-      ],
-      BoardingPoint: {
-        Location: String,
-        Landmark: String,
-        Address: String,
-        Contactnumber: String
-      },
-      CancelPolicy: [
-        {
-          CancellationCharge: Number,
-          CancellationChargeType: Number,
-          PolicyString: String,
-          TimeBeforeDept: String,
-          FromDate: String,
-          ToDate: String
-        }
-      ]
+      }
     },
     { timestamps: true }
   )

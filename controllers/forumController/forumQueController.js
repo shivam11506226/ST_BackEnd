@@ -49,26 +49,19 @@ exports.getPost = async (req, res, next) => {
     try {
         const result = {}; // Declare as an object
         const { search, page, limit, questionId, userId } = req.query;
-        const post = await forumQueListLookUp1(req.query);
+        const post = await findforumQueData({});
         if (post) {
             result.post = post;
         } else {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
         }
+        console.log("lenghth",post.length)
         const unanswered = await forumQueListLookUp(req.query);
         if (unanswered) {
             result.unanswered = unanswered;
         } else {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
         }
-
-        // const answered = await forumListLookUp(req.query);
-        // if (answered) {
-        //     result.answered = answered;
-        // } else {
-        //     return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
-        // }
-
         if (result.unanswered) {
             return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: result });
         } else {
@@ -266,6 +259,7 @@ exports.getComments=async(req,res,next)=>{
         if(!getComments){
             return res.status(statusCode.badRequest).send({ statusCode: statusCode.badRequest, message: responseMessage.BAD_REQUEST });  
         }
+        return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: getComments });
     } catch (error) {
         console.log("get comments ============",error);
         return next(error)

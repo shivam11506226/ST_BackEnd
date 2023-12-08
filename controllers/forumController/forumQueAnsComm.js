@@ -39,11 +39,11 @@ exports.createComment = async (req, res, next) => {
         const { userId, questionId, content, commentId } = req.body;
         const isUser = await findUser({ _id: userId });
         if (!isUser) {
-            return sendActionFailedResponse(res, {}, "User not found");
+            return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.USERS_NOT_FOUND})
         }
         const isQuestionExist = await findforumQue({ _id: questionId });
         if (!isQuestionExist) {
-            return sendActionFailedResponse(res, {}, "Post not found");
+            return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.POST_NOT_FOUND})
         }
         if (commentId) {
             const parentComment = await findforumQueAnsComm({
@@ -70,7 +70,6 @@ exports.createComment = async (req, res, next) => {
             userId: userId,
             content: content,
             questionId: questionId,
-            _id: data._id,
 
         };
         const data = await createforumQueAnsComm(comment);

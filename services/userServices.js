@@ -1,6 +1,10 @@
 const userModel = require('../model/user.model');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
+//**************************************WORK BY */
+//**********CHARU YADAV*****************//
+//**********NODE JS DEVELOPER, This is a services which we need mongodb queries to perform operation on db********//
+
 const userServices = {
     createUser: async (insertObj) => {
         return await userModel.create(insertObj);

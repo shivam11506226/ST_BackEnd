@@ -2,12 +2,11 @@ const axios = require('axios');
 
 async function sendWhatsAppMessage( number, msg) {
     try {
-        const whatsappAPIUrl = 'https://api.bulkwhatsapp.net/wapp/api/send';
-        const apiKey = 'c255bc3cfea34fe588a61dc3c1fe642e';
+        const whatsappAPIUrl = process.env.WHATSAPP_URL
+        const apiKey = process.env.WHATSAPP_API_KEY;
         const mobileNumbers = number;
         const message = msg;
         const response = await axios.get(`${whatsappAPIUrl}?apikey=${apiKey}&mobile=${mobileNumbers}&msg=${message}`);
-        console.log("response===========",response);
         if(!response){
             console.log("response===========Error in uploading image");
         }

@@ -1,6 +1,10 @@
 const brbuserModel = require('../model/brbuser.model');
 const userType = require("../enums/userType");
 const status = require("../enums/status");
+//**************************************WORK BY */
+//**********CHARU YADAV*****************//
+//**********NODE JS DEVELOPER, This is a services which we need mongodb queries to perform operation on db********//
+
 const brbuserServices = {
     createbrbuser: async (insertObj) => {
         return await brbuserModel.create(insertObj);

@@ -1,6 +1,10 @@
 const transactionModel = require('../../model/btocModel/usertransactionsModel');
 const userType = require("../../enums/userType");
 const status = require("../../enums/status");
+//**************************************WORK BY */
+//**********CHARU YADAV*****************//
+//**********NODE JS DEVELOPER, This is a services which we need mongodb queries to perform operation on db********//
+
 const transactionModelServices = {
     createUsertransaction: async (insertObj) => {
         return await transactionModel.create(insertObj);

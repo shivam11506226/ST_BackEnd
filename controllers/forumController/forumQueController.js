@@ -62,14 +62,14 @@ exports.getPost = async (req, res, next) => {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
         }
 
-        const answered = await forumListLookUp(req.query);
-        if (answered) {
-            result.answered = answered;
-        } else {
-            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
-        }
+        // const answered = await forumListLookUp(req.query);
+        // if (answered) {
+        //     result.answered = answered;
+        // } else {
+        //     return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
+        // }
 
-        if (result.unanswered || result.answered) {
+        if (result.unanswered) {
             return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: result });
         } else {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
@@ -256,5 +256,18 @@ exports.createPost1 = async (req, res, next) => {
         console.log("error========>>>>>>", error);
         // sendActionFailedResponse(res, {}, error.message);
         return next(error);
+    }
+}
+
+exports.getComments=async(req,res,next)=>{
+    try {
+        const {questionId}=req.params;
+        const getComments=await findforumQueAnsComm({questionId:questionId,status:status.ACTIVE});
+        if(!getComments){
+            return res.status(statusCode.badRequest).send({ statusCode: statusCode.badRequest, message: responseMessage.BAD_REQUEST });  
+        }
+    } catch (error) {
+        console.log("get comments ============",error);
+        return next(error)
     }
 }

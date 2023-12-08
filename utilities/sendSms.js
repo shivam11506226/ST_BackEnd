@@ -15,6 +15,7 @@ const templateid = "1007338024565017323";
 const templateid1="1007929145692124903";
 const templateid2="1007809387575121367";
 const templateid3="1007413294765585646";
+const subAdmintemplateid="1007236255884587845"
 const baseURL = 'https://localhost:8000';
 
 // module.exports = {
@@ -229,7 +230,7 @@ module.exports = {
   sendSMSForFlightBooking: async (data) => {
      const userName=`${data?.passengerDetails[0]?.firstName} ${data?.passengerDetails[0]?.lastName}`
     const url1='google';
-    const phone=data?.passengerDetails[0]?.mobile_number;
+    const phone=data?.passengerDetails[0]?.ContactNo;
     console.log("Phone: " , phone);
     const details = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details:https://theskytrails.com/${url1}`;
     const url = `http://sms.txly.in/vb/apikey.php?`;
@@ -237,7 +238,7 @@ module.exports = {
       apikey: key,
       senderid: senderid,
       templateid: templateid1,
-      number: 8802737860,
+      number: phone,
       message: details,
     };
     try {
@@ -311,7 +312,6 @@ module.exports = {
       throw error;
     }
   },
-
   sendSMSForHotelBookingAgent:async(data)=>{
     const urldata="https://www.google.com/"
     const details=`Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:${urldata}. Or You Can login theskytrails.com/login`;
@@ -335,12 +335,12 @@ module.exports = {
   },
 
   sendSMSForSubAdmin: async (mobileNumber, otp) => {
-    const messageContent = `Welcome to TheSkyTrails, and check your mail for login credential your mail is: ${otp} to login to your. theskytrails account`;
+    const messageContent = `Welcome to TheSkyTrails, and check your mail for login credential your mail is: ${otp} to login to your account https://b2b.theskytrails.com/subAdminLogin`;
     const url = `http://sms.txly.in/vb/apikey.php?`;
     const params = {
       apikey: key,
       senderid: senderid,
-      templateid: templateid,
+      templateid: subAdmintemplateid,
       number: mobileNumber,
       message: messageContent,
     };
@@ -352,4 +352,5 @@ module.exports = {
       throw error;
     }
   },
+
 };

@@ -337,6 +337,9 @@ const schemas = {
     destination:joi.string().optional(),
     message:joi.string().required(),
     queryType:joi.string().valid(...Object.values(queryType)).required()
+  }),
+  updateofflineQuerySchema:joi.object().keys({
+    queryId:joi.string().required()
   })
 };
 

@@ -3,65 +3,84 @@ const { Schema } = require("mongoose");
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');
 const status =require("../enums/status");
+const bookingStatus = require("../enums/bookingStatus");
 const { string } = require("joi");
 const flightBookingData = new mongoose.Schema(
     {
       userId: {
         type: Schema.Types.ObjectId,
-        required: [true, "user ID is required"],
         ref: "userb2bs",
       },
 
       oneWay:{
         type:Boolean,
-        required: [true, "journey type is required"]
-
       },
       bookingId: {
         type:String,
-        required: [true, "Booking id is required"],
       },
       pnr: {
         type: String,
-        required: [true, "pnr is required"],
       },
-      dateOfJourney :{
-        type: String,
-        required :[true, "Date of journey is required"]
+      totalAmount :{
+        type: Number,
       },
       origin: {
         type: String,
-        required : [true, "origin is required"],
-
       },
       destination : {
         type : String,
-        required :[true, "destination is required"],
       },
-      amount: {
-        type : Number,
-        required: [true, 'Amount is required'],
+      
+      "airlineDetails": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "Airline": {
+              "type": "object",
+              "properties": {
+                "AirlineCode": { "type": "string" },
+                "AirlineName": { "type": "string" },
+                "FlightNumber": { "type": "string" },
+                "FareClass": { "type": "string" }
+              }
+            },
+            "Origin": {
+              "type": "object",
+              "properties": {
+                "AirportCode": { "type": "string" },
+                "AirportName": { "type": "string" },
+                "CityName": { "type": "string" },
+                "Terminal": { "type": "string" },
+                "DepTime": { "type": "string", "format": "date-time" }
+              }
+            },
+            "Destination": {
+              "type": "object",
+              "properties": {
+                "AirportCode": { "type": "string" },
+                "AirportName": { "type": "string" },
+                "CityName": { "type": "string" },
+                "Terminal": { "type": "string" },
+                "ArrTime": { "type": "string", "format": "date-time" }
+              }
+            },
+            "Baggage": { "type": "string" }
+          }
+        }
       },
-      airlineDetails : {
-        AirlineName:{
-          type: String,
-          required :[true, "airline name is required"],
-        },
-        DepTime : {
-          type: String,
-          required :[true, "Departure Time is required"],
-        },
-      },
+      
       passengerDetails: {
         type: [
           {
+            title:{
+              type : String,
+            },
             firstName: {
               type: String,
-              required: true,
             },
             lastName: {
               type: String,
-              required: true,
             },
             gender: {
               type: String,
@@ -71,20 +90,22 @@ const flightBookingData = new mongoose.Schema(
             },
             DateOfBirth: {
               type: String,
-              required: true,
             },
             email: {
               type: String,
-              validate: {
-                validator: (v) => /.+\@.+\..+/.test(v),
-                message: 'Please enter a valid email',
-              },
+              
             },
             addressLine1: {
               type: String,
             },
             city: {
               type: String,
+            },
+            TicketNumber: {
+              type :String,
+            },
+            amount:{
+              type :Number,
             },
           },
         ],
@@ -94,15 +115,11 @@ const flightBookingData = new mongoose.Schema(
         enum: ["success", "failure", "pending"],
         default: "pending",
       },
-      // bookingType:{
-      //   type: String,
-      //   enum: ['busBookingData', 'flightbookingdatas', 'hotelBookingDetail']
-      // },
-    //   status: {
-    //     type: String,
-    //     enums:[status.ACTIVES, status.BLOCK, status.ACTIVE],
-    //     default: status.ACTIVE,
-    // },
+
+      bookingStatus: {
+        type: String,
+        default: bookingStatus.PENDING
+      },      
     },
     { timestamps: true }
   )

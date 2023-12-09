@@ -114,8 +114,8 @@ exports.updateSubAdmin = async (req, res, next) => {
           .send({ message: responseMessage.SUBADMIN_ALREADY_EXIST });
       }
     }
-    if (profilePic) {
-      profilePic = await commonFunction.getSecureUrl(profilePic);
+    if (req.file) {
+      req.body.profilePic = await commonFunction.getImageUrl(req.file);
     }
     const result = await updateSubAdmin({ _id: subAdminId }, req.body);
     return res

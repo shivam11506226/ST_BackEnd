@@ -182,8 +182,8 @@ exports.editProfile = async (req, res, next) => {
                 return res.status(statusCode.Conflict).send({ message: responseMessage.USER_ALREADY_EXIST });
             }
         }
-        if (profilePic) {
-            profilePic = await commonFunction.getSecureUrl(profilePic);
+        if (req.file) {
+            req.body.profilePic = await commonFunction.getImageUrl(req.file);
         }
         const result = await updateUser({ _id: isUSer._id }, req.body);
         return res.status(statusCode.OK).send({ message: responseMessage.UPDATE_SUCCESS, result: result });
@@ -195,12 +195,14 @@ exports.editProfile = async (req, res, next) => {
 
 exports.uploadProfilePicture = async (req, res, next) => {
     try {
-        const { picture } = req.body;
+        if (!req.file) {
+            return res.status(400).send({ message: "No file uploaded." });
+          }
         const userList = await findUser({ _id: req.userId, status: status.ACTIVES });
         if (!userList) {
             return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
         }
-        const imageUrl = await commonFunction.getSecureUrl(picture);
+        const imageUrl = await commonFunction.getImageUrl(req.file);
         if (imageUrl) {
             const result = await updateUser({ _id: userList._id }, { profilePic: imageUrl })
             return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });

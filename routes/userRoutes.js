@@ -23,8 +23,8 @@ module.exports = function (app) {
   app.put('/skyTrails/api/user/updateLocation', [authJwt.verifcationToken], SchemaValidator(schemas.updateLocationSchema), userController.updateLocation)
   app.put('/skyTrails/api/user/forgetPassword', userController.forgetPassword)
   app.put('/skyTrails/api/user/verifyUserOtpWithSocialId', SchemaValidator(schemas.userVerifySchema), [authJwt.verifcationToken], userController.verifyUserOtpWithSocialId)
-
-
+app.put('/skytrails/api/user/editProfile',handleFileUpload,[authJwt.verifcationToken], controller.editProfile)
+app.put('/skyTrails/api/user/uploadProfilePicture',handleFileUpload,[authJwt.verifcationToken], controller.uploadProfilePicture)
 
 
 

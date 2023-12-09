@@ -146,6 +146,7 @@ btocUserRoutes(app)
 const subAdminRoutes=require('./routes/subAdminRoutes')
 subAdminRoutes(app)
 require("./routes/offlinequeryRoutes")(app)
+require("./routes/razorpayRoutes")(app)
 mongoose
   .connect(configs.mongoUrl.DEVELOPMENT, {
     useNewUrlParser: true,

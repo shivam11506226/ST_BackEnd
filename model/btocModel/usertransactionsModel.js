@@ -8,7 +8,7 @@ mongoose.pluralize(null);
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');
 
-const transactionSchema = new Transaction({
+const transactionSchema = mongoose.Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: "users",

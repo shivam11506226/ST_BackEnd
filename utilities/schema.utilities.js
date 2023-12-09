@@ -340,7 +340,11 @@ const schemas = {
   }),
   updateofflineQuerySchema:joi.object().keys({
     queryId:joi.string().required()
-  })
+  }),
+
+  razorPaySchema:joi.object().keys({
+    amount:joi.number().required()
+  }),
 };
 
 module.exports = schemas;

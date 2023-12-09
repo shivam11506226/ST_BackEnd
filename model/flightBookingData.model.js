@@ -115,7 +115,6 @@ const flightBookingData = new mongoose.Schema(
         enum: ["success", "failure", "pending"],
         default: "pending",
       },
-
       bookingStatus: {
         type: String,
         default: bookingStatus.PENDING

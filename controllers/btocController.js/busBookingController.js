@@ -19,31 +19,16 @@ exports.busBooking = async (req, res, next) => {
     const data = {
       ...req.body,
     };
-    console.log("Room", req.body);
     const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
     if (!isUserExist) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.USERS_NOT_FOUND });
     }
-    console.log("==========================",isUserExist);
-    const object = {
-      userId: isUserExist._id,
-      name: req.body.name,
-      phone: req.body.phone,
-      email: req.body.email,
-      address: req.body.address,
-      destination: req.body.destination,
-      origin: req.body.origin,
-      dateOfJourney: req.body.dateOfJourney,
-      busType: req.body.busType,
-      pnr: req.body.pnr,
-      busId: req.body.busId,
-      noOfSeats: req.body.noOfSeats,
-      amount: req.body.amount,
-    }
-    const result = await createUserBusBooking(object);
-    const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login,${pdfFilePath}`
-     await sendSMS.sendSMSBusBooking(result);  
-     await whatsApi.sendWhatsAppMessage(result.phone,message)
+
+    const result = await createUserBusBooking(data);
+    const userName=result.passenger[0].firstName+result.passenger[0].lastName
+    const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login`
+     await sendSMS.sendSMSBusBooking(result.passenger[0].Phone,userName);  
+     await whatsApi.sendWhatsAppMessage(result.passenger[0].Phone,message)
     await commonFunction.BusBookingConfirmationMail(data)
    
     if (result) {

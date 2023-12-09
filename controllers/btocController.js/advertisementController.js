@@ -21,12 +21,15 @@ const {createbusadvertisement,findbusadvertisementData,deletebusadvertisement,ad
 
 exports.createadvertismentController = async (req, res, next) => {
     try {
-        const { image, title, content, startDate, endDate, remainingDays } = req.body;
+        if (!req.file) {
+            return res.status(400).send({ message: "No file uploaded." });
+          }
+        const {  title, content, startDate, endDate, remainingDays } = req.body;
         // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
         // if (!isAdmin) {
         //   return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
         // }
-        const imageFiles = await commonFunction.getSecureUrl(image);
+        const imageFiles = await commonFunction.getImageUrl(req.file);
         if (!imageFiles) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
         }
@@ -51,12 +54,15 @@ exports.createadvertismentController = async (req, res, next) => {
 
 exports.updateadvertisementController = async (req, res, next) => {
     try {
-        const { image, title, content, startDate, endDate, remainingDays,packageId } = req.body
+        if (!req.file) {
+            return res.status(400).send({ message: "No file uploaded." });
+          }
+        const {  title, content, startDate, endDate, remainingDays,packageId } = req.body
         const isExist=await findadvertisementData({_id:packageId,status:status.ACTIVE});
         if(!isExist){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
         }
-        const imageFiles = await commonFunction.getSecureUrl(image);
+        const imageFiles = await commonFunction.getImageUrl(req.file);
         if (!imageFiles) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
         }
@@ -98,12 +104,15 @@ exports.getadvertisementController = async (req, res, next) => {
 // flight adds ********************************************************
 exports.createflightadvertismentController = async (req, res, next) => {
     try {
-        const { image, title, content, startDate, endDate, remainingDays } = req.body;
+        if (!req.file) {
+            return res.status(400).send({ message: "No file uploaded." });
+          }
+        const {  title, content, startDate, endDate, remainingDays } = req.body;
         // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
         // if (!isAdmin) {
         //   return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
         // }
-        const imageFiles = await commonFunction.getSecureUrl(image);
+        const imageFiles = await commonFunction.getImageUrl(req.file);
         if (!imageFiles) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
         }
@@ -128,12 +137,15 @@ exports.createflightadvertismentController = async (req, res, next) => {
 
 exports.updateflightadvertisementController = async (req, res, next) => {
     try {
-        const { image, title, content, startDate, endDate, remainingDays,packageId } = req.body
+        if (!req.file) {
+            return res.status(400).send({ message: "No file uploaded." });
+          }
+        const {  title, content, startDate, endDate, remainingDays,packageId } = req.body
         const isExist=await findflightadvertisementData({_id:packageId,status:status.ACTIVE});
         if(!isExist){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
         }
-        const imageFiles = await commonFunction.getSecureUrl(image);
+        const imageFiles = await commonFunction.getImageUrl(req.file);
         if (!imageFiles) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, responseMessage: responseMessage.INTERNAL_ERROR });
         }
@@ -174,12 +186,15 @@ exports.getflightadvertisementController = async (req, res, next) => {
 // bus adds ********************************************************
 exports.createbustadvertismentController = async (req, res, next) => {
     try {
-        const { image, title, content, startDate, endDate, remainingDays } = req.body;
+        if (!req.file) {
+            return res.status(400).send({ message: "No file uploaded." });
+          }
+        const {  title, content, startDate, endDate, remainingDays } = req.body;
         // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
         // if (!isAdmin) {
         //   return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
         // }
-        const imageFiles = await commonFunction.getSecureUrl(image);
+        const imageFiles = await commonFunction.getImageUrl(req.file);
         if (!imageFiles) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
         }
@@ -204,12 +219,15 @@ exports.createbustadvertismentController = async (req, res, next) => {
 
 exports.updatebusadvertisementController = async (req, res, next) => {
     try {
-        const { image, title, content, startDate, endDate, remainingDays,packageId } = req.body
+        if (!req.file) {
+            return res.status(400).send({ message: "No file uploaded." });
+          }
+        const {  title, content, startDate, endDate, remainingDays,packageId } = req.body
         const isExist=await findbusadvertisementData({_id:packageId,status:status.ACTIVE});
         if(!isExist){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
         }
-        const imageFiles = await commonFunction.getSecureUrl(image);
+        const imageFiles = await commonFunction.getImageUrl(req.file);
         if (!imageFiles) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, responseMessage: responseMessage.INTERNAL_ERROR });
         }
@@ -251,12 +269,15 @@ exports.getbusadvertisementController = async (req, res, next) => {
 // hotel adds ********************************************************
 exports.createhoteladvertismentController = async (req, res, next) => {
     try {
-        const { image, title, content, startDate, endDate, remainingDays } = req.body;
+        if (!req.file) {
+          return res.status(400).send({ message: "No file uploaded." });
+        }
+        const {  title, content, startDate, endDate, remainingDays } = req.body;
         // const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
         // if (!isAdmin) {
         //   return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
         // }
-        const imageFiles = await commonFunction.getSecureUrl(image);
+        const imageFiles = await commonFunction.getImageUrl(req.file);
         if (!imageFiles) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, message: responseMessage.INTERNAL_ERROR });
         }
@@ -281,12 +302,15 @@ exports.createhoteladvertismentController = async (req, res, next) => {
 
 exports.updatehoteladvertisementController = async (req, res, next) => {
     try {
-        const { image, title, content, startDate, endDate, remainingDays,packageId } = req.body
+        if (!req.file) {
+            return res.status(400).send({ message: "No file uploaded." });
+          }
+        const {title, content, startDate, endDate, remainingDays,packageId } = req.body
         const isExist=await findhoteladvertisementData({_id:packageId,status:status.ACTIVE});
         if(!isExist){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
         }
-        const imageFiles = await commonFunction.getSecureUrl(image);
+        const imageFiles = await commonFunction.getImageUrl(req.file);
         if (!imageFiles) {
             return res.status(statusCode.InternalError).send({ statusCode: statusCode.OK, responseMessage: responseMessage.INTERNAL_ERROR });
         }

@@ -267,7 +267,6 @@ const schemas = {
   }),
 
   advertisementSchema:joi.object().keys({
-    image:joi.string().required(),
     title:joi.string().required(),
     content:joi.string().required(),
     startDate:joi.string().required(),
@@ -276,7 +275,6 @@ const schemas = {
   }),
 
   updateadvertisementSchema:joi.object().keys({
-    image:joi.string().required(),
     title:joi.string().required(),
     content:joi.string().required(),
     startDate:joi.string().required(),

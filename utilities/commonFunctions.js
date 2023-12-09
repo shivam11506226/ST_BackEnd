@@ -27,7 +27,7 @@ function getHtmlContent(name) {
             width: 100%; margin: auto; min-height:15em;margin-top: 25px;">
             <div class="main" style="background-image: url('');">
                 <div class="main-container" style="text-align: center;">
-                    <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
+                    <img src="https://res.cloudinary.com/dultedeh8/image/upload/v1702102549/fiouwt8xot7qv5qjqbbk.jpg"
                         style="width: 30%;" alt="logo">
                     <div style="width: 90%;margin: auto; text-align: left;">
                         <br><br>
@@ -67,8 +67,7 @@ module.exports = {
                 <div class="main" style="background-image: url('');">
                     <div class="main-container" style="text-align: center;">
                         <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
-                        <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
-                            style="width: 30%;" alt="logo">
+                        <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo" style="width:25%;margin-top: -10px; align="center" />
         
                         <div style="width: 90%;margin: auto; text-align: left;">
                             <br><br>
@@ -112,8 +111,7 @@ module.exports = {
                 <div class="main" style="background-image: url('');">
                     <div class="main-container" style="text-align: center;">
                         <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
-                        <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
-                            style="width: 30%;" alt="logo">
+                        <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo" style="width:25%;margin-top: -10px; align="center" />
         
                         <div style="width: 90%;margin: auto; text-align: left;">
                             <br><br>
@@ -229,8 +227,7 @@ module.exports = {
                 <div class="main" style="background-image: url('');">
                     <div class="main-container" style="text-align: center;">
                         <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
-                        <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
-                            style="width: 30%;" alt="logo">
+                        <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo" style="width:25%;margin-top: -10px; align="center" />
         
                         <div style="width: 90%;margin: auto; text-align: left;">
                             <br><br>
@@ -297,8 +294,7 @@ module.exports = {
                 <div class="main" style="background-image: url('');">
                     <div class="main-container" style="text-align: center;">
                         <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
-                        <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
-                            style="width: 30%;" alt="logo">
+                        <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo" style="width:25%;margin-top: -10px; align="center" />
         
                         <div style="width: 90%;margin: auto; text-align: left;">
                             <br><br>
@@ -2057,7 +2053,7 @@ module.exports = {
   },
 
   getImageUrl: async (files) => {
-    var result = await cloudinary.v2.uploader.upload(files[0].path, { resource_type: "auto" })
+    var result = await cloudinary.v2.uploader.upload(files.path, { resource_type: "auto" })
     return result.secure_url;
   },
   //===============================================================================================
@@ -2155,8 +2151,7 @@ module.exports = {
             <div class="main" style="background-image: url('');">
                 <div class="main-container" style="text-align: center;">
                     <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
-                    <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
-                        style="width: 30%;" alt="logo">
+                    <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo" style="width:25%;margin-top: -10px;" />
     
                     <div style="width: 90%;margin: auto; text-align: left;">
                         <br><br>
@@ -2222,9 +2217,7 @@ module.exports = {
             <div class="main" style="background-image: url('');">
                 <div class="main-container" style="text-align: center;">
                     <!-- <h1 style="padding-top: 30px;"> <strong> GFMI </strong></h1> -->
-                    <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
-                        style="width: 30%;" alt="logo">
-    
+                    <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo" style="width:25%;margin-top: -10px;" />
                     <div style="width: 90%;margin: auto; text-align: left;">
                         <br><br>
                         <p style="color: #333030;font-size: 18px;margin-top: 0px;"> Dear User,
@@ -2413,63 +2406,65 @@ return await transporter.sendMail(mailOptions);
     <head>
         <title>Thank You for Your Query</title>
         <style>
-            body {
-                font-family: 'Open Sans', sans-serif;
-                background: linear-gradient(to bottom right, #4b6cb7, #182848);
-                margin: 0;
-                padding: 0;
-            }
-    
-            .card {
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-                transition: 0.5s;
-                width: 80%;
-                margin: auto;
-                min-height: 15em;
-                margin-top: 50px;
-                background-color: #fff;
-                border-radius: 20px;
-                overflow: hidden;
-            }
-    
-            .main {
-                background-image: url(''); /* Add your background image URL here */
-                background-size: cover;
-                background-position: center;
-                height: 250px;
-            }
-    
-            .main-container {
-                text-align: center;
-                padding: 20px;
-                color: #1a1a1a;
-            }
-    
-            img {
-                width: 150px;
-                border-radius: 50%;
-                margin-top: 20px;
-            }
-    
-            .message-container {
-                width: 90%;
-                margin: auto;
-                text-align: left;
-                padding-top: 20px;
-            }
-    
-            p {
-                font-size: 20px;
-                line-height: 1.6;
-                margin-top: 0;
-                color: #555;
-            }
-    
-            h1 {
-                font-size: 42px;
-                color: #1a1a1a;
-                margin-bottom: 10px;
-            }
+        body {
+          font-family: 'Open Sans', sans-serif;
+          background: #f1f1f1; // Light gray background
+          margin: 0;
+          padding: 0;
+        }
+        
+        .card {
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); // Subtle shadow
+          transition: 0.5s;
+          width: 80%;
+          margin: auto;
+          min-height: 20em;
+          margin-top: 70px;
+          background-color: #fff;
+          border: 1px solid #ddd; // Subtle border
+          border-radius: 20px;
+          overflow: hidden;
+        }
+        
+        .main {
+          background-color: #e4e4e4; // Light gray background
+          height: 200px;
+        }
+        
+        .main-container {
+          text-align: center;
+          padding: 20px;
+          color: #333; // Dark gray text
+        }
+        
+        img {
+          width: 25%;
+          border-radius: 50%;
+          margin-top: 20px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); // Subtle drop shadow
+        }
+        
+        .message-container {
+          width: 90%;
+          margin: auto;
+          text-align: left;
+          padding-top: 40px; // Increased padding
+        }
+        
+        p {
+          font-size: 22px; // Increased font size
+          line-height: 1.6;
+          margin-top: 0;
+          color: #555;
+        }
+        
+        h1 {
+          font-family: Arial, sans-serif; // Sans-serif font
+          font-size: 42px;
+          color: #333; // Dark gray text
+          margin-bottom: 15px; // Increased spacing
+        }
+        
         </style>
     </head>
     
@@ -2477,9 +2472,7 @@ return await transporter.sendMail(mailOptions);
         <div class="card">
             <div class="main" style="background-image: url('');"></div>
             <div class="main-container">
-                <h1><strong>The SkyTrails</strong></h1>
-                <img src="https://res.cloudinary.com/nandkishor/image/upload/v1676882752/Group_1171275777_gge2f0.png"
-                    alt="The SkyTrails Logo">
+                <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo" style="width:25%;margin-top: -10px; align="center" />
                 <div class="message-container">
                     <p>Dear user, thank you for reaching out to The SkyTrails support team. Your query has been submitted, and we will get back to you as soon as possible.</p>
                 </div>

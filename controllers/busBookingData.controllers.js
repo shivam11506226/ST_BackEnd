@@ -34,18 +34,12 @@ exports.addBusBookingData = async (req, res) => {
     }
     const busBooking = new busBookingData(data);
     const response = await busBooking.save();
-    // console.log(response.bookingStatus,"status")
-
     const msg = "Bus booking details added successfully";
     if(response.bookingStatus === "BOOKED"){
       const message = `Hello ${data.passenger[0]?.title} ${data.passenger[0]?.firstName} ${data.passenger[0]?.lastName} ,Thank you for booking your Bus stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login,`
       await sendSMS.sendSMSBusBookingAgent(response);
-      console.log(data?.passenger[0]?.Phone,"phone number")
       await whatsAppMsg.sendWhatsAppMessage(data?.passenger[0]?.Phone, message);
-      // console.log(data, "data")
       await commonFunction.BusBookingConfirmationMail(data);
-    
-
     }
     
     actionCompleteResponse(res, response, msg);

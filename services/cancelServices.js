@@ -281,14 +281,14 @@ const cancelBookingServices = {
             {
                 $match: {
                     $or: [
-                        { "userDetails.username": { $regex: data, $options: "i" } },
-                        { "userDetails.email": { $regex: data, $options: "i" } },
+                        { "userDetails.personal_details.username": { $regex: data, $options: "i" } },
+                        { "userDetails.personal_details.email": { $regex: data, $options: "i" } },
                         { "bustDetails.paymentStatus": { $regex: data, $options: "i" } },
                         { "bustDetails.busType": { $regex: data, $options: "i" } },
                         { "bustDetails.dateOfJourney": { $regex: data, $options: "i" } },
                         { "bookingId": { $regex: data, $options: "i" } },
                         { "bustDetails.origin": { $regex: data, $options: "i" } },
-                        { "bustDetails.amount": parseInt(data) }
+                        { "busId": parseInt(data) }
                     ],
                 }
             }
@@ -315,6 +315,7 @@ const cancelBookingServices = {
         console.log("result============",result)
         return result;
     },
+    
     countTotalBusCancelled: async () => {
         return await cancelBusModel.countDocuments({ bookingStatus: bookingStatus.CANCEL })
     },

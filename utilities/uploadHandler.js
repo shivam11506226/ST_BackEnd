@@ -1,7 +1,8 @@
 const multer = require('multer');
 const path = require('path');
- const { v4: uuidv4 } = require('uuid');
-const { badRequest, internalServerError } = require('./responceCode'); // Correct the path to your response code module
+const { v4: uuidv4 } = require('uuid');
+const File = require('../model/user.model');
+const { badRequest } = require('./responceCode'); // Correct the path to your response code module
 
 // Set storage engine
 const storage = multer.diskStorage({
@@ -17,40 +18,36 @@ const storage = multer.diskStorage({
 // Initialize multer
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 1000000 } // Set file size limit (optional)
-}).single('filename');
+  limits: { fileSize: 100000000000 } // Set file size limit (optional)
+}).single('images');
 
 // Middleware to handle file uploads
-const handleFileUpload = (req, res,next,upload) => {
-  try{
-    upload(req,res, async(err)=>{
-        //console.log("fileData",req.file)
-        if(!req.file){
-            return res.status(400).json({success:false, message:"No file uploaded"});
-     }  
-               if(err){
-                return res.status(400).json({success:false,message:"there is error no file uploading"});
-               }
-               // save data into database
-               const fileData = new File({
-                fileName:req.file.filename,
-                uuid:uuidv4(),
-                path:req.file.path,
-                size:req.file.size
+const handleFileUpload = (req, res, next) => {
+  try {
+    upload(req, res, async (err) => {
+      if (!req.file) {
+        return res.status(400).json({ success: false, message: "No file uploaded" });
+      }
 
-               });
-               
-             
-                 const result =  await fileData.save();
-                //  console.log(result,"nn")
-                    return res.json({file:`${process.env.Host}/api/file/${result.uuid}`});        
-    })
+      if (err) {
+        return res.status(400).json({ success: false, message: "There is an error uploading the file" });
+      }
 
+      // Save data into the database
+      const fileData = new File({
+        fileName: req.file.filename,
+        uuid: uuidv4(),
+        path: req.file.path,
+        size: req.file.size
+      });
 
-}catch(error){
-//   console.log(error,"bb")
- return res.status(500).json({success:false, message:"Internal server error!",error});
-}
+      const result = await fileData.save();
+      req.fileData = result; // Add the file data to the request for further processing if needed
+      return next();
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Internal server error!", error });
+  }
 };
 
-module.exports = { upload, handleFileUpload };
+module.exports = { handleFileUpload };

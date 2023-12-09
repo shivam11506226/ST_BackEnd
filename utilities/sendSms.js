@@ -251,14 +251,14 @@ module.exports = {
       throw error;
     }
   },
-  sendSMSBusBooking:async(data)=>{
-    const details=`Hello, ${data.name}.We appreciate your Bus booking with The Skytrails. Your booking has been verified! Click the following link to view details= https://theskytrails.com/google`;
+  sendSMSBusBooking:async(data,name)=>{
+    const details=`Hello, ${name}.We appreciate your Bus booking with The Skytrails. Your booking has been verified! Click the following link to view details= https://theskytrails.com/google`;
     const url = `http://sms.txly.in/vb/apikey.php?`;
     const params = {
       apikey: key,
       senderid: senderid,
       templateid: templateid3,
-      number: data.phone,
+      number: data,
       message: details,
     };
     try {

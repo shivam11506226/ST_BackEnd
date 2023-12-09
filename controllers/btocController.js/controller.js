@@ -533,3 +533,27 @@ exports.verifyUserOtpWithSocialId = async (req, res, next) => {
     return next(error);
   }
 };
+
+exports.editProfile = async (req, res, next) => {
+  try {
+      const { username, email, mobile_number, profilePic, } = req.body;
+      const isUSer = await findUser({ _id: req.userId, status: status.ACTIVE });
+      if (!isUSer) {
+          return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
+      }
+      if (email || mobile_number) {
+          const isExist = await findUser({ $or: [{ email: email }, { mobile_number: mobile_number }], _id: { $nin: isUSer._id } });
+          if (isExist) {
+              return res.status(statusCode.Conflict).send({ message: responseMessage.USER_ALREADY_EXIST });
+          }
+      }
+      if (req.file) {
+          req.body.profilePic = await commonFunction.getImageUrl(req.file);
+      }
+      const result = await updateUser({ _id: isUSer._id }, req.body);
+      return res.status(statusCode.OK).send({ message: responseMessage.UPDATE_SUCCESS, result: result });
+  } catch (error) {
+      console.log("error=======>>>>>>", error);
+      return next(error);
+  }
+}

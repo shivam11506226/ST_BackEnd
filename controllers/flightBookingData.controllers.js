@@ -16,27 +16,21 @@ const { createcancelBooking, updatecancelBooking, aggregatePaginatecancelBooking
 exports.addFlightBookingData = async (req, res) => {
   try {
 
-    const passengers = req.body.passengerDetails.map((passenger, index) => {
-      // Convert index to string as keys in Map are strings
-      return passenger
-    }
-    );
-
-    const data = {
-      ...req.body,
-      // passengerDetails: new Map(passengers),
-      passengerDetails: passengers
-    };
-    console.log(data, "new flight booking")
-
+      const data={
+        ...req.body,
+        bookingStatus:"BOOKED",
+      }
     const response = await flightBookingData.create(data);
     const msg = "flight booking details added successfully";
-    // console.log(response.paymentStatus)
-    const userName = data.passengerDetails[0].firstName + data.passengerDetails[0].lastName;
-    const message = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details:https://theskytrails.com/google`
-    await whatsAppMsg.sendWhatsAppMessage(data.passengerDetails[0].ContactNo.slice(5), message)
-    const send = await sendSMS.sendSMSForFlightBookingAgent(response);
-    await commonFunction.FlightBookingConfirmationMail(data);
+
+    if(response.bookingStatus === "BOOKED"){
+    
+     const userName = response.passengerDetails[0].firstName + response.passengerDetails[0].lastName;
+     const message = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details:https://theskytrails.com/google`
+      await whatsAppMsg.sendWhatsAppMessage(response.passengerDetails[0].ContactNo.slice(5), message);
+      const send = await sendSMS.sendSMSForFlightBookingAgent(response);
+    // await commonFunction.FlightBookingConfirmationMail(data);
+    }
     actionCompleteResponse(res, response, msg);
   } catch (error) {
     sendActionFailedResponse(res, {}, error.message);

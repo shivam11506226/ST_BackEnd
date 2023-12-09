@@ -14,76 +14,117 @@ const BookingDetailSchema = new mongoose.Schema(
             type: Schema.Types.ObjectId,
             ref: "users",
         },
-        amount: {
-            type: Number,
+
+        oneWay:{
+          type:Boolean,
         },
         bookingId: {
-            type: Number,
+          type:String,
         },
         pnr: {
-            type: String,
+          type: String,
+        },
+        totalAmount :{
+          type: Number,
         },
         origin: {
-            type: String,
+          type: String,
         },
-        destination: {
-            type: String,
+        destination : {
+          type : String,
         },
-        airlineDetails: {
-            AirlineName: {
-                type: String,
-            },
-            DepTime: {
-                type: String,
-            },
-        },
-        passengerDetails: [
-            {
-                title:{
-                    type:String,
-                },
-                firstName: {
-                    type: String,
-                },
-                lastName: {
-                    type: String,
-                },
-                gender: {
-                    type: String,
-                    
-                },
-                ContactNo: {
-                    type: String,
-                },
-                CountryCode:{
-                    type: String,
-                },
-                DateOfBirth: {
-                    type: String,
-                },
-                email: {
-                    type: String,
-                },
-                addressLine1: {
-                    type: String,
-                },
-                city: {
-                    type: String,
-                },
-                PassportNo:{
-                    type: String,
+        
+        "airlineDetails": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Airline": {
+                "type": "object",
+                "properties": {
+                  "AirlineCode": { "type": "string" },
+                  "AirlineName": { "type": "string" },
+                  "FlightNumber": { "type": "string" },
+                  "FareClass": { "type": "string" }
                 }
+              },
+              "Origin": {
+                "type": "object",
+                "properties": {
+                  "AirportCode": { "type": "string" },
+                  "AirportName": { "type": "string" },
+                  "CityName": { "type": "string" },
+                  "Terminal": { "type": "string" },
+                  "DepTime": { "type": "string", "format": "date-time" }
+                }
+              },
+              "Destination": {
+                "type": "object",
+                "properties": {
+                  "AirportCode": { "type": "string" },
+                  "AirportName": { "type": "string" },
+                  "CityName": { "type": "string" },
+                  "Terminal": { "type": "string" },
+                  "ArrTime": { "type": "string", "format": "date-time" }
+                }
+              },
+              "Baggage": { "type": "string" }
             }
-        ]
-        ,
+          }
+        },
+        
+        passengerDetails: {
+          type: [
+            {
+              title:{
+                type : String,
+              },
+              firstName: {
+                type: String,
+              },
+              lastName: {
+                type: String,
+              },
+              gender: {
+                type: String,
+              },
+              ContactNo: {
+                type: String,
+              },
+              DateOfBirth: {
+                type: String,
+              },
+              email: {
+                type: String,
+                
+              },
+              addressLine1: {
+                type: String,
+              },
+              city: {
+                type: String,
+              },
+              TicketNumber: {
+                type :String,
+              },
+              amount:{
+                type :Number,
+              },
+            },
+          ],
+        },
+        paymentStatus: {
+          type: String,
+          enum: ["success", "failure", "pending"],
+          default: "pending",
+        },
+        bookingStatus: {
+          type: String,
+          default: bookingStatus.PENDING
+        },      
         status: {
             type: String,
             default: status.ACTIVE
-        },
-        bookingStatus: {
-            type: String,
-            enum:[bookingStatus.BOOKED,bookingStatus.CANCEL,bookingStatus.PENDING],
-            default: bookingStatus.PENDING
         },
         transactions: {
             type: mongoose.Types.ObjectId,

@@ -1,61 +1,104 @@
-const responseMessage = require('../../utilities/responses');
-const statusCode = require('../../utilities/responceCode')
+const responseMessage = require("../../utilities/responses");
+const statusCode = require("../../utilities/responceCode");
 const status = require("../../enums/status");
 const bcrypt = require("bcryptjs");
-const axios = require('axios');
+const axios = require("axios");
 /**********************************SERVICES********************************** */
-const { userServices } = require('../../services/userServices');
-const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
+const { userServices } = require("../../services/userServices");
+const {
+  createUser,
+  findUser,
+  getUser,
+  findUserData,
+  updateUser,
+  paginateUserSearch,
+  countTotalUser,
+} = userServices;
 const userType = require("../../enums/userType");
 const sendSMS = require("../../utilities/sendSms");
-const commonFunction = require('../../utilities/commonFunctions');
-const { userBusBookingServices } = require('../../services/btocServices/busBookingServices');
-const bookingStatus = require('../../enums/bookingStatus');
-const { createUserBusBooking, findUserBusBooking, getUserBusBooking, findUserBusBookingData, deleteUserBusBooking, userBusBookingList, updateUserBusBooking, paginateUserBusBookingSearch } = userBusBookingServices
-const whatsApi=require("../../utilities/whatsApi")
+const commonFunction = require("../../utilities/commonFunctions");
+const {
+  userBusBookingServices,
+} = require("../../services/btocServices/busBookingServices");
+const bookingStatus = require("../../enums/bookingStatus");
+const {
+  createUserBusBooking,
+  findUserBusBooking,
+  getUserBusBooking,
+  findUserBusBookingData,
+  deleteUserBusBooking,
+  userBusBookingList,
+  updateUserBusBooking,
+  paginateUserBusBookingSearch,
+} = userBusBookingServices;
+const whatsApi = require("../../utilities/whatsApi");
 
 exports.busBooking = async (req, res, next) => {
   try {
     const data = {
       ...req.body,
     };
-    const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE });
+    const isUserExist = await findUser({
+      _id: req.userId,
+      status: status.ACTIVE,
+    });
     if (!isUserExist) {
-      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.USERS_NOT_FOUND });
+      return res
+        .status(statusCode.NotFound)
+        .send({
+          statusCode: statusCode.NotFound,
+          responseMessage: responseMessage.USERS_NOT_FOUND,
+        });
     }
-
     const result = await createUserBusBooking(data);
-    const userName=result.passenger[0].firstName+result.passenger[0].lastName
-    const message = `Hello ${data.name} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login`
-     await sendSMS.sendSMSBusBooking(result.passenger[0].Phone,userName);  
-     await whatsApi.sendWhatsAppMessage(result.passenger[0].Phone,message)
-    await commonFunction.BusBookingConfirmationMail(data)
-   
+    const userName =
+      result.passenger[0].firstName + result.passenger[0].lastName;
+    const message = `Hello ${userName} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login`;
+    await sendSMS.sendSMSBusBooking(result.passenger[0].Phone, userName);
+    await whatsApi.sendWhatsAppMessage(result.passenger[0].Phone, message);
+    await commonFunction.BusBookingConfirmationMail(data);
+
     if (result) {
-      return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.BUS_BOOKING_CREATED, result: result });
+      return res
+        .status(statusCode.OK)
+        .send({
+          statusCode: statusCode.OK,
+          responseMessage: responseMessage.BUS_BOOKING_CREATED,
+          result: result,
+        });
     }
   } catch (error) {
     console.log("error: ", error);
     return next(error);
   }
-}
+};
 
 exports.getBusBookingList = async (req, res, next) => {
   try {
     const { userId } = req.userId;
     const isUserExist = await findUser({ _id: userId, status: status.ACTIVES });
     if (!isUserExist) {
-      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+      return res
+        .status(statusCode.NotFound)
+        .send({
+          statusCode: statusCode.NotFound,
+          message: responseMessage.USERS_NOT_FOUND,
+        });
     }
     const result = await userBusBookingList({ status: status.ACTIVE });
     if (result) {
-      return res.status(statusCode.OK).send({ statusCode: statusCode.OK, message: responseMessage.BOOKING_NOT_FOUND });
+      return res
+        .status(statusCode.OK)
+        .send({
+          statusCode: statusCode.OK,
+          message: responseMessage.BOOKING_NOT_FOUND,
+        });
     }
   } catch (error) {
     console.log("error: ", error);
     return next(error);
   }
-}
+};
 
 //************GETALL BUSBOKING DETAILS****************/
 

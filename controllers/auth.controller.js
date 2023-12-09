@@ -319,7 +319,7 @@ exports.adminLogin = async (req, res, next) => {
 //*********Edit profile***************/
 exports.editProfile = async (req, res, next) => {
   try {
-    const { username, email, mobile_number, profilePic, } = req.body;
+    const { username, email, mobile_number,profilePic } = req.body;
     const isAdmin = await findUser({ _id: req.userId, userType: userType.ADMIN });
     if (!isAdmin) {
       return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
@@ -330,8 +330,8 @@ exports.editProfile = async (req, res, next) => {
         return res.status(statusCode.Conflict).send({ message: responseMessage.USER_ALREADY_EXIST });
       }
     }
-    if (profilePic) {
-      profilePic = await commonFunction.getSecureUrl(profilePic);
+    if (req.file) {
+      req.body.profilePic = await commonFunction.getImageUrl(req.file);
     }
     const result = await updateUser({ _id: isAdmin._id }, req.body);
     return res.status(statusCode.OK).send({ message: responseMessage.UPDATE_SUCCESS, result: result });
@@ -607,12 +607,12 @@ exports.cancelTickets = async (req, res, next) => {
 //*************upload profile picture********************/
 exports.uploadProfilePicture = async (req, res, next) => {
   try {
-    const { picture } = req.body;
+    // const { picture } = req.body;
     const userList = await findUser({ _id: req.userId });
     if (!userList) {
       return res.status(statusCode.NotFound).send({ message: responseMessage.USERS_NOT_FOUND });
     }
-    const imageUrl = await commonFunction.getSecureUrl(picture);
+    const imageUrl = await commonFunction.getImageUrl(req.file);
     if (imageUrl) {
       const result = await updateUser({ _id: userList._id }, { profilePic: imageUrl })
       return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });

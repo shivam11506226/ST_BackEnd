@@ -354,6 +354,22 @@ module.exports = {
     const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
     const formattedDate = currentDate.toLocaleDateString('en-US', options);
     
+
+    const formatDate = (dateString) => {
+      const options = {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+        weekday: 'short',
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      };
+    
+      const date = new Date(dateString);
+      return date.toLocaleString('en-US', options);
+    };
+
   // console.log("to================>>>>>>>",to)
       const name = `${to?.passengerDetails[0]?.firstName} ${to?.passengerDetails[0]?.lastName}`;
       // Define your HTML content with nested elements
@@ -479,7 +495,7 @@ module.exports = {
               </div>
       
 
-              ${[1,2].map(item =>`
+              ${to.passengerDetails.map(item =>`
               <div style="width:100%; float: left; padding: 5px;">
       
                 <div style="width:100%; float: left; padding-bottom:5px;">
@@ -488,19 +504,14 @@ module.exports = {
       
       
                     <span style="margin-top: 5px; width: 100%; float: left;"><b>Name:</b>
-                      Mr
-                      Md Raufur
-                      Rahman</span><br>
-      
-      
+                      ${item.title} ${item.firstName} ${item.lastName}</span><br>      
                   </div>
                   <div style="width: 30%; float: left; margin-right: 8px;">
       
       
       
                     <span style="margin-top: 5px; width: 100%; float: left;">
-                      MCTVRI
-      
+                      ${item.TicketNumber}      
                     </span>
       
       
@@ -508,28 +519,12 @@ module.exports = {
                   <div style="width: 15%; float: right; margin-right: 45px; text-align: left;">
       
       
-                    <span style="margin-top: 5px; width: 100%; float: left; text-align: left;">-</span>
-      
-      
-      
+                    <span style="margin-top: 5px; width: 100%; float: left; text-align: left;">-</span>      
                   </div>
-                </div>
-      
-      
-             
-      
-      
-                
-      
-      
-                
-      
-      
+                </div>                  
               </div>
-              
                 `).join('')}
-            </div>
-      
+            </div>      
       
             <div style="width: 100%; float: left; margin-top: 15px; border: 1px solid #D6D8E7;">
       
@@ -544,77 +539,66 @@ module.exports = {
                 <div style="width: 20%; float: right; margin-right: 10px;">
                   Status</div>
               </div>
-      
+              ${to.airlineDetails.map(item =>`      
               <div style="width: 100%; float: left; padding: 5px;">
                 <div style="width: 23%; float: left; margin-right: 0;">
                   <span style="margin-top: 5px; width: 18%; height: 75px; float: left;">
-                    <img id="airlineLogo" src="https://raw.githubusercontent.com/The-SkyTrails/ST_BackEnd/main/utilities/FlightImages/UK.png" height="27px" width="30px" alt="UK">
+                    <img id="airlineLogo" src=${`https://raw.githubusercontent.com/The-SkyTrails/ST_BackEnd/main/utilities/FlightImages/${item?.Airline?.AirlineCode}.png`} height="27px" width="30px" alt="UK">
                   </span><span style="margin-top: 5px; width: 70%; float: left;">
-                    Air Vistara
-                    UK
-                    911<br>
-                    E
+                    ${item.Airline.AirlineName}
+                    ${item.Airline.AirlineCode}
+                    ${item.Airline.FlightNumber}<br>
+                    ${item.Airline.FareClass}
                     Class
-                    <br>
-      
-                    Aircraft:
-                    320
-                    <br>
-      
-                    Operating Carrier:UK
+                    <br>      
+                    Operating Carrier:${item.Airline.AirlineCode}
       
                     <label>Cabin:Economy</label>
-      
                   </span>
                 </div>
                 <div style="width: 25%; float: left; margin-right: 10px;">
                   <span style="margin-top: 5px; width: 100%; float: left;">
-                    DEL
-                    (Indira Gandhi Airport ,
-                    Delhi
+                    ${item.Origin.AirportCode}
+                    (${item.Origin.AirportName} ,
+                    ${item.Origin.CityName}
                     ) </span>
       
                   <span style="margin-top: 5px;
                                    width: 100%; float: left;">Terminal:
-                    3
+                    ${item.Origin.Terminal}
                   </span>
                   <span style="margin-top: 5px; width: 100%; float: left;">
-                    6:30 PM
-                    Thu, 30-Nov-2023</span>
+                  ${formatDate(item.Origin.DepTime)}
+                  </span>
                 </div>
                 <div style="width: 25%; float: left; margin-right: 10px;">
                   <span style="margin-top: 5px; width: 100%; float: left;">
-                    IDR
-                    (Devi Ahilya Bai Holkar International Airport,
-                    Indore) </span>
+                    ${item.Destination.AirportCode}
+                    (${item.Destination.AirportName},
+                    ${item.Destination.CityName}) </span>
+
+                    <span style="margin-top: 5px;
+                                   width: 100%; float: left;">Terminal:
+                    ${item.Destination.Terminal}
+                  </span>
       
                   <span style="margin-top: 5px; width: 100%; float: left;">
-                    7:55 PM
-                    Thu, 30-Nov-2023
+                    ${formatDate(item.Destination.ArrTime)}
                   </span>
                 </div>
                 <div style="width: 20%; float: right; margin-right: 10px;">
                   <span style="margin-top: 5px; width: 100%; float: left;">
                     Confirmed</span>
-      
-      
-                  <span style="margin-top: 5px; width: 100%; float: left;">Airline Ref :
-                    JV35G9</span>
-      
-                  <span> <span style="float: left;">Baggage(per Adult):1 PC(s)</span></span>
-                  <br>
-                  <span><span style="float: left;">Meal(per Adult):Included</span>
-      
+            
+                  <span> <span style="float: left;">Baggage: ${item.Baggage}</span></span>
+                 
                     <span style="margin-top: 5px; width: 100%; float: left;">
-      
-                    </span>
-      
-      
+                    </span>      
                     <span style="margin-top: 5px; width: 100%; float: left;">Non stop</span>
                   </span>
                 </div>
               </div>
-      
+              `).join('')}      
             </div>
       
             <div
@@ -640,7 +624,7 @@ module.exports = {
                     Total Amount:
                   </div>
                   <div style="width:85px; float:right; text-align:right;">
-                    ₹ ${to.amount}.00
+                    ₹ ${to.totalAmount}.00
                   </div>
                 </div> 
               </div>

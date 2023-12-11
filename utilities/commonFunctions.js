@@ -742,7 +742,7 @@ module.exports = {
       `;
 
       // Create a new PDF document
-      const browser = await puppeteer.launch({ headless: 'new',});
+      const browser = await puppeteer.launch({ headless: 'new',  timeout: 0});
       const page = await browser.newPage();
 
       // Save the PDF to a temporary file
@@ -773,6 +773,7 @@ module.exports = {
         user: nodemailerConfig.options.auth.user,
         pass: nodemailerConfig.options.auth.pass,
       },
+      connectionTimeout: 60000,
     });
   
     const passengerEmail = to.passengerDetails[0].email;
@@ -1303,7 +1304,7 @@ module.exports = {
       </html>`;
 
       // Create a new PDF document
-      const browser = await puppeteer.launch({ headless: 'new',});
+      const browser = await puppeteer.launch({ headless: 'new',  timeout: 0});
       const page = await browser.newPage();
 
       // Save the PDF to a temporary file
@@ -1333,6 +1334,7 @@ module.exports = {
         user: nodemailerConfig.options.auth.user,
         pass: nodemailerConfig.options.auth.pass,
       },
+      connectionTimeout: 60000,
     });
   
     const passengerEmail = to.passenger[0]?.Email;
@@ -1974,7 +1976,7 @@ module.exports = {
     </html>`;
 
      // Create a new PDF document
-     const browser = await puppeteer.launch({ headless: 'new',});
+     const browser = await puppeteer.launch({ headless: 'new',  timeout: 0});
      const page = await browser.newPage();
 
      // Save the PDF to a temporary file
@@ -1999,6 +2001,7 @@ module.exports = {
         user: nodemailerConfig.options.auth.user,
         pass: nodemailerConfig.options.auth.pass,
       },
+      connectionTimeout: 60000,
     });
     const email = to.email;
     var mailOptions = {
@@ -2021,6 +2024,9 @@ module.exports = {
       // Send the email
       const info = await transporter.sendMail(mailOptions);
       console.log("Email sent: " + info.response);
+
+      fs.unlinkSync(pdfFilePath);
+      
       return info;
     } catch (error) {
       console.error("Email sending failed:", error);

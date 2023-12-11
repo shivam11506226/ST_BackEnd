@@ -14,7 +14,7 @@ module.exports = function (app) {
     app.get('/skyTrails/flightBooking/getoneFlightsBooking/:id',controller.getoneFlightsBooking);
     app.delete('/skyTrails/flightBooking/deleteFlightBookings/:id',controller.deleteFlightBookings);
     app.delete('/skyTrails/flightBooking/deleteAllFlightBookings',controller.deleteAllFlightBookings);
-
+    app.get('/skyTrails/flightBooking/getoneFlightsBookingById/:id',controller.getoneFlightsBookingById);
     // ================ Get All Flight Booking List for Admin ========
 
     app.post('/skyTrails/flightBooking/getAllFlightsBookingForAdmin', controller.getAllFlghtBookingForAdmin);

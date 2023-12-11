@@ -21,6 +21,9 @@ module.exports = function (app) {
     // app.delete('/skyTrails/api/user/', controller.deletePost);
     app.get('/skyTrails/api/user/getUserflightBooking',[authJwt.verifcationToken],flightBookingController.getUserflightBooking);
     app.get('/skyTrails/api/user/getUserFlightData',[authJwt.verifcationToken],flightBookingController.getUserFlightData);
+
+    app.get('/skyTrails/api/user/getUserBusBooking',[authJwt.verifcationToken],busBookingController.getBusBookingList);
+    
     // [authJwt.verifcationToken]
     
     app.post('/skyTrails/api/admin/createadvertisment',upload.handleFileUpload,SchemaValidator(schemas.advertisementSchema), advertisementController.createadvertismentController);

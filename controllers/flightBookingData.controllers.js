@@ -72,6 +72,21 @@ exports.getoneFlightsBooking = async (req, res) => {
     response = await flightBookingData.find({
       userId: { $in: [req.params.id] },
     });
+    console.log(response,"response");
+    const msg = "user booking data get successfully";
+    actionCompleteResponse(res, response, msg);
+  } catch (error) {
+    sendActionFailedResponse(res, {}, error.message);
+  }
+};
+
+
+exports.getoneFlightsBookingById = async (req, res) => {
+  try {
+    response = await flightBookingData.find({
+      _id: { $in: [req.params.id] },
+    });
+    console.log(response,"response");
     const msg = "user booking data get successfully";
     actionCompleteResponse(res, response, msg);
   } catch (error) {

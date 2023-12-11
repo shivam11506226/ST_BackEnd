@@ -25,7 +25,7 @@ exports.addFlightBookingData = async (req, res) => {
 
     if(response.bookingStatus === "BOOKED"){
     
-     const userName = response.passengerDetails[0].firstName + response.passengerDetails[0].lastName;
+     const userName = response.passengerDetails[0].firstName +" "+ response.passengerDetails[0].lastName;
      const message = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details:https://theskytrails.com/google`
       await whatsAppMsg.sendWhatsAppMessage(response.passengerDetails[0].ContactNo.slice(5), message);
       const send = await sendSMS.sendSMSForFlightBookingAgent(response);

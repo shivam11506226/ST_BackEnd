@@ -73,9 +73,37 @@ exports.busBooking = async (req, res, next) => {
 };
 
 exports.getBusBookingList = async (req, res, next) => {
+  // try {
+  //   const { userId } = req.userId;
+  //   console.log(userId,"userId")
+  //   const isUserExist = await findUser({ _id: userId, status: status.ACTIVE});
+  //   if (!isUserExist) {
+  //     return res
+  //       .status(statusCode.NotFound)
+  //       .send({
+  //         statusCode: statusCode.NotFound,
+  //         message: responseMessage.USERS_NOT_FOUND,
+  //       });
+  //   }
+  //   const result = await userBusBookingList({ status: status.ACTIVE });
+  //   if (result) {
+  //     return res
+  //       .status(statusCode.OK)
+  //       .send({
+  //         statusCode: statusCode.OK,
+  //         message: responseMessage.BOOKING_NOT_FOUND,
+  //       });
+  //   }
+  // } catch (error) {
+  //   console.log("error: ", error);
+  //   return next(error);
+  // }
   try {
-    const { userId } = req.userId;
-    const isUserExist = await findUser({ _id: userId, status: status.ACTIVES });
+    const { page, limit, search, fromDate, toDate } = req.query;
+    const isUserExist = await findUser({
+      _id: req.userId,
+      status: status.ACTIVE,
+    });
     if (!isUserExist) {
       return res
         .status(statusCode.NotFound)
@@ -84,15 +112,27 @@ exports.getBusBookingList = async (req, res, next) => {
           message: responseMessage.USERS_NOT_FOUND,
         });
     }
-    const result = await userBusBookingList({ status: status.ACTIVE });
-    if (result) {
+    const body = {
+      page,
+      limit,
+      search,
+      fromDate,
+      toDate,
+      userId: isUserExist._id,
+    };
+    const result = await paginateUserBusBookingSearch(body);
+    console.log("result=========", result);
+    if (result.docs.length == 0) {
       return res
-        .status(statusCode.OK)
+        .status(statusCode.NotFound)
         .send({
-          statusCode: statusCode.OK,
-          message: responseMessage.BOOKING_NOT_FOUND,
+          statusCode: statusCode.NotFound,
+          message: responseMessage.DATA_NOT_FOUND,
         });
     }
+    return res
+      .status(statusCode.OK)
+      .send({ message: responseMessage.DATA_FOUND, result: result });
   } catch (error) {
     console.log("error: ", error);
     return next(error);

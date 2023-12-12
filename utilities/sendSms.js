@@ -279,7 +279,7 @@ module.exports = {
       apikey: key,
       senderid: senderid,
       templateid: templateid1,
-      number: data.passengerDetails[0].ContactNo.slice(5),
+      number: data.passengerDetails[0].ContactNo,
       message: details,
     };
     try {

@@ -89,9 +89,9 @@ exports.flighBooking = async (req, res, next) => {
     const message = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details: https://theskytrails.com/${url1}`;
     await whatsApi.sendWhatsAppMessage(phone, message);
     await sendSMSUtils.sendSMSForFlightBooking(data);
-    await commonFunction.FlightBookingConfirmationMail(data);
+    await commonFunction.FlightBookingConfirmationMail(result);
     return res.status(statusCode.OK).send({
-      statusCode: statusCode.OK,
+      statusCode: statusCode.OK, 
       message: responseMessage.FLIGHT_BOOKED,
       result,
     });

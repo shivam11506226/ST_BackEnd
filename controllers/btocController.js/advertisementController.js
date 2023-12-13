@@ -171,10 +171,15 @@ exports.updateflightadvertisementController = async (req, res, next) => {
 exports.getflightadvertisementController = async (req, res, next) => {
     try {
         // const { page, limit } = req.query;
-       
+        const currentDate = new Date();
+console.log("currentDate=======>>>>>",currentDate)
+// endDate: { $gt: currentDate },
         const result=await advertisementflightList({status:status.ACTIVE});
-        if(!result){
-            return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
+        if (!result || result.length === 0) {
+            return res.status(statusCode.NotFound).send({
+                statusCode: statusCode.NotFound,
+                responseMessage: responseMessage.DATA_NOT_FOUND,
+            });
         }
         return res.status(statusCode.OK).send({statusCode:statusCode.OK,responseMessage:responseMessage.DATA_FOUND,result:result})
     } catch (error) {
@@ -253,7 +258,9 @@ exports.updatebusadvertisementController = async (req, res, next) => {
 exports.getbusadvertisementController = async (req, res, next) => {
     try {
         const { page, limit } = req.query;
-       
+        const currentDate = new Date();
+        console.log("currentDate=======>>>>>",currentDate)
+        // endDate: { $gt: currentDate },
         const result=await advertisementbusList({status:status.ACTIVE});
         if(!result){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})
@@ -336,7 +343,9 @@ exports.updatehoteladvertisementController = async (req, res, next) => {
 exports.gethoteladvertisementController = async (req, res, next) => {
     try {
         const { page, limit } = req.query;
-       
+        const currentDate = new Date();
+        console.log("currentDate=======>>>>>",currentDate)
+        // endDate: { $gt: currentDate },
         const result=await hoteladvertisementList({status:status.ACTIVE});
         if(!result){
             return res.status(statusCode.NotFound).send({statusCode:statusCode.NotFound,responseMessage:responseMessage.DATA_NOT_FOUND})

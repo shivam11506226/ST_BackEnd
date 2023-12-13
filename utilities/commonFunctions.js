@@ -350,7 +350,7 @@ module.exports = {
 
   FlightBookingConfirmationMail: async (to) => {
 
-    const currentDate = new Date();
+    const currentDate = new Date(to.createdAt);
     const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
     const formattedDate = currentDate.toLocaleDateString('en-US', options);
     
@@ -823,7 +823,7 @@ module.exports = {
   BusBookingConfirmationMail: async (to) => {
     // console.log(to,"data");
 
-    const currentDate = new Date();
+    const currentDate = new Date(to.createdAt);
     const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
     const formattedDate = currentDate.toLocaleDateString('en-US', options);
 
@@ -1374,7 +1374,7 @@ module.exports = {
 
  HotelBookingConfirmationMail: async (to) => {
 
-  const currentDate = new Date();
+  const currentDate = new Date(to.createdAt);
   const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
   const formattedDate = currentDate.toLocaleDateString('en-US', options);
 

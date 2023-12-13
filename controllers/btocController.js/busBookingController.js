@@ -56,7 +56,7 @@ exports.busBooking = async (req, res, next) => {
     const message = `Hello ${userName} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login`;
     await sendSMS.sendSMSBusBooking(result.passenger[0].Phone, userName);
     await whatsApi.sendWhatsAppMessage(result.passenger[0].Phone, message);
-    await commonFunction.BusBookingConfirmationMail(data);
+    await commonFunction.BusBookingConfirmationMail(result);
 
     if (result) {
       return res
@@ -209,3 +209,33 @@ exports.getBusBookingList = async (req, res, next) => {
 //     return next(error);
 //   }
 // }
+
+exports.getUserBusData = async (req, res, next) => {
+  try {
+    const isUserExist = await findUser({
+      _id: req.userId,
+      status: status.ACTIVE,
+    });
+    console.log("isUSerExist", isUserExist);
+    if (!isUserExist) {
+      return res.status(statusCode.NotFound).send({
+        statusCode: statusCode.NotFound,
+        message: responseMessage.USERS_NOT_FOUND,
+      });
+    }
+
+    const result = await userBusBookingList({ status: status.ACTIVE });
+    if (result) {
+      return res.status(statusCode.NotFound).send({
+        statusCode: statusCode.NotFound,
+        message: responseMessage.DATA_NOT_FOUND,
+      });
+    }
+    return res
+      .status(statusCode.OK)
+      .send({ message: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error: ", error);
+    return next(error);
+  }
+};

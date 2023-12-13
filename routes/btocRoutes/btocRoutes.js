@@ -23,9 +23,10 @@ module.exports = function (app) {
     app.get('/skyTrails/api/user/getUserFlightData',[authJwt.verifcationToken],flightBookingController.getUserFlightData);
 
     app.get('/skyTrails/api/user/getUserBusBooking',[authJwt.verifcationToken],busBookingController.getBusBookingList);
-    app.get('/skyTrails/api/user/getUserHotelBooking',[authJwt.verifcationToken],hotelBookingController.getAllHotelBookingList)
+    app.get('/skyTrails/api/user/getUserHotelBooking',[authJwt.verifcationToken],hotelBookingController.getAllHotelBookingList);
     // [authJwt.verifcationToken]
-    
+    app.get('/skyTrails/api/user/getUserHotelData',[authJwt.verifcationToken],hotelBookingController.getUserHotelData);
+    app.get('/skyTrails/api/user/getUserBusData',[authJwt.verifcationToken],busBookingController.getUserBusData);
     app.post('/skyTrails/api/admin/createadvertisment',upload.handleFileUpload,SchemaValidator(schemas.advertisementSchema), advertisementController.createadvertismentController);
     app.put('/skyTrails/api/admin/updateadvertisement',upload.handleFileUpload,[authJwt.verifcationToken],SchemaValidator(schemas.updateadvertisementSchema), advertisementController.updateadvertisementController);
     app.get('/skyTrails/api/getadvertisement',advertisementController.getadvertisementController);

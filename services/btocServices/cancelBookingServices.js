@@ -66,6 +66,7 @@ const cancelUserBookingServices = {
                         { "flightDetails.dateOfJourney": { $regex: data, $options: "i" } },
                         { "bookingId": { $regex: data, $options: "i" } },
                         { "flightDetails.origin": { $regex: data, $options: "i" } },
+                        { "reason": { $regex: data, $options: "i" } },
                         { "flightDetails.amount": parseInt(data) }
                     ],
             }
@@ -206,6 +207,7 @@ const cancelUserBookingServices = {
                         { "paymentStatus": { $regex: data, $options: "i" } },
                         { "night": parseInt(data) },
                         { "room": parseInt(data) },
+                        { "reason": { $regex: data, $options: "i" } },
                         { "bookingStatus": { $regex: data, $options: "i" } }
                     ],
                 }
@@ -283,6 +285,7 @@ return await cancelBusModel.find(data);
                         { "busDetails.dateOfJourney": { $regex: data, $options: "i" } },
                         { "bookingId": { $regex: data, $options: "i" } },
                         { "busDetails.origin": { $regex: data, $options: "i" } },
+                        { "reason": { $regex: data, $options: "i" } },
                         { "busDetails.amount": parseInt(data) }
                     ],
                 }

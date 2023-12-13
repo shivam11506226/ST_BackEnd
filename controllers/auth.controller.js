@@ -791,7 +791,7 @@ exports.getCancelUserFlightBooking = async (req, res, next) => {
     // var userId = isUserExist._id;
     const { page, limit, search, fromDate } = req.query;
     const query = { page, limit, search, fromDate, };
-    const result = await aggregatePaginateGetBooking1(req.query);
+    const result = await aggregatePaginatecancelFlightBookingsList(req.query);
     if (!result) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
     }
@@ -804,7 +804,7 @@ exports.getCancelUserFlightBooking = async (req, res, next) => {
 exports.getCancelUserHotelBooking = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate } = req.query;
-    const result = await paginateUserhotelBookingModelSearch(req.query);
+    const result = await getHotelCancelRequesrByAggregate(req.query);
     if (!result) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
     }
@@ -817,7 +817,7 @@ exports.getCancelUserHotelBooking = async (req, res, next) => {
 exports.getCancelUserBusBooking = async (req, res, next) => {
   try {
     const { page, limit, search, fromDate } = req.query;
-    const result = await paginateUserBusBookingSearch(req.query);
+    const result = await getBusCancelRequestByAggregate(req.query);
     if (!result) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
     }

@@ -48,16 +48,13 @@ exports.flighBooking = async (req, res, next) => {
       status: status.ACTIVE,
     });
     if (!isUserExist) {
-      return res
-        .status(statusCode.NotFound)
-        .send({
-          statusCode: statusCode.NotFound,
-          message: responseMessage.USERS_NOT_FOUND,
-        });
+      return res.status(statusCode.NotFound).send({
+        statusCode: statusCode.NotFound,
+        message: responseMessage.USERS_NOT_FOUND,
+      });
     }
     data.userId = isUserExist._id;
     data.bookingStatus = bookingStatus.BOOKED;
-    console.log(data);
     // const passengerDetails = data.passengerDetails || [];
     // const modifiedPassengers = [];
     // for (let i = 0; i < passengerDetails.length; i++) {
@@ -89,17 +86,15 @@ exports.flighBooking = async (req, res, next) => {
     const userName = `${data?.passengerDetails[0]?.firstName} ${data?.passengerDetails[0]?.lastName}`;
     const url1 = "google";
     const phone = data?.passengerDetails[0]?.ContactNo;
-    const message = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details:https://theskytrails.com/${url1}`;
+    const message = `Hello,${userName}.We appreciate your flight booking with The Skytrails. Your booking has been verified! Click the following link to view details: https://theskytrails.com/${url1}`;
     await whatsApi.sendWhatsAppMessage(phone, message);
     await sendSMSUtils.sendSMSForFlightBooking(data);
     await commonFunction.FlightBookingConfirmationMail(data);
-    return res
-      .status(statusCode.OK)
-      .send({
-        statusCode: statusCode.OK,
-        message: responseMessage.FLIGHT_BOOKED,
-        result,
-      });
+    return res.status(statusCode.OK).send({
+      statusCode: statusCode.OK,
+      message: responseMessage.FLIGHT_BOOKED,
+      result,
+    });
   } catch (error) {
     console.log("error: ", error);
     return next(error);
@@ -114,12 +109,10 @@ exports.getUserflightBooking = async (req, res, next) => {
       status: status.ACTIVE,
     });
     if (!isUserExist) {
-      return res
-        .status(statusCode.NotFound)
-        .send({
-          statusCode: statusCode.NotFound,
-          message: responseMessage.USERS_NOT_FOUND,
-        });
+      return res.status(statusCode.NotFound).send({
+        statusCode: statusCode.NotFound,
+        message: responseMessage.USERS_NOT_FOUND,
+      });
     }
     const body = {
       page,
@@ -132,12 +125,10 @@ exports.getUserflightBooking = async (req, res, next) => {
     const result = await aggregatePaginateGetBooking(body);
     console.log("result=========", result);
     if (result.docs.length == 0) {
-      return res
-        .status(statusCode.NotFound)
-        .send({
-          statusCode: statusCode.NotFound,
-          message: responseMessage.DATA_NOT_FOUND,
-        });
+      return res.status(statusCode.NotFound).send({
+        statusCode: statusCode.NotFound,
+        message: responseMessage.DATA_NOT_FOUND,
+      });
     }
     return res
       .status(statusCode.OK)
@@ -156,22 +147,18 @@ exports.getUserFlightData = async (req, res, next) => {
     });
     console.log("isUSerExist", isUserExist);
     if (!isUserExist) {
-      return res
-        .status(statusCode.NotFound)
-        .send({
-          statusCode: statusCode.NotFound,
-          message: responseMessage.USERS_NOT_FOUND,
-        });
+      return res.status(statusCode.NotFound).send({
+        statusCode: statusCode.NotFound,
+        message: responseMessage.USERS_NOT_FOUND,
+      });
     }
 
     const result = await findUserflightBookingData({ status: status.ACTIVE });
     if (result) {
-      return res
-        .status(statusCode.NotFound)
-        .send({
-          statusCode: statusCode.NotFound,
-          message: responseMessage.DATA_NOT_FOUND,
-        });
+      return res.status(statusCode.NotFound).send({
+        statusCode: statusCode.NotFound,
+        message: responseMessage.DATA_NOT_FOUND,
+      });
     }
     return res
       .status(statusCode.OK)

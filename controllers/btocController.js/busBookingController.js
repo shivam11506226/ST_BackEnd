@@ -50,6 +50,7 @@ exports.busBooking = async (req, res, next) => {
           responseMessage: responseMessage.USERS_NOT_FOUND,
         });
     }
+    data.userId=isUserExist._id
     const result = await createUserBusBooking(data);
     const userName =`${result.passenger[0].firstName} ${result.passenger[0].lastName}`
     const message = `Hello ${userName} ,Thank you for booking your hotel stay with TheSkytrails. Your reservation is confirmed! Please click on url to see details:. Or You Can login theskytrails.com/login`;

@@ -24,22 +24,132 @@ const {
   countTotalUsertransaction,
 } = transactionModelServices;
 
+// exports.createOrder = async (req, res, next) => {
+//   const orderData = {
+//     amount: 50000, // amount in paise (e.g., 50000 for 500 INR)
+//     currency: 'INR',
+//     receipt: 'order_receipt',
+//     payment_capture: 1, // Auto capture payment
+//   };
+
+//   try {
+//     const response = await instance.orders.create(orderData);
+//     console.log("response=>>>>>>>>>>>>>>>", response);
+
+//     // Log the entire response to inspect its structure
+//     console.log("Entire Response: ", JSON.stringify(response, null, 2));
+
+//     // Check if there's a payment link in the response (adjust based on inspection)
+//     let paymentLink = response.short_url;
+
+//     if (!paymentLink) {
+//       // If still not found, you may need to adjust this based on the actual response structure
+//       console.error("Payment link not found in the response");
+//       res.status(500).json({ error: "Payment link not found" });
+//       return;
+//     }
+
+//     console.log("paymentLink==============", paymentLink);
+//     res.json({ paymentLink });
+//   } catch (error) {
+//     console.error("Error creating order:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+// exports.createOrder = async (req, res, next) => {
+//   const orderData = {
+//     amount: 500,
+//     currency: "INR",
+//     accept_partial: true,
+//     first_min_partial_amount: 100,
+//     description: "For XYZ purpose",
+//     customer: {
+//       name: "Gaurav Kumar",
+//       email: "gaurav.kumar@example.com",
+//       contact: "+919000090000",
+//     },
+//     notify: {
+//       sms: true,
+//       email: true,
+//     },
+//     reminder_enable: true,
+//     notes: {
+//       policy_name: "Jeevan Bima",
+//     }, // Auto capture payment
+//   };
+
+//   try {
+//     const response = instance.paymentLink.create(orderData);
+//     console.log("response=>>>>>>>>>>>>>>>", response);
+
+//     // Log the entire response to inspect its structure
+//     console.log("Entire Response: ", JSON.stringify(response, null, 2));
+
+//     // Check if there's a payment link in the response (adjust based on inspection)
+//     let paymentLink = response.short_url;
+//     if (!paymentLink) {
+//       // If still not found, you may need to adjust this based on the actual response structure
+//       console.error("Payment link not found in the response");
+//       res.status(500).json({ error: "Payment link not found" });
+//       return;
+//     }
+
+//     // const paymentLink = `https://example.com/payment-page?orderId=${orderId}`;
+//     // console.log("paymentLink==============", paymentLink);
+//     // res.json({ paymentLink });
+//   } catch (error) {
+//     console.error("Error creating order:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+
+
 exports.createOrder = async (req, res, next) => {
+  const orderData = {
+    amount: 500,
+    currency: "INR",
+    accept_partial: true,
+    first_min_partial_amount: 100,
+    description: "For XYZ purpose",
+    customer: {
+      name: "Gaurav Kumar",
+      email: "gaurav.kumar@example.com",
+      contact: "+919000090000",
+    },
+    notify: {
+      sms: true,
+      email: true,
+    },
+    reminder_enable: true,
+    notes: {
+      policy_name: "Jeevan Bima",
+    },
+  };
+
   try {
-    const { amount } = req.body;
-    var options = {
-      amount: amount, // amount in the smallest currency unit
-      currency: "INR",
-      receipt: "rcptid_11",
-    };
-    instance.orders.create(options, function (err, order) {
-      console.log(order);
-      console.log("orderId",order.id)
-      return res.status(statusCode.OK).send({responseMessage:order})
-    });
+    const response = await instance.paymentLink.create(orderData); // Use 'await' here
+    console.log("response=>>>>>>>>>>>>>>>", response);
+
+    // Log the entire response to inspect its structure
+    console.log("Entire Response: ", JSON.stringify(response, null, 2));
+
+    // Check if there's a payment link in the response (adjust based on inspection)
+    let paymentLink = response.short_url;
+    if (!paymentLink) {
+      // If still not found, you may need to adjust this based on the actual response structure
+      console.error("Payment link not found in the response");
+      res.status(500).json({ error: "Payment link not found" });
+      return;
+    }
+
+    // Provide the payment link in the response
+    console.log("paymentLink==============", paymentLink);
+    res.json({ paymentLink });
   } catch (error) {
-    console.log("error in create order on razorpay=====", error);
-    return next(error);
+    console.error("Error creating order:", error);
+    res.status(500).json({ error: error.message });
   }
 };
 

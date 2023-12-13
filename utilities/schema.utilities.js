@@ -343,6 +343,18 @@ const schemas = {
   razorPaySchema:joi.object().keys({
     amount:joi.number().required()
   }),
+  packageBookingSchema:joi.object().keys({
+    pakageid:joi.string().required(),
+    email:joi.string().required(),
+    fullName:joi.string().required(),
+    contryCode:joi.string().required(),
+    phone:joi.string().required(),
+    departureCity:joi.string().required(),
+    adults:joi.number().required(),
+    child:joi.number().required(),
+    selectRoom:joi.number().required(),
+    checkIndate:joi.string().required(),
+  }),
 };
 
 module.exports = schemas;

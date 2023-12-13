@@ -2353,7 +2353,7 @@ return await transporter.sendMail(mailOptions);
         <div class="card">
             <div class="main-container">
                 <h1>Hi, ${userName}!</h1>
-                <img src="https://asset.cloudinary.com/dva0pxegk/71805b75cabf8a0b8cee4d00b172473e" alt="logo">
+                <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo">
                 <p>Welcome to TheSkytrails! Your journey begins now.</p>
                 <p>Your login credentials are:</p>
                 <p>Username: ${userName}<br> Password: ${pass}</p>
@@ -2488,6 +2488,165 @@ return await transporter.sendMail(mailOptions);
     return await transporter.sendMail(mailOptions);
     
 
+  },
+
+  packageBookingConfirmationMail:async (to) => {
+    try {
+      const currentDate = new Date(to.createdAt);
+      const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+      const formattedDate = currentDate.toLocaleDateString('en-US', options);
+  
+      function formatDate(dateString, format) {
+        const date = new Date(dateString);
+        const options = {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+        };
+        return date.toLocaleString('en-US', options);
+      }
+  
+      const boardingTimeFormatted = formatDate(to.departureTime, 'DD MMMM YYYY hh:mm A');
+      const journeyDateFormatted = formatDate(to.departureTime, 'ddd, DD MMM YYYY');
+      const depTimeFormatted = formatDate(to.departureTime, 'hh:mm A');
+  
+      const name = `${to.fullName}`;
+      const htmlContent = `<!DOCTYPE html>
+      <html lang="en">
+      
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+        <style>
+          p {
+            margin: 0 4px 0 0;
+          }
+        </style>
+        <title>Package Booking Confirmation</title>
+      </head>
+      
+      <body style="margin: 0; padding: 0; font-size: 16px; font-family: Montserrat, sans-serif; line-height: 1.6;">
+      
+        <div style="background: #fff; overflow: hidden; padding: 10px; max-width: 800px; border: 2px solid #000; font-size: 12px; font-family: Montserrat, sans-serif; margin: 10px auto;">
+          <div>
+            <div style="justify-content: space-between; align-items: flex-start; display: flex; margin-top: 24px;">
+              <img src="https://travvolt.s3.amazonaws.com/ST-Main-LogoPdf.png" alt="logo" style="width: 25%; margin-top: -10px;" />
+              <div style="color: black; font-size: 24px; font-family: Montserrat; font-weight: 600; word-wrap: break-word;">
+                Package - Booking
+              </div>
+              <!-- Additional content if needed -->
+            </div>
+            <div style="margin-top: 15px;">
+              <b>Package Reservation</b> Please take a note of your reservation details. If you have any questions, feel free to contact us.
+            </div>
+            <!-- Additional content if needed -->
+      
+            <!-- Package Details -->
+            <div style="width: 100%; margin-top: 20px; border: 1px solid #D6D8E7;">
+              <!-- Add package details here -->
+              <p><strong>Package Name:to:{}</strong> Your Package Name</p>
+              <p><strong>Departure City:</strong> ${to.departureCity}</p>
+              <p><strong>Number of Adults:</strong> ${to.adults}</p>
+              <p><strong>Number of Children:</strong> ${to.child}</p>
+              <!-- Additional package details -->
+            </div>
+            <!-- End Package Details -->
+      
+            <!-- Journey Details -->
+            <div style="width: 100%; float: left; margin-top: 15px; border: 1px solid #D6D8E7;">
+              <div style="width: 100%; background: #004684; float: left; font-weight: bold; padding: 5px; padding-right: 0px; border-bottom: 1px solid #D6D8E7; color: #fff;">
+                <div style="width: 100%; float: left; margin-right: 0;">
+                  Journey Details
+                </div>
+              </div>
+              <div style="width: 100%; display: flex; justify-content: flex-start; gap: 35%; padding: 5px 0 1px 5px;">
+                <div style="display: flex; gap: 10px;">
+                  <div>
+                    <p>
+                      <strong>Departure Date:</strong>
+                    </p>
+                    <p>
+                      <strong>Departure Time:</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      ${journeyDateFormatted}
+                    </p>
+                    <p>
+                      ${depTimeFormatted}
+                    </p>
+                  </div>
+                </div>
+                <!-- Additional journey details -->
+              </div>
+            </div>
+            <!-- End Journey Details -->
+      
+            <!-- Boarding Details -->
+            <!-- Add boarding details if needed -->
+            <!-- End Boarding Details -->
+      
+            <!-- Additional sections as needed -->
+      
+          </div>
+        </div>
+      
+      </body>
+      
+      </html>
+      `;
+      const browser = await puppeteer.launch({ headless: 'new', timeout: 0 });
+      // const browser = await puppeteer.launch({ headless: true, timeout: 0 });
+      const page = await browser.newPage();
+  
+      // Set a longer timeout if needed
+      // await page.setDefaultNavigationTimeout(60000);
+  
+      // Wait for some time to let dynamic content load (adjust the time as needed)
+      await page.waitForTimeout(2000);
+  
+      await page.setContent(htmlContent);
+      const pdfFilePath = 'Package_Booking.pdf';
+      const pdfBytes = await page.pdf({ path: pdfFilePath, format: 'A4' });
+      await browser.close();
+      fs.writeFileSync(pdfFilePath, pdfBytes);
+  
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: nodemailerConfig.options.auth.user,
+          pass: nodemailerConfig.options.auth.pass,
+        },
+        connectionTimeout: 60000,
+      });
+  
+      const passengerEmail = to.email;
+      const mailOptions = {
+        from: nodemailerConfig.options.auth.user,
+        to: passengerEmail,
+        subject: 'Package Booking Confirmation Mail',
+        html: getHtmlContent(name),
+        attachments: [{ filename: 'Package_Booking.pdf', path: pdfFilePath }],
+      };
+  
+      await transporter.verify();
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Email sent: ' + info.response);
+  
+      fs.unlinkSync(pdfFilePath);
+  
+      return info;
+    } catch (error) {
+      console.error('Email sending failed:', error);
+      throw error;
+    }
   }
 
 };

@@ -11,7 +11,7 @@ const userServices = {
     },
 
     findUser: async (query) => {
-        return await userModel.findOne(query).select('-otp -isApproved -roles ');
+        return await userModel.findOne(query);
     },
 
     getUser: async (query) => {

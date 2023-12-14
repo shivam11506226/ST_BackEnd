@@ -28,6 +28,9 @@ const cancelUserBookingServices = {
         let data = filter || ""
         let pipeline = [
             {
+                $match:{status:status.ACTIVE}
+            },
+            {
                 $lookup: {
                     from: "users",
                     localField: 'userId',
@@ -87,73 +90,7 @@ const cancelUserBookingServices = {
         const result= await cancelFlightBookingsModel.aggregatePaginate(aggregate, options)
         return result;
     },
-    // aggregatePaginatecancelFlightBookingsList: async (body) => {
-    //     const { page, limit, search, fromDate, toDate } = body;
-    //     if (search) {
-    //         var filter = search;
-    //     }
-    //     let data = filter || ""
-    //     let pipeline = [
-    //         {
-    //             $lookup: {
-    //                 from: "users",
-    //                 localField: 'userId',
-    //                 foreignField: '_id',
-    //                 as: "userDetails",
-    //             }
-    //         },
-    //         {
-    //             $unwind: {
-    //                 path: "$userDetails",
-    //                 preserveNullAndEmptyArrays: true
-    //             }
-    //         },
-    //           {
-    //             $lookup: {
-    //                 from: "flightbookingdatas",
-    //                 localField: 'flightBookingId',
-    //                 foreignField: '_id',
-    //                 as: "flightDetails",
-    //               }
-    //           },
-    //           {
-    //             $unwind: {
-    //               path: "$flightDetails",
-    //               preserveNullAndEmptyArrays: true
-    //             }
-    //           },
-    //           {
-    //             $match: {
-    //                 $or: [
-    //                     { "flightDetails.AirlineName": { $regex: data, $options: "i" } },
-    //                     { "userDetails.username": { $regex: data, $options: "i" } },
-    //                     { "userDetails.email": { $regex: data, $options: "i" } },
-    //                     { "flightDetails.paymentStatus": { $regex: data, $options: "i" } },
-    //                     { "flightDetails.destination": { $regex: data, $options: "i" } },
-    //                     { "flightDetails.dateOfJourney": { $regex: data, $options: "i" } },
-    //                     { "bookingId": { $regex: data, $options: "i" } },
-    //                     { "flightDetails.origin": { $regex: data, $options: "i" } },
-    //                     { "flightDetails.amount": parseInt(data) }
-    //                 ],
-    //         }
-    //     }
-    //     ]
-    //     if (fromDate) {
-    //         pipeline.dateOfJourney = { $eq: fromDate };
-    //     }
-    //     if (toDate) {
-    //         pipeline.createdAt = { $eq: toDate }
-    //     }
-    //     let aggregate = cancelFlightBookingsModel.aggregate(pipeline)
-    //     let options = {
-    //         page: parseInt(page) || 1,
-    //         limit: parseInt(limit) || 10,
-    //         sort: { createdAt: -1 },
-    //     };
-    //     const result= await cancelFlightBookingsModel.aggregatePaginate(aggregate, options)
-    //     return result;
-    // },
-    countTotalcancelFlightBookings: async () => {
+     countTotalcancelFlightBookings: async () => {
         return await cancelFlightBookingsModel.countDocuments({ bookingStatus: bookingStatus.CANCEL })
     },
 
@@ -170,6 +107,9 @@ const cancelUserBookingServices = {
         }
         let data = filter || ""
         let pipeline = [
+            {
+                $match:{status:status.ACTIVE}
+            },
             {
                 $lookup: {
                     from: "users",
@@ -246,6 +186,9 @@ return await cancelBusModel.find(data);
         }
         let data = filter || ""
         let pipeline = [
+            {
+                $match:{status:status.ACTIVE}
+            },
             {
                 $lookup: {
                     from: "users",

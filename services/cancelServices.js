@@ -56,15 +56,88 @@ const cancelBookingServices = {
             {
                 $match: {
                     $or: [
-                        { "flightDetails.AirlineName": { $regex: data, $options: "i" } },
+                        { "flightDetails.airlineDetails[0].Airline.AirlineName": { $regex: data, $options: "i" } },
                         { "userDetails.username": { $regex: data, $options: "i" } },
                         { "userDetails.email": { $regex: data, $options: "i" } },
-                        { "flightDetails.paymentStatus": { $regex: data, $options: "i" } },
+                        { "flightDetails.pnr": { $regex: data, $options: "i" } },
                         { "flightDetails.destination": { $regex: data, $options: "i" } },
-                        { "flightDetails.dateOfJourney": { $regex: data, $options: "i" } },
+                        { "flightDetails.airlineDetails[0].Origin.DepTime": { $regex: data, $options: "i" } },
                         { "bookingId": { $regex: data, $options: "i" } },
-                        { "flightDetails.origin": { $regex: data, $options: "i" } },
-                        { "flightDetails.amount": parseInt(data) }
+                        { "flightDetails.airlineDetails[0].Origin.CityName": { $regex: data, $options: "i" } },
+                        { "flightDetails.totalAmount": parseInt(data) }
+                    ],
+                }
+            }
+        ]
+        if (fromDate) {
+            pipeline.push({ $match: { "flightDetails.dateOfJourney": { $eq: fromDate } } });
+        }
+
+        if (toDate) {
+            pipeline.push({ $match: { "flightDetails.createdAt": { $eq: toDate } } });
+        }
+
+        pipeline.push({
+            $sort: { createdAt: -1 },
+        });
+
+        let aggregate = cancelFlightBookingsModel.aggregate(pipeline);
+        let options = {
+            page: parseInt(page) || 1,
+            limit: parseInt(limit) || 10,
+        };
+
+        const result = await cancelFlightBookingsModel.aggregatePaginate(aggregate, options);
+        return result;
+    },
+    aggregatecancelFlightBookingsList: async (body) => {
+        const { page, limit, search, fromDate, toDate } = body;
+        if (search) {
+            var filter = search;
+        }
+        let data = filter || ""
+        let pipeline = [
+            {$match:{status:status.ACTIVE}},
+            {
+                $lookup: {
+                    from: "userb2bs",
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: "userDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$userDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "flightbookingdatas",
+                    localField: 'flightBookingId',
+                    foreignField: '_id',
+                    as: "flightDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$flightDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { "flightDetails.airlineDetails[0].Airline.AirlineName": { $regex: data, $options: "i" } },
+                        { "userDetails.username": { $regex: data, $options: "i" } },
+                        { "userDetails.email": { $regex: data, $options: "i" } },
+                        { "flightDetails.pnr": { $regex: data, $options: "i" } },
+                        { "flightDetails.destination": { $regex: data, $options: "i" } },
+                        { "flightDetails.airlineDetails[0].Origin.DepTime": { $regex: data, $options: "i" } },
+                        { "bookingId": { $regex: data, $options: "i" } },
+                        { "flightDetails.airlineDetails[0].Origin.CityName": { $regex: data, $options: "i" } },
+                        { "flightDetails.totalAmount": parseInt(data) }
                     ],
                 }
             }
@@ -173,7 +246,81 @@ const cancelBookingServices = {
 
         const result = await cancelHotelModel.aggregatePaginate(aggregate, options);
         return result;
-    },   
+    },  
+    getAgentHotelCancelRequesrByAggregate: async (body) => {
+        const { page, limit, search, fromDate, toDate } = body;
+        if (search) {
+            var filter = search;
+        }
+        let data = filter || ""
+        let pipeline = [
+            {$match:{status:status.ACTIVE}},
+            {
+                $lookup: {
+                    from: "userb2bs",
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: "userDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$userDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "hotelBookingDetail",
+                    localField: 'hotelBookingId',
+                    foreignField: '_id',
+                    as: "hotelDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$hotelDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { "hotelDetails.AirlineName": { $regex: data, $options: "i" } },
+                        { "userDetails.username": { $regex: data, $options: "i" } },
+                        { "userDetails.email": { $regex: data, $options: "i" } },
+                        { "hotelDetails.paymentStatus": { $regex: data, $options: "i" } },
+                        { "hotelDetails.destination": { $regex: data, $options: "i" } },
+                        { "hotelDetails.dateOfJourney": { $regex: data, $options: "i" } },
+                        { "bookingId": { $regex: data, $options: "i" } },
+                        { "hotelDetails.origin": { $regex: data, $options: "i" } },
+                        { "hotelDetails.amount": parseInt(data) },
+                        { "reason": { $regex: data, $options: "i" } },
+                    ],
+                }
+            }
+        ]
+        if (fromDate) {
+            pipeline.push({ $match: { "hotelDetails.dateOfJourney": { $eq: fromDate } } });
+        }
+
+        if (toDate) {
+            pipeline.push({ $match: { "hotelDetails.createdAt": { $eq: toDate } } });
+        }
+
+        pipeline.push({
+            $sort: { createdAt: -1 },
+        });
+
+        let aggregate = cancelHotelModel.aggregate(pipeline);
+        let options = {
+            page: parseInt(page) || 1,
+            limit: parseInt(limit) || 10,
+        };
+
+        const result = await cancelHotelModel.aggregatePaginate(aggregate, options);
+        return result;
+    },  
     countTotalHotelCancelled: async () => {
         return await cancelHotelModel.countDocuments({ bookingStatus: bookingStatus.CANCEL })
     },
@@ -243,6 +390,7 @@ const cancelBookingServices = {
         const result = await cancelBusModel.aggregatePaginate(aggregate, options);
         return result;
     },
+
     getBusCancellation: async (body) => {
         const { page, limit, search, fromDate, toDate } = body;
         if (search) {
@@ -315,7 +463,79 @@ const cancelBookingServices = {
         console.log("result============",result)
         return result;
     },
-    
+      getBusCancellationAgent: async (body) => {
+        const { page, limit, search, fromDate, toDate } = body;
+        if (search) {
+            var filter = search;
+        }
+        let data = filter || ""
+        let pipeline = [
+            {$match:{status:status.ACTIVE}},
+            {
+                $lookup: {
+                    from: "userb2bs",
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: "userDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$userDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $lookup: {
+                    from: "busBookingData",
+                    localField: 'busBookingId',
+                    foreignField: '_id',
+                    as: "bustDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$bustDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $match: {
+                    $or: [
+                        { "userDetails.personal_details.username": { $regex: data, $options: "i" } },
+                        { "userDetails.personal_details.email": { $regex: data, $options: "i" } },
+                        { "bustDetails.paymentStatus": { $regex: data, $options: "i" } },
+                        { "bustDetails.busType": { $regex: data, $options: "i" } },
+                        { "bustDetails.dateOfJourney": { $regex: data, $options: "i" } },
+                        { "bookingId": { $regex: data, $options: "i" } },
+                        { "bustDetails.origin": { $regex: data, $options: "i" } },
+                        { "busId": parseInt(data) }
+                    ],
+                }
+            }
+        ]
+        if (fromDate) {
+            pipeline.push({ $match: { "bustDetails.dateOfJourney": { $eq: fromDate } } });
+        }
+
+        if (toDate) {
+            pipeline.push({ $match: { "bustDetails.createdAt": { $eq: toDate } } });
+        }
+
+        pipeline.push({
+            $sort: { createdAt: -1 },
+        });
+
+        let aggregate = cancelBusModel.aggregate(pipeline);
+        let options = {
+            page: parseInt(page) || 1,
+            limit: parseInt(limit) || 10,
+        };
+
+        const result = await cancelBusModel.aggregatePaginate(aggregate, options);
+        console.log("result============",result)
+        return result;
+    },
     countTotalBusCancelled: async () => {
         return await cancelBusModel.countDocuments({ bookingStatus: bookingStatus.CANCEL })
     },

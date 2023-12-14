@@ -61,6 +61,7 @@ const changeHotelRequestServices = {
         }
         let data = filter || ""
         let pipeline = [
+            {$match:{status:status.ACTIVE}},
             {
                 $lookup: {
                     from: "userb2bs",
@@ -92,7 +93,8 @@ const changeHotelRequestServices = {
             {
                 $match: {
                     $or: [
-                        { "userDetails.username": { $regex: data, $options: "i" } },
+                        { "userDetails.personal_details.first_name": { $regex: data, $options: "i" } },
+                        { "userDetails.personal_details.last_name": { $regex: data, $options: "i" } },
                         { "userDetails.email": { $regex: data, $options: "i" } },
                         { "hotelDetails.paymentStatus": { $regex: data, $options: "i" } },
                         { "hotelDetails.HotelId": { $regex: data, $options: "i" } },

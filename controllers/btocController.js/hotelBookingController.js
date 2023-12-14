@@ -76,7 +76,7 @@ exports.hotelBooking= async (req, res, next)=> {
         toDate,
         userId:isUserExist._id, 
       }
-      const result = await aggregatePaginateHotelBookingList(body );
+      const result = await aggregatePaginateHotelBookingList(body);
       if (result.docs.length == 0) {
         return res.status(statusCode.NotFound).send({ message: responseMessage.DATA_NOT_FOUND });
       }
@@ -100,8 +100,7 @@ exports.hotelBooking= async (req, res, next)=> {
           message: responseMessage.USERS_NOT_FOUND,
         });
       }
-  
-      const result = await userhotelBookingModelList({ status: status.ACTIVE });
+      const result = await userhotelBookingModelList({ status: status.ACTIVE,userId:isUserExist._id});
       if (result) {
         return res.status(statusCode.NotFound).send({
           statusCode: statusCode.NotFound,

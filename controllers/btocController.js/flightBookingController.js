@@ -153,7 +153,7 @@ exports.getUserFlightData = async (req, res, next) => {
       });
     }
 
-    const result = await findUserflightBookingData({ status: status.ACTIVE });
+    const result = await findUserflightBookingData({ status: status.ACTIVE,userId:isUserExist._id });
     if (result) {
       return res.status(statusCode.NotFound).send({
         statusCode: statusCode.NotFound,

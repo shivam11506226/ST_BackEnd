@@ -224,7 +224,7 @@ exports.getUserBusData = async (req, res, next) => {
       });
     }
 
-    const result = await userBusBookingList({ status: status.ACTIVE });
+    const result = await userBusBookingList({ status: status.ACTIVE,userId:isUserExist._id });
     if (result) {
       return res.status(statusCode.NotFound).send({
         statusCode: statusCode.NotFound,

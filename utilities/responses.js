@@ -63,7 +63,7 @@ module.exports = {
 	AGENT_NOT_FOUND: "Agent not found",
 	BOOKING_NOT_FOUND: "Booking is not available",
 	BUS_BOOKING_CREATED: "Bus booking successfully !",
-	BOOKING_SUCCESS: "Bokking successfully",
+	BOOKING_SUCCESS: "Booking successfully",
 	VISA_CREATED: "Visa Created successfull.",
 	CANCEL_REQUEST_SEND: "Your cancel request was send successfully.",
 	CANCEL_REQUEST_SEND_TIME_OUT: "Your cancel request is not allowed.",

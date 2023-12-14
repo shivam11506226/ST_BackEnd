@@ -4,7 +4,8 @@ const flightBookingController=require('../../controllers/btocController.js/fligh
 const hotelBookingController=require('../../controllers/btocController.js/hotelBookingController');
 const advertisementController=require('../../controllers/btocController.js/advertisementController');
 const userCancelController=require('../../controllers/btocController.js/cancelTicketController');
-const packageController=require('../../controllers/btocController.js/packageBookingController')
+const packageController=require('../../controllers/btocController.js/packageBookingController');
+const changeRequestController=require('../../controllers/btocController.js/changeRequestController')
 const schemas = require('../../utilities/schema.utilities');
 const SchemaValidator = require('../../utilities/validations.utilities');
 const upload=require('../../utilities/uploadHandler')
@@ -48,5 +49,10 @@ module.exports = function (app) {
     app.get('/skyTrails/api/user/getCancelUserBusBooking',userCancelController.getCancelUserBusBooking);
     app.post('/skyTrails/api/user/packageBooking',[authJwt.verifcationToken],SchemaValidator(schemas.packageBookingSchema),packageController.packageBooking);
     app.get('/skyTrails/api/user/getPackageBookigs',[authJwt.verifcationToken],packageController.getPackageBookigs);
-    
+    // app.post('/skyTrails/api/user/cancelUserHotelBooking',[authJwt.verifcationToken],SchemaValidator(schemas.cancelUserHotelBookingSchema),changeRequestController.changeRequestController);
+    // app.post('/skyTrails/api/user/cancelUserFlightBooking',[authJwt.verifcationToken],SchemaValidator(schemas.cancelUserFlightBookingSchema),changeRequestController)
+    // app.post('/skyTrails/api/user/cancelUserBusBooking',[authJwt.verifcationToken],SchemaValidator(schemas.cancelUserBusBookingSchema),changeRequestController.cancelUserBusBooking)
+    app.get('/skyTrails/api/user/getChangelUserFlightBooking',[authJwt.verifcationToken],changeRequestController.getUserFlightChangeRequest);
+    // app.get('/skyTrails/api/user/getCancelUserHotelBooking',changeRequestController.getCancelUserHotelBooking);
+    // app.get('/skyTrails/api/user/getCancelUserBusBooking',changeRequestController.getCancelUserBusBooking);
 }

@@ -38,7 +38,12 @@ const {userBusBookingServices}=require("../services/btocServices/busBookingServi
 const { createUserBusBooking, findUserBusBooking, getUserBusBooking, findUserBusBookingData, deleteUserBusBooking, userBusBookingList, updateUserBusBooking, paginateUserBusBookingSearch } = userBusBookingServices
 const { userhotelBookingModelServices } = require('../services/btocServices/hotelBookingServices');
 const { createUserhotelBookingModel, findUserhotelBookingModel, getUserhotelBookingModel, deleteUserhotelBookingModel, userhotelBookingModelList, updateUserhotelBookingModel, paginateUserhotelBookingModelSearch,countTotalhotelBooking,aggregatePaginateHotelBookingList2 } = userhotelBookingModelServices
-
+const { subAdminServices } = require("../services/subAdminServices");
+const {createSubAdmin, findSubAdmin,findSubAdminData,deleteSubAdmin,subAdminList,updateSubAdmin,paginateSubAdminSearch,countTotalSubAdmin,} = subAdminServices;
+const { cancelBookingServices } = require("../services/cancelServices");
+const {  aggregatecancelFlightBookingsList,getAgentHotelCancelRequesrByAggregate,getBusCancellationAgent } = cancelBookingServices;
+const {changeUserBookingServices}=require("../services/btocServices/changeRequestServices");
+const {flightchangeRequestUserList,hotelchangeRequestUserList,buschangeRequestUserList}=changeUserBookingServices;
 //**********Necessary models***********/
 const flightModel = require('../model/flightBookingData.model')
 const hotelBookingModel = require('../model/hotelBooking.model');
@@ -448,7 +453,7 @@ exports.adminDashBoard = async (req, res, next) => {
     result.NoOfFlightBookings = await flightModel.countDocuments({ paymentStatus: "success" });
     result.NoOfBusBookings = await busBookingModel.countDocuments({ bookingStatus: bookingStatus.BOOKED });
     result.TotalBooking = result.NoOfHotelBookings + result.NoOfBusBookings + result.NoOfFlightBookings;
-    result.NoOfSubAdmin = await countTotalUser({ userType: userType.SUBADMIN });
+    result.NoOfSubAdmin = await countTotalSubAdmin({ userType: userType.SUBADMIN });
     result.NoOfUser = await countTotalUser({ userType: userType.USER });
     result.NoOfAgent = await countTotalbrbUser({ userType: userType.AGENT });
     return res.status(statusCode.OK).send({ message: responseMessage.DATA_FOUND, result: result });
@@ -779,6 +784,7 @@ exports.getAllBusBookingListAgent = async (req, res, next) => {
     return next(error);
   }
 }
+//get all user cancel request*****************************************
 exports.getCancelUserFlightBooking = async (req, res, next) => {
   try {
 
@@ -958,6 +964,101 @@ exports.getMarkup=async(req,res,next)=>{
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK,responseMessage:responseMessage.DATA_FOUND,result: result });
   } catch (error) {
     console.log("Error: " + error);
+    return next(error)
+  }
+}
+
+
+//get all user cancel request*****************************************
+exports.getCancelAgentFlightBooking = async (req, res, next) => {
+  try {
+
+    // const isUserExist = await findUser({ _id: req.userId, status: status.ACTIVE, userType: userType.USER });
+    // // console.log("isAgentExists", isAgentExists);
+    // if (!isUserExist) {
+    //   return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+    // }
+    // var userId = isUserExist._id;
+    const { page, limit, search, fromDate } = req.query;
+    const query = { page, limit, search, fromDate, };
+    const result = await aggregatecancelFlightBookingsList(req.query);
+    if (!result) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error to get cancel flight", error);
+    return next(error);
+  }
+}
+exports.getCancelAgentHotelBooking = async (req, res, next) => {
+  try {
+    const { page, limit, search, fromDate } = req.query;
+    const result = await getAgentHotelCancelRequesrByAggregate(req.query);
+    if (!result) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error to get cancel flight", error);
+    return next(error);
+  }
+}
+exports.getCancelAgentBusBooking = async (req, res, next) => {
+  try {
+    const { page, limit, search, fromDate } = req.query;
+    const result = await getBusCancellationAgent(req.query);
+    if (!result) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, responseMessage: responseMessage.DATA_FOUND, result: result });
+  } catch (error) {
+    console.log("error", error);
+    return next(error);
+  }
+}
+
+//get change flight booking details request by User**********************************
+exports.getUserchangeFlightRequest = async (req, res, next) => {
+  try {
+    const { page, limit, search, fromDate, toDate } = req.query;
+    const result = await flightchangeRequestUserList(req.query);
+    if (!result) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+  } catch (error) {
+    console.log("Error to getting data", error);
+    return next(error)
+  }
+}
+//get change hotel booking details request by User**********************************
+exports.getUserchangeHotelRequest = async (req, res, next) => {
+  try {
+    const { page, limit, search, fromDate, toDate } = req.query;
+
+    const result = await hotelchangeRequestUserList(req.query);
+    if (!result) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+  } catch (error) {
+    console.log("Error to getting data", error);
+    return next(error)
+  }
+}
+//get change bus booking details request by User**********************************
+exports.getUserchangeBusRequest = async (req, res, next) => {
+  try {
+    const { page, limit, search, fromDate, toDate } = req.query;
+    const result = await buschangeRequestUserList(req.query);
+    console.log(result);
+    if (!result) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+  } catch (error) {
+    console.log("Error to getting data", error);
     return next(error)
   }
 }

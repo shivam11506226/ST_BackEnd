@@ -21,10 +21,6 @@ const changeBookingDataSchema =
             type: Schema.Types.ObjectId,
             ref: "userflightBookingDetail"
         },
-        status: {
-            type: String,
-            default: "ACTIVE"
-        },
         contactNumber: {
             type: String
         },
@@ -33,6 +29,11 @@ const changeBookingDataSchema =
         },
         amount: {
             type: Number
+        },
+        status: {
+            type: String,
+            enum:[status.ACTIVE,status.BLOCK,status.DELETE],
+            default: status.ACTIVE
         },
         approveStatus: {
             type: String,

@@ -355,6 +355,14 @@ const schemas = {
     selectRoom:joi.number().required(),
     checkIndate:joi.string().required(),
   }),
+  changeUserRequest: joi.object().keys({
+    reason: joi.string().required(),
+    changerequest: joi.string().required(),
+    bookingId: joi.number().required(),
+    contactNumber: joi.string().required(),
+    flightBookingId:joi.string().required(),
+    pnr:joi.string().required()
+  }),
 };
 
 module.exports = schemas;

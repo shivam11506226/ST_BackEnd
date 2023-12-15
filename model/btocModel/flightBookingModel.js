@@ -19,7 +19,7 @@ const BookingDetailSchema = new mongoose.Schema(
           type:Boolean,
         },
         bookingId: {
-          type:String,
+          type:Number,
         },
         pnr: {
           type: String,

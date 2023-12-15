@@ -120,47 +120,6 @@ exports.RegisterUser = async (req, res) => {
   });
 };
 
-// exports.LoginUser = async (req, res) => {
-//   b2bUser
-//     .findOne({ "personal_details.email": req.body.email })
-//     .exec((err, user) => {
-//       if (err) {
-//         console.log(err);
-//         sendActionFailedResponse(res, {}, err.message);
-//       }
-
-//       if (!user) {
-//         const msg = "User Not found.";
-//         sendActionFailedResponse(res, {}, msg);
-//       }
-
-//       if (user?.is_active == 0) {
-//         const msg = "User Disabled Please Contact your Administrator";
-//         sendActionFailedResponse(res, {}, msg);
-//       } else if (user?.is_active == 1) {
-//         var passwordIsValid = bcrypt.compareSync(
-//           req.body.password,
-//           user?.personal_details?.password
-//         );
-
-//         if (!passwordIsValid) {
-//           // return res.status(401).send({ message: "Invalid Password!" });
-//           const msg = "Invalid Password!";
-//           sendActionFailedResponse(res, {}, msg);
-//         }
-//         const response = {
-//           id: user._id,
-//           username: user?.personal_details?.first_name,
-//           email: user?.personal_details?.email,
-//           balance: user?.balance,
-//           markup: user?.markup
-//         };
-//         msg = "User Login Successfully!";
-//         actionCompleteResponse(res, response, msg);
-//       }
-//     });
-// };
-
 exports.LoginUser = async (req, res) => {
   try {
     const user = await b2bUser.findOne({ "personal_details.email": req.body.email });
@@ -862,7 +821,7 @@ exports.changeFlightDetailsRequest = async (req, res, next) => {
       amount: amount
     }
     const result = await createchangeRequest(object);
-    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK,responseMessage:responseMessage.CHANGE_REQUEST_SUCCESS, result: result });
   } catch (error) {
     console.log("error", error);
     return next(error);

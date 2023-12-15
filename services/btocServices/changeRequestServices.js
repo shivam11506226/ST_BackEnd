@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 //**********NODE JS DEVELOPER, This is a services which we need mongodb queries to perform operation on db********//
 
 const changeUserBookingServices = {
-    createUserFlightCancelRequest: async (insertObj) => {
+    createUserFlightChangeRequest: async (insertObj) => {
         return await userChangeFlightModel.create(insertObj);
     },
     flightchangeRequestUserList:async(body)=>{
@@ -20,6 +20,9 @@ const changeUserBookingServices = {
         }
         let data = filter || ""
         let pipeline = [
+            {
+                $match:{status:status.ACTIVE}
+            },
             {
                 $lookup: {
                     from: "users",
@@ -34,47 +37,7 @@ const changeUserBookingServices = {
                     preserveNullAndEmptyArrays: true
                 }
             },
-            {
-                $lookup: {
-                    from: "userflightBookingDetail",
-                    localField: 'flightBookingId',
-                    foreignField: '_id',
-                    as: "flightDetails",
-                }
-            },
-            {
-                $unwind: {
-                    path: "$flightDetails",
-                    preserveNullAndEmptyArrays: true
-                }
-            },
-            {
-                $match: {
-                    $or: [
-                        { "hotelName": { $regex: data, $options: "i" }, },
-                        { "userDetails.username": { $regex: data, $options: "i" } },
-                        { "userDetails.email": { $regex: data, $options: "i" } },
-                        { "paymentStatus": { $regex: data, $options: "i" } },
-                        { "destination": { $regex: data, $options: "i" } },
-                        { "flightDetails.": parseInt(data) },
-                        { "room": parseInt(data) },
-                        { "flightDetails.bookingId": { $regex: data, $options: "i" } }
-                    ],
-                }
-            },
         ]
-        if (fromDate && !toDate) {
-            pipeline.CheckInDate = { $eq: fromDate };
-        }
-        if (!fromDate && toDate) {
-            pipeline.CheckOutDate = { $eq: toDate };
-        }
-        if (fromDate && toDate) {
-            pipeline.$and = [
-                { CheckInDate: { $eq: fromDate } },
-                { CheckOutDate: { $eq: toDate } },
-            ]
-        }
         let aggregate = userChangeFlightModel.aggregate(pipeline)
         let options = {
             page: parseInt(page) || 1,
@@ -84,7 +47,7 @@ const changeUserBookingServices = {
         return await userChangeFlightModel.aggregatePaginate(aggregate, options)
 
     },
-    createUserHotelCancelRequest: async (insertObj) => {
+    createUserHotelChangeRequest: async (insertObj) => {
         return await userChangeHotelModel.create(insertObj);
     },
     hotelchangeRequestUserList:async(body)=>{
@@ -94,6 +57,9 @@ const changeUserBookingServices = {
         }
         let data = filter || ""
         let pipeline = [
+            {
+                $match:{status:status.ACTIVE}
+            },
             {
                 $lookup: {
                     from: "users",
@@ -158,7 +124,7 @@ const changeUserBookingServices = {
         return await userChangeHotelModel.aggregatePaginate(aggregate, options)
 
     },
-    createUserBusCancelRequest: async (insertObj) => {
+    createUserBusChangeRequest: async (insertObj) => {
         return await userChangeBusModel.create(insertObj);
     },
     buschangeRequestUserList:async(body)=>{
@@ -168,6 +134,9 @@ const changeUserBookingServices = {
         }
         let data = filter || ""
         let pipeline = [
+            {
+                $match:{status:status.ACTIVE}
+            },
             {
                 $lookup: {
                     from: "users",

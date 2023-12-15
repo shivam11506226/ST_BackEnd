@@ -77,5 +77,7 @@ module.exports = {
 	BAD_REQUEST:"Bad request.",
 	STATIC_CREATED:"Static content created successfully.",
 	STATIC_DELETED:"Static content deleted successfully.",
-	POST_NOT_FOUND:"Post not found"
+	POST_NOT_FOUND:"Post not found",
+	CHANGE_REQUEST_SUCCESS:"Change request submitted succesfully",
+	CHANGE_NOT_ALLOW:"Change request not allow for this ticket"
 };

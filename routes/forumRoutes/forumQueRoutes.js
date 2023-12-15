@@ -16,6 +16,7 @@ module.exports = function (app) {
     app.put('/skyTrails/forumPost/updatePost', controller.updatePost);
     app.delete('/skyTrails/forumPost/deletePost', controller.deletePost);
     app.get('/skyTrails/forumPost/getTopStories',controller.getTopStories);
-    app.get('/skyTrails/forumPost/getPostByID',controller.getPostByID);
-    app.get('/skyTrails/forumPost/getComments',controller.getComments)
+    app.get('/skyTrails/forumPost/getPostOfUser',[authJwt.verifcationToken],controller.getPostOfUser);
+    app.get('/skyTrails/forumPost/getComments',controller.getComments);
+    app.get('/skyTrails/forumPost/getPostByID',controller.getPostByID)
 }

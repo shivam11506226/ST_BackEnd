@@ -75,7 +75,55 @@ const forumQueServices={
       const info = await forumQueModel.aggregatePaginate(aggregate, options);
       return info;
     },
+    forumQueListLookUpOfUser: async (body) => {
+      const { search, page, limit, questionId, userId } = body;
+      if (search) {
+        var filter = search;
+      }
+      let data = filter || ""
+      let searchData = [
+        {$match:{userId:userId,status:status.ACTIVE}},
+        {
+          $lookup: {
+            from: "users",
+            localField: 'userId',
+            foreignField: '_id',
+            as: "userDetail",
+          }
+        },
+        {
+          $unwind: {
+            path: "$userDetail",
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $match: {
+            content: { $regex: data, $options: "i" }
+          }
+        },
   
+  
+      ]
+      if (questionId) {
+        searchData.push({
+          $match: { "questionsData.questionId": mongoose.Types.ObjectId(questionId) }
+        })
+      }
+      if (userId) {
+        searchData.push({
+          $match: { "userDetail.userId": mongoose.Types.ObjectId(userId) }
+        })
+      }
+      let aggregate = forumQueModel.aggregate(searchData)
+      let options = {
+        page: parseInt(page, 10) || 1,
+        limit: parseInt(limit, 10) || 10,
+        sort: { createdAt: -1 },
+      };
+      const info = await forumQueModel.aggregatePaginate(aggregate, options);
+      return info;
+    },
   
     getTopSTories: async (params) => {
       const { search, page, limit, questionId, userId } = params;

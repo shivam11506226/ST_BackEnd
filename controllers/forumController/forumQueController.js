@@ -16,6 +16,7 @@ const {
   forumQueListLookUp,
   forumQueListLookUp1,
   getTopSTories,
+  forumQueListLookUpOfUser
 } = forumQueServices;
 const { userServices } = require("../../services/userServices");
 const {
@@ -88,7 +89,7 @@ exports.getPost = async (req, res, next) => {
   try {
     const result = {}; // Declare as an object
     const { search, page, limit, questionId, userId } = req.query;
-    const post = await forumQueListLookUp1({});
+    const post = await forumQueListLookUpOfUser({});
     if (post) {
       result.post = post;
     } else {
@@ -173,21 +174,39 @@ exports.deletePost = async (req, res, next) => {
 exports.getPostOfUser = async (req, res, next) => {
   try {
     const { search, page, limit, questionId, userId } = req.query;
-    const isUser = await findUser({ _id: userId });
-    if (!isUser) {
-      return sendActionFailedResponse(res, {}, "User not found");
-    }
-    const unanswered = await forumQueListLookUp(req.query);
-    const answered = await forumListLookUp(req.query);
-    const result = {
-      unanswered,
-      answered,
-    };
-    if (!unanswered) {
-      return actionCompleteResponse(res, result, "All posts successfully.");
-    } else if (!answered) {
-      return sendActionFailedResponse(res, [], "No posts found.");
-    }
+    const isUserExist = await findUser({ _id: req.userId,status:status.ACTIVE,otpVerified:true });
+        console.log("isAgentExists", isUserExist);
+        if (!isUserExist) {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
+        }
+         req.query.userId=isUserExist._id;
+        const result=await forumQueListLookUp1(req.query)
+        if(!result){
+          return res
+          .status(statusCode.NotFound)
+          .send({
+            statusCode: statusCode.NotFound,
+            message: responseMessage.DATA_NOT_FOUND,
+          });
+        }
+        return res
+        .status(statusCode.OK)
+        .send({
+          statusCode: statusCode.OK,
+          responseMessage: responseMessage.DATA_FOUND,
+          result: result,
+        });
+    // const unanswered = await forumQueListLookUp(req.query);
+    // const answered = await forumListLookUp(req.query);
+    // const result = {
+    //   unanswered,
+    //   answered,
+    // };
+    // if (!unanswered) {
+    //   return actionCompleteResponse(res, result, "All posts successfully.");
+    // } else if (!answered) {
+    //   return sendActionFailedResponse(res, [], "No posts found.");
+    // }
   } catch (error) {
     console.log("error========>>>>>>", error);
     return next(error);

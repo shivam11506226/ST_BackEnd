@@ -25,7 +25,7 @@ const { createbrbuser, findbrbuser, getbrbuser, findbrbuserData, updatebrbuser, 
 const { userflightBookingServices } = require('../services/btocServices/flightBookingServices');
 const { aggregatePaginateGetBooking,aggregatePaginateGetBooking1 } = userflightBookingServices;
 const { cancelUserBookingServices } = require("../services/btocServices/cancelBookingServices");
-const { createcancelFlightBookings, findAnd, updatecancelFlightBookings, aggregatePaginatecancelFlightBookingsList, countTotalcancelFlightBookings, createHotelCancelRequest, updateHotelCancelRequest, getHotelCancelRequesrByAggregate, countTotalHotelCancelled, createBusCancelRequest, updateBusCancelRequest, getBusCancelRequestByAggregate, countTotalBusCancelled } = cancelUserBookingServices;
+const { createcancelFlightBookings, findAnd, updatecancelFlightBookings, aggregatePaginatecancelFlightBookingsList1, countTotalcancelFlightBookings, createHotelCancelRequest, updateHotelCancelRequest, getHotelCancelRequesrByAggregate, countTotalHotelCancelled, createBusCancelRequest, updateBusCancelRequest, getBusCancelRequestByAggregate, countTotalBusCancelled } = cancelUserBookingServices;
 const { changeRequestServices } = require('../services/changeRequest');
 const { createchangeRequest, findchangeRequest, findchangeRequestData, deletechangeRequest, changeRequestList, updatechangeRequest, paginatechangeRequestSearch, aggregatePaginatechangeRequestList, countTotalchangeRequest } = changeRequestServices;
 const { changeHotelRequestServices } = require('../services/changeHotelRequestServices');
@@ -796,7 +796,7 @@ exports.getCancelUserFlightBooking = async (req, res, next) => {
     // var userId = isUserExist._id;
     const { page, limit, search, fromDate } = req.query;
     const query = { page, limit, search, fromDate, };
-    const result = await aggregatePaginatecancelFlightBookingsList(req.query);
+    const result = await aggregatePaginatecancelFlightBookingsList1(req.query);
     if (!result) {
       return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, responseMessage: responseMessage.DATA_NOT_FOUND });
     }

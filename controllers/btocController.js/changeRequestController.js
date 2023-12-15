@@ -6,7 +6,7 @@ const userType = require("../../enums/userType");
 
 /**********************************SERVICES********************************** */
 const {changeUserBookingServices}=require("../../services/btocServices/changeRequestServices");
-const {createUserFlightChangeRequest,flightchangeRequestUserList,createUserHotelChangeRequest,hotelchangeRequestUserList,createUserBusChangeRequest,buschangeRequestUserList}=changeUserBookingServices;
+const {createUserFlightChangeRequest,flightchangeRequestUserList1,createUserHotelChangeRequest,hotelchangeRequestUserList,createUserBusChangeRequest,buschangeRequestUserList}=changeUserBookingServices;
 const { userServices } = require('../../services/userServices');
 const { createUser, findUser, getUser, findUserData, updateUser, paginateUserSearch, countTotalUser } = userServices;
 const { userflightBookingServices } = require('../../services/btocServices/flightBookingServices');
@@ -61,7 +61,7 @@ exports.getUserFlightChangeRequest=async(req,res,next)=>{
         if (!isUserExist) {
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
         }
-        const result=flightchangeRequestUserList(req.query);
+        const result=flightchangeRequestUserList1(req.query);
         if(!result||result.length==0){
             return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.DATA_NOT_FOUND });
         }

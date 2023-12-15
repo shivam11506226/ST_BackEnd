@@ -65,7 +65,7 @@ exports.login = async (req, res, next) => {
       otpExpireTime: otpExpireTime,
     };
     const isExist = await findUser({
-      "phone.mobile_number": mobileNumber,
+      "phone.mobile_number": mobileNumber,userType:userType.USER,
       status: status.ACTIVE,
     });
     if (!isExist) {
@@ -83,8 +83,6 @@ exports.login = async (req, res, next) => {
         phone: result1.phone,
         userType: result1.userType,
         otpVerified: result1.otpVerified,
-        status: result1.status,
-        otp: otp,
         token: token,
       };
       return res

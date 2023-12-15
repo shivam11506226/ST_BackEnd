@@ -47,6 +47,40 @@ const changeUserBookingServices = {
         return await userChangeFlightModel.aggregatePaginate(aggregate, options)
 
     },
+    flightchangeRequestUserList1:async(body)=>{
+        const { page, limit, search, fromDate, toDate,userId } = body;
+        if (search) {
+            var filter = search;
+        }
+        let data = filter || ""
+        let pipeline = [
+            {
+                $match:{userId:userId,status:status.ACTIVE}
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: "userDetails",
+                }
+            },
+            {
+                $unwind: {
+                    path: "$userDetails",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+        ]
+        let aggregate = userChangeFlightModel.aggregate(pipeline)
+        let options = {
+            page: parseInt(page) || 1,
+            limit: parseInt(limit) || 5,
+            sort: { createdAt: -1 },
+        };
+        return await userChangeFlightModel.aggregatePaginate(aggregate, options)
+
+    },
     createUserHotelChangeRequest: async (insertObj) => {
         return await userChangeHotelModel.create(insertObj);
     },

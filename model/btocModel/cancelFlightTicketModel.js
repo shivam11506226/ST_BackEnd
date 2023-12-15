@@ -25,6 +25,9 @@ const cancelBookingDataSchema = new mongoose.Schema(
         pnr: {
             type: Number,
         },
+        amount:{
+            type: Number,
+        },
         status: {
             type: String,
             default: "ACTIVE"

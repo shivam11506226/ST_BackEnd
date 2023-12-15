@@ -37,6 +37,21 @@ exports.addFlightBookingData = async (req, res) => {
   }
 };
 
+
+exports.EmailTicket= async (req, res) => {
+  const id=req.body.TicketId;
+    try{
+    const response = await flightBookingData.findById({_id:id});
+    await commonFunction.FlightBookingConfirmationMail(response);
+    const msg="PDF sent successfully to your email. Please check your inbox."
+
+    actionCompleteResponse(res, msg);
+  } catch (error) {
+    sendActionFailedResponse(res, {}, error.message);
+  }
+
+}
+
 exports.getAllFlightsBooking = async (req, res) => {
   try {
     const response = await flightBookingData.find();

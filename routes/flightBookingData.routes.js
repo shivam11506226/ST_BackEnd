@@ -10,6 +10,7 @@ module.exports = function (app) {
     });
     // app.post('/skyTrails/flightBooking/addFlightBookingData',SchemaValidator(schemas.flightBookingSchema),controller.addFlightBookingData);
     app.post('/skyTrails/flightBooking/addFlightBookingData',controller.addFlightBookingData);
+    app.post('/skyTrails/flight/emailTicket',controller.EmailTicket);
     app.get('/skyTrails/flightBooking/getAllFlightsBooking',controller.getAllFlightsBooking);
     app.get('/skyTrails/flightBooking/getoneFlightsBooking/:id',controller.getoneFlightsBooking);
     app.delete('/skyTrails/flightBooking/deleteFlightBookings/:id',controller.deleteFlightBookings);

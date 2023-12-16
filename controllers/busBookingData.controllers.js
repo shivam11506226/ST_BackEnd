@@ -48,6 +48,22 @@ exports.addBusBookingData = async (req, res) => {
   }
 };
 
+
+
+
+exports.getoneBusBookingById = async (req, res) => {
+  try {
+    response = await busBookingData.find({
+      _id: { $in: [req.params.id] },
+    });
+    console.log(response,"response");
+    const msg = "user booking data get successfully";
+    actionCompleteResponse(res, response, msg);
+  } catch (error) {
+    sendActionFailedResponse(res, {}, error.message);
+  }
+};
+
 //======================================================================
 //======== Get All Bus Booking list For admin  =========================
 //======================================================================

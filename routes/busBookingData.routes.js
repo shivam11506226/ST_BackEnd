@@ -22,4 +22,5 @@ module.exports = function (app) {
     "/skyTrails/getAllBusBookingForAdmin",
     controller.getAllBusBookingdataForAdmin
   );
+  app.get('/skyTrails/BusBooking/getoneBusBookingById/:id',controller.getoneBusBookingById);
 };

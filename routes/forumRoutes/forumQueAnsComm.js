@@ -1,6 +1,7 @@
 const controller = require('../../controllers/forumController/forumQueAnsComm');
 const schemas = require('../../utilities/schema.utilities');
 const SchemaValidator = require('../../utilities/validations.utilities');
+const { authJwt } = require("../../middleware");
 
 module.exports = function (app) {
     app.use(function (req, res, next) {
@@ -12,6 +13,6 @@ module.exports = function (app) {
     app.get('/skyTrails/forumPost/getPostComment', controller.getPostComment);
     app.put('/skyTrails/forumPost/updatePostComment', controller.updatePostComment);
     app.delete('/skyTrails/forumPost/deletePostComment', controller.deletePostComment);
-    app.get('/skyTrails/forumPost/getPostCommentsOfUser',controller.getPostCommentsOfUser);
+    app.get('/skyTrails/forumPost/getPostCommentsOfUser',[authJwt.verifcationToken],controller.getPostCommentsOfUser);
     app.post('/skyTrails/forumPost/likeComments',controller.likeComments);
 }

@@ -3,7 +3,7 @@ const { authJwt } = require("../middleware");
 const SchemaValidator = require("../utilities/validations.utilities");
 const schemas = require("../utilities/schema.utilities");
 const controller = require("../controllers/userController");
-const userController = require("../controllers/btocController.js/controller");
+const userController = require("../controllers/btocController/controller");
 const { handleFileUpload } = require("../utilities/uploadHandler");
 module.exports = function (app) {
   app.use(function (req, res, next) {

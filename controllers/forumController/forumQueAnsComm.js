@@ -2,7 +2,8 @@ const status = require("../../enums/status");
 const schemas = require("../../utilities/schema.utilities");
 const commentStatus = require("../../enums/commentStatus");
 const responseMessage = require('../../utilities/responses');
-const statusCode = require('../../utilities/responceCode')
+const statusCode = require('../../utilities/responceCode');
+
 //************************************SERVICES**********************************************************/
 
 const { forumQueServices } = require("../../services/forumQueServices");
@@ -140,18 +141,22 @@ exports.deletePostComment = async (req, res, next) => {
 exports.getPostCommentsOfUser = async (req, res, next) => {
     try {
         const { search, page, limit, questionId, userId } = req.query;
-        // const unanswered = await findforumQueAnsCommData(req.body);
-        const isUser = await findUser({ _id: userId });
-        console.log("isUser============", isUser);
-        if (!isUser) {
-            return sendActionFailedResponse(res, {}, "User not found");
+        const isUserExist = await findUser({ _id: req.userId,status:status.ACTIVE,otpVerified:true });
+        console.log("isAgentExists", isUserExist);
+        if (!isUserExist) {
+            return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.USERS_NOT_FOUND });
         }
+        req.query.userId=isUserExist._id;
         const result = await findforumQueAnsCommData(req.query);
-        // const result = {
-        //     unanswered,
-        //     answered,
-        // };
-        return actionCompleteResponse(res, result, "All posts successfully.");
+    
+        // return actionCompleteResponse(res, result, "All posts successfully.");
+        return res
+        .status(statusCode.OK)
+        .send({
+          statusCode: statusCode.OK,
+          responseMessage: responseMessage.DATA_FOUND,
+          result: result,
+        });
     } catch (error) {
         console.log("error========>>>>>>", error);
         return next(error);

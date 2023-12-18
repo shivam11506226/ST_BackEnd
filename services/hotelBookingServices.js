@@ -59,7 +59,6 @@ const hotelBookingServicess = {
         if (search) {
             var filter = search;
         }
-        console.log('aggregatePaginateHotelBookingList',body)
         let data = filter || ""
         let pipeline = [
             {

@@ -56,5 +56,5 @@ module.exports = function (app) {
   app.get('/skyTrails/api/admin/getCancelAgentUserFlightBooking',controller.getCancelAgentFlightBooking);
   app.get('/skyTrails/api/admin/getCancelAgentHotelBooking',controller.getCancelAgentHotelBooking);
   app.get('/skyTrails/api/admin/getCancelAgentBusBooking',controller.getCancelAgentBusBooking);
-  
+  app.get('/skyTrails/api/admin/getSearchHistory',controller.getSearchHistory);
 };

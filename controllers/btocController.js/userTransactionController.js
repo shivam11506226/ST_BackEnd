@@ -8,7 +8,7 @@ const {
 } = require("../../common/common");
 const bcrypt = require("bcryptjs");
 const axios = require('axios');
-
+const crypto=require('crypto')
 //razor pay instance******************************************
 let instance = new Razorpay({
   key_id: process.env.Razorpay_KEY_ID,
@@ -98,47 +98,63 @@ exports.makePayment=async(req,res,next)=>{
       receipt: "order_rcptid_11",
       partial_payment:true
     };
-    const razorpayOrder = await createRazorpayOrder(options);
+    const razorpayOrder = await  instance.orders.create(options);
 
     // Log the order details for debugging
     console.log("Razorpay Order:", razorpayOrder);
 
-    const transactionData={
-      userId:isUserExist._id,
-      orderId:razorpayOrder.id,
-      amount:amount,
-      bookingType:bookingType
-    };
-   const result= await createUsertransaction(transactionData);
-if(result){
-  res.status(statusCode.OK).send({statusCode:statusCode.OK,responseMessage:responseMessage.PAYMENT_SUCCESS,result:result});
-}
+  //   const transactionData={
+  //     userId:isUserExist._id,
+  //     orderId:razorpayOrder.id,
+  //     amount:amount,
+  //     bookingType:bookingType
+  //   };
+  //  const result= await createUsertransaction(transactionData);
+
+  res.status(statusCode.OK).send({statusCode:statusCode.OK,responseMessage:responseMessage.PAYMENT_SUCCESS,result:razorpayOrder});
   } catch (error) {
     console.log("error in transaction===========",error);
     return  next(error)
   }
 }
 
-exports.payVerify = (req, res) => {
+
+
+exports.payVerify =async(req,res,next)=>{
   try {
-    console.log(req.body);
+    const {orderID,paymentId,signature}=req.body;
     body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
-    var crypto = require("crypto");
-    var expectedSignature = crypto.createHmac('sha256', process.env.Razorpay_KEY_SECRET)
-      .update(body.toString())
-      .digest('hex');
-    console.log("sig" + req.body.razorpay_signature);
-    console.log("sig" + expectedSignature);
-
-    if (expectedSignature === req.body.razorpay_signature) {
-      console.log("Payment Success");
-    } else {
-      console.log("Payment Fail");
+    const isUserExist = await findUserData({
+      _id: req.userId,
+      status: status.ACTIVE,
+    });
+    if (!isUserExist) {
+      return res
+        .status(statusCode.NotFound)
+        .send({
+          statusCode: statusCode.NotFound,
+          message: responseMessage.USERS_NOT_FOUND,
+        });
     }
-
+    var expectedSignature = crypto.createHmac('sha256',process.env.Razorpay_KEY_SECRET).update(body.toString()).digest('hex');
+    const isAuth=expectedSignature===signature;
+    if(isAuth){
+      // await instance.paymentLink.create({orderID,paymentId,signature});
+      const transactionData={
+        userId:isUserExist._id,
+        orderId:razorpayOrder.id,
+        amount:amount,
+        paymentId:paymentId,
+        signature:signature,
+        bookingType:bookingType
+      };
+     const result= await createUsertransaction(transactionData);
+      res.redirect(`http://localhost:8000/paymentsuccess?reference=${paymentId}`)
+    }
+   
   } catch (error) {
-    sendActionFailedResponse(res, {}, "Internal server error");
-    console.log(error.message);
+    console.log("Error in payment verification=>>",error.message);
+    return next(error)
   }
 }
 

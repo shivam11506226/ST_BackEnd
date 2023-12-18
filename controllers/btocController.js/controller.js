@@ -165,7 +165,7 @@ exports.verifyUserOtp = async (req, res, next) => {
     }
     const updation = await updateUser(
       { _id: isUserExist._id, status: status.ACTIVE },
-      { otpVerified: true }
+      { otpVerified: true,otp:" " }
     );
     console.log("======================", updation);
     if (updation.firstTime === false) {
@@ -537,16 +537,27 @@ exports.editProfile = async (req, res, next) => {
       const { username, email, mobile_number,gender,Nationality,City,State,pincode,dob,address } = req.body;
       console.log("req.body==============",req.body)
       const isUSer = await findUser({ _id: req.userId, status: status.ACTIVE });
+      console.log("isUser=======",isUSer)
       if (!isUSer) {
           return res.status(statusCode.Unauthorized).send({ message: responseMessage.UNAUTHORIZED });
       }
-      if (email || mobile_number) {
-          const isExist = await findUser({ $or: [{ email: email }, { mobile_number: mobile_number }], _id: { $nin: isUSer._id } });
-          console.log("isExist",isExist)
-          if (isExist) {
-              return res.status(statusCode.Conflict).send({ message: responseMessage.USER_ALREADY_EXIST });
-          }
+      if (mobile_number) {
+        const isExistMobile = await findUser({ 'phone.mobile_number': mobile_number, _id: { $ne: isUSer._id } });
+        console.log("isExistMobile", isExistMobile)
+        
+        if (isExistMobile) {
+          return res.status(statusCode.Conflict).send({ message: responseMessage.USER_ALREADY_EXIST });
+        }
+      } else if (email) {
+        const isExistEmail = await findUser({ email: email, _id: { $ne: isUSer._id } });
+        console.log("isExistEmail=================", isExistEmail)
+        
+        if (isExistEmail) {
+          return res.status(statusCode.Conflict).send({ message: responseMessage.USER_ALREADY_EXIST });
+        }
       }
+  
+      console.log("req.body", req.body);
       console.log("req.body",req.body);
       const result = await updateUser({ _id: isUSer._id }, req.body);
 

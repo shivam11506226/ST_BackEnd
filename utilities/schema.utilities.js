@@ -375,6 +375,13 @@ const schemas = {
     email: joi.string().required(),
     contact: joi.string().required(),
     policyName: joi.string().required()
+  }),
+  searchSchema:joi.object().keys({
+    origin: joi.string().required(),
+    destination: joi.string().required(),
+    journeyType: joi.string().required(),
+    searchType: joi.string().valid(...Object.values(queryType)).required(),
+    journeyDate: joi.string().required(),
   })
 };
 

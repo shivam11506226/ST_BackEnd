@@ -49,30 +49,21 @@ const forumQueServices={
           }
         },
         {
-          $match: {
-            content: { $regex: data, $options: "i" }
-          }
-        },
-  
-  
+          $sort: { createdAt: -1 } 
+        }
       ]
       if (questionId) {
         searchData.push({
           $match: { "questionsData.questionId": mongoose.Types.ObjectId(questionId) }
         })
       }
-      if (userId) {
-        searchData.push({
-          $match: { "userDetail.userId": mongoose.Types.ObjectId(userId) }
-        })
-      }
-      let aggregate = forumQueModel.aggregate(searchData)
-      let options = {
-        page: parseInt(page, 10) || 1,
-        limit: parseInt(limit, 10) || 10,
-        sort: { createdAt: -1 },
-      };
-      const info = await forumQueModel.aggregatePaginate(aggregate, options);
+      let info = forumQueModel.aggregate(searchData)
+      // let options = {
+      //   page: parseInt(page)||1,
+      //   limit: parseInt(limit)||100,
+      //   sort: { createdAt: -1 },
+      // };
+      // const info = await forumQueModel.aggregatePaginate(aggregate, options);
       return info;
     },
     forumQueListLookUpOfUser: async (body) => {
@@ -110,11 +101,7 @@ const forumQueServices={
           $match: { "questionsData.questionId": mongoose.Types.ObjectId(questionId) }
         })
       }
-      if (userId) {
-        searchData.push({
-          $match: { "userDetail.userId": mongoose.Types.ObjectId(userId) }
-        })
-      }
+     
       let aggregate = forumQueModel.aggregate(searchData)
       let options = {
         page: parseInt(page, 10) || 1,
@@ -223,14 +210,12 @@ const forumQueServices={
               })
         }
         let aggregate = forumQueModel.aggregate(searchData)
-        console.log("aggregate============",aggregate);
         let options = {
           page: parseInt(page, 10) || 1,
           limit: parseInt(limit, 10) || 10,
           sort: { createdAt: -1 },
         };
         const info=await forumQueModel.aggregatePaginate(aggregate, options);
-        console.log("info==========",info);
         return info;
       }
 }

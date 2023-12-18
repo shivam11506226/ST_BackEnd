@@ -44,6 +44,9 @@ const { cancelBookingServices } = require("../services/cancelServices");
 const {  aggregatecancelFlightBookingsList,getAgentHotelCancelRequesrByAggregate,getBusCancellationAgent } = cancelBookingServices;
 const {changeUserBookingServices}=require("../services/btocServices/changeRequestServices");
 const {flightchangeRequestUserList,hotelchangeRequestUserList,buschangeRequestUserList}=changeUserBookingServices;
+const {userSerachesServices}=require('../services/btocServices/userSearchServices');
+const {createUserSearch,findUserSearch,deleteUserSearch,userSearchList,updateUserSearch}=userSerachesServices;
+
 //**********Necessary models***********/
 const flightModel = require('../model/flightBookingData.model')
 const hotelBookingModel = require('../model/hotelBooking.model');
@@ -968,7 +971,6 @@ exports.getMarkup=async(req,res,next)=>{
   }
 }
 
-
 //get all user cancel request*****************************************
 exports.getCancelAgentFlightBooking = async (req, res, next) => {
   try {
@@ -1017,7 +1019,6 @@ exports.getCancelAgentBusBooking = async (req, res, next) => {
     return next(error);
   }
 }
-
 //get change flight booking details request by User**********************************
 exports.getUserchangeFlightRequest = async (req, res, next) => {
   try {
@@ -1059,6 +1060,20 @@ exports.getUserchangeBusRequest = async (req, res, next) => {
     return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
   } catch (error) {
     console.log("Error to getting data", error);
+    return next(error)
+  }
+}
+
+//************************************GET SEARCHHISTORY************************************************/
+exports.getSearchHistory=async(req,res,next)=>{
+  try {
+    const result=await userSearchList({});
+    if (!result) {
+      return res.status(statusCode.NotFound).send({ statusCode: statusCode.NotFound, message: responseMessage.BOOKING_NOT_FOUND });
+    }
+    return res.status(statusCode.OK).send({ statusCode: statusCode.OK, result: result });
+  } catch (error) {
+    console.log("error in getting data=====>>>>>>>",error.message);
     return next(error)
   }
 }

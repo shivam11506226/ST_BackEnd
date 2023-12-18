@@ -1,16 +1,18 @@
 // const {upload} = require('../../utilities/uploadHandler');
-const busBookingController = require('../../controllers/btocController.js/busBookingController');
-const flightBookingController=require('../../controllers/btocController.js/flightBookingController');
-const hotelBookingController=require('../../controllers/btocController.js/hotelBookingController');
-const advertisementController=require('../../controllers/btocController.js/advertisementController');
-const userCancelController=require('../../controllers/btocController.js/cancelTicketController');
-const packageController=require('../../controllers/btocController.js/packageBookingController');
-const changeRequestController=require('../../controllers/btocController.js/changeRequestController');
-const userTransactionsController=require('../../controllers/btocController.js/userTransactionController')
+const busBookingController = require('../../controllers/btocController/busBookingController');
+const flightBookingController=require('../../controllers/btocController/flightBookingController');
+const hotelBookingController=require('../../controllers/btocController/hotelBookingController');
+const advertisementController=require('../../controllers/btocController/advertisementController');
+const userCancelController=require('../../controllers/btocController/cancelTicketController');
+const packageController=require('../../controllers/btocController/packageBookingController');
+const changeRequestController=require('../../controllers/btocController/changeRequestController');
+const userTransactionsController=require('../../controllers/btocController/userTransactionController');
+const userSearchHistoryController=require('../../controllers/btocController/userSearchesController')
 const schemas = require('../../utilities/schema.utilities');
 const SchemaValidator = require('../../utilities/validations.utilities');
 const upload=require('../../utilities/uploadHandler')
 const { authJwt } = require("../../middleware");
+const { Schemas } = require('aws-sdk');
 module.exports = function (app) {
     app.use(function (req, res, next) {
         res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
@@ -57,4 +59,5 @@ module.exports = function (app) {
     // app.get('/skyTrails/api/user/getCancelUserBusBooking',changeRequestController.getCancelUserBusBooking);
     app.post('/skyTrails/api/user/makepayment',[authJwt.verifcationToken],userTransactionsController.makePayment);
     app.post('/skyTrails/api/user/payVerify',[authJwt.verifcationToken],SchemaValidator(schemas.paymentUrlSchema),userTransactionsController.payVerify)
+    app.post('/skyTrails/api/user/createSearchHistory',[authJwt.verifcationToken],SchemaValidator(schemas.searchSchema),userSearchHistoryController.createSearchHistory)
 }

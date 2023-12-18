@@ -15,7 +15,7 @@ const forumQueAnsCommServices = {
     },
 
     findforumQueAnsCommData: async (query) => {
-        return await forumQueAnsCommModel.find(query);
+        return await forumQueAnsCommModel.find(query).populate('questionId');
     },
 
     deleteforumQueAnsComm: async (query) => {

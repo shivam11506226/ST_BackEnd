@@ -72,7 +72,7 @@ const hotelBookingDetailSchema = new mongoose.Schema(
         },
         bookingStatus: {
             type: String,
-            default: bookingStatus.PENDING
+            default: bookingStatus.BOOKED
         },
         transactions:{
             type:mongoose.Types.ObjectId,

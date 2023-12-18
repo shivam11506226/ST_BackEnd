@@ -24,7 +24,9 @@ const transactionSchema = mongoose.Schema({
     orderId:{
         type:String
     },
- 
+    signature:{
+        type:String
+    },
     bookingType: {
         type: String,
         enum: [offerType.FLIGHTS, offerType.HOTELS, offerType.BUS],

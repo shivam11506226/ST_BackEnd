@@ -55,6 +55,6 @@ module.exports = function (app) {
     app.get('/skyTrails/api/user/getChangelUserFlightBooking',[authJwt.verifcationToken],changeRequestController.getUserFlightChangeRequest);
     // app.get('/skyTrails/api/user/getCancelUserHotelBooking',changeRequestController.getCancelUserHotelBooking);
     // app.get('/skyTrails/api/user/getCancelUserBusBooking',changeRequestController.getCancelUserBusBooking);
-    app.post('/skyTrails/api/user/makepayment',[authJwt.verifcationToken],SchemaValidator(schemas.paymentSchema),userTransactionsController.makePayment);
+    app.post('/skyTrails/api/user/makepayment',[authJwt.verifcationToken],userTransactionsController.makePayment);
     app.post('/skyTrails/api/user/paymentUrl',[authJwt.verifcationToken],SchemaValidator(schemas.paymentUrlSchema),userTransactionsController.paymentUrl)
 }

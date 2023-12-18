@@ -21,6 +21,9 @@ const transactionSchema = mongoose.Schema({
     paymentId:{
         type:String
     },
+    orderId:{
+        type:String
+    },
  
     bookingType: {
         type: String,

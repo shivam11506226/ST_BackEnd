@@ -89,7 +89,7 @@ exports.getPost = async (req, res, next) => {
   try {
     const result = {}; // Declare as an object
     const { search, page, limit, questionId, userId } = req.query;
-    const post = await forumQueListLookUpOfUser({});
+    const post = await forumQueListLookUp1({});
     if (post) {
       result.post = post;
     } else {

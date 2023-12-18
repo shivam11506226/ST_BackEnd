@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const userType = require("../enums/userType");
 const { user } = require(".");
 const status = require("../enums/status");
+const gender=require("../enums/gender")
 const approveStatus = require("../enums/approveStatus");
 var bcrypt = require("bcryptjs");
 const mongoosePaginate = require("mongoose-paginate-v2");
@@ -49,8 +50,24 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    Address: {
+    address: {
       type: String,
+    },
+    gender:{
+      type: String,
+      enum:[gender.FEMALE,gender.MALE,gender.OTHER]
+    },
+    Nationality:{
+      type: String,
+    },
+    City:{
+      type: String
+    },
+    State:{
+      type: String
+    },
+    pincode:{
+      type:String
     },
     approveStatus: {
       type: String,

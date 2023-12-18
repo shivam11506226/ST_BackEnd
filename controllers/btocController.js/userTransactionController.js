@@ -10,7 +10,7 @@ const bcrypt = require("bcryptjs");
 const axios = require('axios');
 
 //razor pay instance******************************************
-var instance = new Razorpay({
+let instance = new Razorpay({
   key_id: process.env.Razorpay_KEY_ID,
   key_secret: process.env.Razorpay_KEY_SECRET,
 });
@@ -76,10 +76,10 @@ exports.userTransaction=async(req,res,next) => {
     }
 }
 
-exports.makePayment = async (req, res) => {
+
+exports.makePayment=async(req,res,next)=>{
   try {
-    const { bookingType, amount, paymentId } = req.body;
-    console.log(req.body);
+    const { bookingType, amount } = req.body;
     const isUserExist = await findUserData({
       _id: req.userId,
       status: status.ACTIVE,
@@ -92,28 +92,20 @@ exports.makePayment = async (req, res) => {
           message: responseMessage.USERS_NOT_FOUND,
         });
     }
-    let instance = new Razorpay({
-      key_id: process.env.Razorpay_KEY_ID,
-      key_secret: process.env.Razorpay_KEY_SECRET,
-    });
-
     var options = {
       amount: Number(amount) * 100,
       currency: "INR",
       receipt: "order_rcptid_11",
+      partial_payment:true
     };
-    console.log(req.body.amount);
-    instance.orders.create(options, function (err, order) {
-      if (err) {
-        console.error(err);
-        res.status(statusCode.InternalError).send({statusCode:statusCode.InternalError,responseMessage:responseMessage.INTERNAL_ERROR,result:paymentLink})
-      }
-      console.log(order);
-    });
-    
+    const razorpayOrder = await createRazorpayOrder(options);
+
+    // Log the order details for debugging
+    console.log("Razorpay Order:", razorpayOrder);
+
     const transactionData={
       userId:isUserExist._id,
-      paymentId:paymentId,
+      orderId:razorpayOrder.id,
       amount:amount,
       bookingType:bookingType
     };
@@ -122,11 +114,10 @@ if(result){
   res.status(statusCode.OK).send({statusCode:statusCode.OK,responseMessage:responseMessage.PAYMENT_SUCCESS,result:result});
 }
   } catch (error) {
-    sendActionFailedResponse(res, {}, "Internal server error");
-    console.log(error);
+    console.log("error in transaction===========",error);
+    return  next(error)
   }
-
-};
+}
 
 exports.payVerify = (req, res) => {
   try {
@@ -151,9 +142,52 @@ exports.payVerify = (req, res) => {
   }
 }
 
-exports.paymentUrl=async(req,res,next)=>{
+// exports.paymentUrl=async(req,res,next)=>{
+//   try {
+//     const {amount,name,email,contact,policyName}=req.body;
+//     const orderData = {
+//       amount: amount,
+//       currency: "INR",
+//       accept_partial: true,
+//       first_min_partial_amount: 100,
+//       description: "For payment purpose",
+//       customer: {
+//         name: name,
+//         email:email,
+//         contact: contact
+//       },
+//       notify: {
+//         sms: true,
+//         email: true,
+//         whatsapp:true
+//       },
+//       reminder_enable: true,
+//       notes: {
+//         policy_name: policyName||"payment for bookings",
+//       },
+//     };
+//     const response = await instance.paymentLink.create(orderData);
+//     console.log("response=>>>>>>>>>>>>>>>", response);
+//     console.log("Entire Response: ", JSON.stringify(response, null, 2));
+//     let paymentLink = response.short_url;
+//     if (!paymentLink) {
+//       console.error("Payment link not found in the response");
+//       res.status(statusCode.InternalError).send({statusCode:statusCode.InternalError,responseMessage:"Payment link not found",result:paymentLink})
+//     }
+//     console.log("paymentLink==============", paymentLink);
+//     res.status(statusCode.OK).send({statusCode:statusCode.OK,responseMessage:responseMessage.PAYMENT_SUCCESS,result:paymentLink});
+//   } catch (error) {
+//     console.error("Error creating url:", error);
+//     // res.status(500).json({ error: error.message, razorpayError: error.response.data });
+//     return next(error)
+    
+//   }
+// }
+
+exports.paymentUrl = async (req, res, next) => {
   try {
-    const {amount,name,email,contact,policyName}=req.body;
+    const { amount, name, email, contact, policyName } = req.body;
+
     const orderData = {
       amount: amount,
       currency: "INR",
@@ -162,32 +196,69 @@ exports.paymentUrl=async(req,res,next)=>{
       description: "For payment purpose",
       customer: {
         name: name,
-        email:email,
-        contact: contact
+        email: email,
+        contact: contact,
       },
       notify: {
         sms: true,
         email: true,
-        whatsapp:true
+        whatsapp: true,
       },
       reminder_enable: true,
       notes: {
-        policy_name: policyName||"payment for bookings",
+        policy_name: policyName || "payment for bookings",
       },
     };
+
     const response = await instance.paymentLink.create(orderData);
-    console.log("response=>>>>>>>>>>>>>>>", response);
     console.log("Entire Response: ", JSON.stringify(response, null, 2));
+
     let paymentLink = response.short_url;
     if (!paymentLink) {
       console.error("Payment link not found in the response");
-      res.status(statusCode.InternalError).send({statusCode:statusCode.InternalError,responseMessage:"Payment link not found",result:paymentLink})
+      return res
+        .status(statusCode.InternalError)
+        .send({
+          statusCode: statusCode.InternalError,
+          responseMessage: "Payment link not found",
+          result: paymentLink,
+        });
     }
+
     console.log("paymentLink==============", paymentLink);
-    res.status(statusCode.OK).send({statusCode:statusCode.OK,responseMessage:responseMessage.PAYMENT_SUCCESS,result:paymentLink});
+    
+    // In a real-world scenario, you would save the payment link or associated order details in your database.
+
+    return res
+      .status(statusCode.OK)
+      .send({
+        statusCode: statusCode.OK,
+        responseMessage: responseMessage.PAYMENT_SUCCESS,
+        result: paymentLink,
+      });
   } catch (error) {
     console.error("Error creating url:", error);
-    res.status(500).json({ error: error.message, razorpayError: error.response.data });
-    
+    if (error.response && error.response.data) {
+      console.error("Razorpay Error Details:", error.response.data);
+    }
+    return next(error);
   }
-}
+};
+
+
+
+
+
+// Function to create a Razorpay order
+const createRazorpayOrder = (orderOptions) => {
+  return new Promise((resolve, reject) => {
+    instance.orders.create(orderOptions, (err, order) => {
+      if (err) {
+        console.error("Error creating Razorpay order:", err);
+        reject(err);
+      } else {
+        resolve(order);
+      }
+    });
+  });
+};

@@ -534,7 +534,7 @@ exports.verifyUserOtpWithSocialId = async (req, res, next) => {
 }; 
 exports.editProfile = async (req, res, next) => {
   try {
-      const { username, email, mobile_number, profilePic, } = req.body;
+      const { username, email, mobile_number,gender,Nationality,City,State,pincode,dob,address } = req.body;
       console.log("req.body==============",req.body)
       const isUSer = await findUser({ _id: req.userId, status: status.ACTIVE });
       if (!isUSer) {
@@ -546,9 +546,6 @@ exports.editProfile = async (req, res, next) => {
           if (isExist) {
               return res.status(statusCode.Conflict).send({ message: responseMessage.USER_ALREADY_EXIST });
           }
-      }
-      if (req.file) {
-          req.body.profilePic = await commonFunction.getImageUrl(req.file);
       }
       console.log("req.body",req.body);
       const result = await updateUser({ _id: isUSer._id }, req.body);

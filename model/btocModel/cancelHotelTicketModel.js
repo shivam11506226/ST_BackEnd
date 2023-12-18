@@ -32,6 +32,7 @@ const cancelBookingDataSchema = new mongoose.Schema(
         bookingStatus: {
             type: String,
             enums: [bookingStatus.BOOKED, bookingStatus.CANCEL, bookingStatus.PENDING],
+            
         },
     }, { timestamps: true }
 )

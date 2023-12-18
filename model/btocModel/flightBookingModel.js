@@ -120,7 +120,7 @@ const BookingDetailSchema = new mongoose.Schema(
         },
         bookingStatus: {
           type: String,
-          default: bookingStatus.PENDING
+          default: bookingStatus.BOOKED
         },      
         status: {
             type: String,

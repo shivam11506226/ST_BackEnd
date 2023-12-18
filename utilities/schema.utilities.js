@@ -2,7 +2,8 @@ const joi = require('joi');
 joi.objectId = require('joi-objectid')(joi);
 const issuedType=require('../enums/issuedType');
 const authType=require('../enums/authType');
-const queryType=require("../enums/offerType")
+const queryType=require("../enums/offerType");
+// const bookingType=require("../enums/")
 const schemas = {
   flightBookingSchema: joi.object().keys({
     userId: joi.string().required(),
@@ -363,6 +364,18 @@ const schemas = {
     flightBookingId:joi.string().required(),
     pnr:joi.string().required()
   }),
+  paymentSchema:joi.object().keys({
+    amount: joi.number().required(),
+    paymentId: joi.string().required(),
+    bookingType:joi.string().valid(...Object.values(queryType)).required()
+  }),
+  paymentUrlSchema:joi.object().keys({
+    name: joi.string().required(),
+    amount: joi.number().required(),
+    email: joi.string().required(),
+    contact: joi.string().required(),
+    policyName: joi.string().required()
+  })
 };
 
 module.exports = schemas;

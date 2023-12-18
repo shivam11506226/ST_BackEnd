@@ -163,3 +163,90 @@ const verifySignature = async (order_id, payment_id, signature) => {
     console.log(" payment is successful");
   }
 };
+
+
+//update b2b balance using razorpay
+exports.makePayment = async (req, res) => {
+
+  try {
+    const { _id, amount, paymentId } = req.body; // Destructure userId and additionalBalance from the request body
+
+    // Check if userId is valid in your user table
+    console.log(req.body);
+
+
+    let instance = new Razorpay({
+      key_id: process.env.Razorpay_KEY_ID,
+      key_secret: process.env.Razorpay_KEY_SECRET,
+    });
+
+    var options = {
+      amount: Number(req.body.amount) * 100, // amount in the smallest currency unit
+      currency: "INR",
+      receipt: "order_rcptid_11",
+    };
+    console.log(req.body.amount);
+    instance.orders.create(options, function (err, order) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ code: 500, message: "Server Error" });
+      }
+
+      console.log(order);
+      // return res.send({
+      //   code: 200,
+      //   message: "order Created Successfully",
+      //   data: order,
+      // });
+    });
+
+    const AgentWalletData={
+      userId:_id,
+      orderId:paymentId,
+      amount:amount
+    };
+    await agentWallets.create(AgentWalletData);
+    const user = await b2bUser.findById(_id);
+
+    if (!user) {
+      return sendActionFailedResponse(res, {}, "Invalid userId");
+    }
+
+    // Update the user's balance by adding the additional balance
+    user.balance += Number(amount);
+
+    // Save the updated user
+    const updatedUser = await user.save();
+
+    // Respond with the updated user object
+    actionCompleteResponse(res, updatedUser, "User balance updated successfully");
+
+  } catch (error) {
+    sendActionFailedResponse(res, {}, "Internal server error");
+    console.log(error);
+  }
+
+};
+
+exports.payVerify = (req, res) => {
+  try {
+    console.log(req.body);
+    body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
+    var crypto = require("crypto");
+    var expectedSignature = crypto.createHmac('sha256', process.env.Razorpay_KEY_SECRET)
+      .update(body.toString())
+      .digest('hex');
+    console.log("sig" + req.body.razorpay_signature);
+    console.log("sig" + expectedSignature);
+
+    if (expectedSignature === req.body.razorpay_signature) {
+      console.log("Payment Success");
+    } else {
+      console.log("Payment Fail");
+    }
+
+  } catch (error) {
+    sendActionFailedResponse(res, {}, "Internal server error");
+    console.log(error.message);
+  }
+}

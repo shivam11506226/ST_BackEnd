@@ -26,7 +26,8 @@ const cancelBookingDataSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            default: "ACTIVE"
+            enum:[status.ACTIVE,status.BLOCK,status.DELETE],
+            default: status.ACTIVE
         },
         bookingStatus: {
             type: String,

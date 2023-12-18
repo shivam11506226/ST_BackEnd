@@ -4,6 +4,8 @@ const { Schema } = require("mongoose");
 const status = require('../../enums/status');
 const bookingStatus = require("../../enums/bookingStatus");
 const offerType = require("../../enums/offerType");
+const paymentStatus = require("../../enums/paymentStatus");
+
 mongoose.pluralize(null);
 const aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 const mongoosePaginate = require('mongoose-paginate-v2');
@@ -13,30 +15,24 @@ const transactionSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: "users",
     },
-    amount: { type: Number },
-    flightBookingId: {
-        type: Schema.Types.ObjectId,
-        ref: "userflightBookingDetail"
+    amount: { 
+        type: Number
+     },
+    paymentId:{
+        type:String
     },
-    busBookingId: {
-        type: Schema.Types.ObjectId,
-        ref: "userbusBookingDetail"
-    },
-    hotelBookingId: {
-        type: Schema.Types.ObjectId,
-        ref: "userHotelBookingDetail"
-    },
+ 
     bookingType: {
         type: String,
         enum: [offerType.FLIGHTS, offerType.HOTELS, offerType.BUS],
     },
     transactionStatus: {
         type: String,
-        enum: [bookingStatus.PENDING, bookingStatus.SUCCESS, bookingStatus.FAILED],
-        default: bookingStatus.PENDING
+        enum: [paymentStatus.PENDING, paymentStatus.SUCCESS, paymentStatus.FAILED],
+        default: paymentStatus.PENDING
     }
 
-}, { timeStamp: true })
+}, { timestamps: true })
 
 transactionSchema.plugin(aggregatePaginate);
 

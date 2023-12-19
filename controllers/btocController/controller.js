@@ -295,7 +295,6 @@ exports.uploadImage = async (req, res, next) => {
     if (!req.file) {
       return res.status(400).send({ message: "No file uploaded." });
     }
-
     const isUserExist = await findUserData({
       _id: req.userId,
       status: status.ACTIVE,
@@ -308,7 +307,6 @@ exports.uploadImage = async (req, res, next) => {
           message: responseMessage.USERS_NOT_FOUND,
         });
     }
-
     const imageFiles = await commonFunction.getImageUrl(req.file);
     if (!imageFiles) {
       return res
@@ -318,7 +316,6 @@ exports.uploadImage = async (req, res, next) => {
           message: responseMessage.INTERNAL_ERROR,
         });
     }
-
     const result = await updateUser(
       { _id: isUserExist._id },
       { profilePic: imageFiles }

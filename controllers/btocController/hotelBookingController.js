@@ -100,7 +100,7 @@ exports.hotelBooking= async (req, res, next)=> {
           message: responseMessage.USERS_NOT_FOUND,
         });
       }
-      const result = await userhotelBookingModelList({ status: status.ACTIVE,userId:isUserExist._id});
+      const result = await userhotelBookingModelList({ status: status.ACTIVE,userId:isUserExist._id,CheckInDate:-1});
       if (result) {
         return res.status(statusCode.NotFound).send({
           statusCode: statusCode.NotFound,

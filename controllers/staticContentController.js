@@ -78,9 +78,9 @@ exports.listStaticContent = async (req, res, next) => {
         });
     } else {
       return res
-        .status(statusCode.NotFound)
+        .status(statusCode.OK)
         .send({
-          statusCode: statusCode.NotFound,
+          statusCode: statusCode.OK,
           message: responseMessage.DATA_NOT_FOUND,
           result: result,
         });

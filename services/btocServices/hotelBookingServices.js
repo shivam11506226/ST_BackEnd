@@ -103,6 +103,9 @@ const userhotelBookingModelServices = {
                     
                 }
             },
+            {
+                $sort:{CheckInDate:-1}
+            }
 
         ]
         if (fromDate && !toDate) {
